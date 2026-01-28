@@ -25,12 +25,19 @@ Page({
     const item = e.currentTarget.dataset.item;
     console.log('Go to detail:', item);
 
+    if (item === 'procurement') {
+      // 跳转到采购合规页面
+      wx.navigateTo({
+        url: '/pages/profile/company/procurement-compliance/procurement-compliance'
+      });
+      return;
+    }
+
     const itemNames = {
       qualification: '资格资质合规',
       governance: '企业治理合规',
       finance: '财务合规',
-      labor: '劳动用工合规',
-      procurement: '采购合规'
+      labor: '劳动用工合规'
     };
 
     wx.showToast({

@@ -9,6 +9,7 @@
     "pages/profile/profile",
     "pages/profile/company/company",
     "pages/profile/company/data-compliance/data-compliance",
+    "pages/profile/company/procurement-compliance/procurement-compliance",
     "pages/department/department"
   ],
   "window": {

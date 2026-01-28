@@ -1,4 +1,4 @@
-// 码上签约小程序入口
+// 防风险小程序入口
 App({
   globalData: {
     userInfo: null,
@@ -10,7 +10,7 @@ App({
   },
   
   onLaunch() {
-    console.log('码上签约小程序启动');
+    console.log('防风险小程序启动');
     this.checkLogin();
   },
   

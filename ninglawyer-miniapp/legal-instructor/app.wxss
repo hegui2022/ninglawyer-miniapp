@@ -1,318 +1,284 @@
-/**
- * 法律教官小程序全局样式
- * 采用微信企业微信设计风格
- */
+/* 法律教官小程序 - 全局样式 */
 
-/* 全局变量 */
+/* 页面背景 */
 page {
-  --weui-font-size-base: 17px;
-  --weui-font-size-caption: 13px;
-  --weui-font-size-heading: 20px;
-  
-  --weui-color-primary: #07C160;
-  --weui-color-primary-active: #06AD56;
-  --weui-color-primary-disabled: #A0E8B5;
-  
-  --weui-color-warning: #FA9D3B;
-  --weui-color-error: #FA5151;
-  --weui-color-info: #10AEFF;
-  --weui-color-success: #07C160;
-  
-  --weui-text-color-primary: #111111;
-  --weui-text-color-secondary: #666666;
-  --weui-text-color-placeholder: #B2B2B2;
-  --weui-text-color-link: #576B95;
-  
-  --weui-bg-color-default: #FFFFFF;
-  --weui-bg-color-active: #F7F7F7;
-  --weui-bg-color-disabled: #F0F0F0;
-  
-  --weui-border-color-default: #E5E5E5;
-  --weui-border-color-active: #D9D9D9;
-  --weui-border-color-disabled: #EFEFEF;
-  
-  --weui-radius-base: 8px;
-  --weui-radius-large: 12px;
-  
-  --weui-spacing-base: 16px;
-  --weui-spacing-large: 24px;
-  
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", STHeiti, "Microsoft Yahei", Tahoma, Simsun, sans-serif;
-  background-color: #F7F7F7;
-  color: var(--weui-text-color-primary);
+  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  font-size: 28rpx;
+  color: #333333;
+  line-height: 1.6;
 }
 
 /* 容器 */
 .container {
   min-height: 100vh;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  flex-direction: column;
 }
 
-/* 页面 */
-.page {
-  min-height: 100vh;
-  background-color: #F7F7F7;
+/* 通用按钮 */
+.btn-primary {
+  width: 100%;
+  height: 88rpx;
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary:active {
+  opacity: 0.8;
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 88rpx;
+  background: #ffffff;
+  color: #07C160;
+  border: 2rpx solid #07C160;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:active {
+  opacity: 0.8;
+}
+
+.btn-danger {
+  width: 100%;
+  height: 88rpx;
+  background: #ffffff;
+  color: #F44336;
+  border: 2rpx solid #F44336;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 卡片 */
 .card {
-  background-color: var(--weui-bg-color-default);
-  border-radius: var(--weui-radius-base);
-  padding: var(--weui-spacing-base);
-  margin: var(--weui-spacing-base);
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
-.card-title {
-  font-size: var(--weui-font-size-base);
-  font-weight: 600;
-  color: var(--weui-text-color-primary);
-  margin-bottom: var(--weui-spacing-base);
+/* 输入框 */
+.input-field {
+  width: 100%;
+  height: 88rpx;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333333;
 }
 
-.card-content {
-  font-size: var(--weui-font-size-base);
-  color: var(--weui-text-color-secondary);
-  line-height: 1.6;
-}
-
-/* 按钮 */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  padding: 0 var(--weui-spacing-large);
-  font-size: var(--weui-font-size-base);
-  border-radius: var(--weui-radius-base);
-  border: none;
-  outline: none;
-  transition: all 0.3s;
-}
-
-.btn-primary {
-  background-color: var(--weui-color-primary);
-  color: #FFFFFF;
-}
-
-.btn-primary:active {
-  background-color: var(--weui-color-primary-active);
-}
-
-.btn-primary:disabled {
-  background-color: var(--weui-color-primary-disabled);
-}
-
-.btn-secondary {
-  background-color: #FFFFFF;
-  color: var(--weui-text-color-primary);
-  border: 1rpx solid var(--weui-border-color-default);
-}
-
-.btn-secondary:active {
-  background-color: var(--weui-bg-color-active);
-}
-
-.btn-large {
-  height: 56px;
-  font-size: var(--weui-font-size-heading);
-}
-
-.btn-small {
-  height: 32px;
-  padding: 0 var(--weui-spacing-base);
-  font-size: var(--weui-font-size-caption);
-}
-
-/* 文本 */
-.text-primary {
-  color: var(--weui-text-color-primary);
-}
-
-.text-secondary {
-  color: var(--weui-text-color-secondary);
-}
-
-.text-placeholder {
-  color: var(--weui-text-color-placeholder);
-}
-
-.text-link {
-  color: var(--weui-text-color-link);
-}
-
-.text-success {
-  color: var(--weui-color-success);
-}
-
-.text-warning {
-  color: var(--weui-color-warning);
-}
-
-.text-error {
-  color: var(--weui-color-error);
-}
-
-.text-info {
-  color: var(--weui-color-info);
+.input-field::placeholder {
+  color: #CCCCCC;
 }
 
 /* 标题 */
 .title {
-  font-size: var(--weui-font-size-heading);
+  font-size: 36rpx;
   font-weight: 600;
-  color: var(--weui-text-color-primary);
+  color: #333333;
+  margin-bottom: 24rpx;
 }
 
 .subtitle {
-  font-size: var(--weui-font-size-base);
-  color: var(--weui-text-color-secondary);
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 16rpx;
 }
 
-/* 标签 */
-.tag {
-  display: inline-block;
-  padding: 4px 12px;
-  font-size: var(--weui-font-size-caption);
-  border-radius: 4px;
-  background-color: var(--weui-bg-color-active);
-  color: var(--weui-text-color-secondary);
+/* 文本 */
+.text-primary {
+  color: #07C160;
 }
 
-.tag-primary {
-  background-color: rgba(7, 193, 96, 0.1);
-  color: var(--weui-color-primary);
+.text-danger {
+  color: #F44336;
 }
 
-.tag-success {
-  background-color: rgba(7, 193, 96, 0.1);
-  color: var(--weui-color-success);
+.text-warning {
+  color: #FF9800;
 }
 
-.tag-warning {
-  background-color: rgba(250, 157, 59, 0.1);
-  color: var(--weui-color-warning);
+.text-secondary {
+  color: #666666;
 }
 
-.tag-error {
-  background-color: rgba(250, 81, 81, 0.1);
-  color: var(--weui-color-error);
+.text-hint {
+  color: #999999;
+  font-size: 24rpx;
 }
 
 /* 分割线 */
 .divider {
   height: 1rpx;
-  background-color: var(--weui-border-color-default);
-  margin: var(--weui-spacing-base) 0;
+  background: #E0E0E0;
+  margin: 24rpx 0;
 }
 
-/* 加载中 */
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+/* 徽章 */
+.badge {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 600;
 }
 
-.loading-text {
-  margin-left: 16rpx;
-  color: var(--weui-text-color-secondary);
+.badge-success {
+  background: #E8F5E9;
+  color: #07C160;
+}
+
+.badge-warning {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+
+.badge-danger {
+  background: #FFEBEE;
+  color: #F44336;
+}
+
+.badge-info {
+  background: #E3F2FD;
+  color: #2196F3;
 }
 
 /* 空状态 */
-.empty {
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80rpx 0;
+  padding: 120rpx 0;
 }
 
 .empty-icon {
   font-size: 120rpx;
-  margin-bottom: var(--weui-spacing-base);
+  margin-bottom: 24rpx;
 }
 
 .empty-text {
-  font-size: var(--weui-font-size-base);
-  color: var(--weui-text-color-secondary);
+  font-size: 28rpx;
+  color: #999999;
 }
 
-/* 图标 */
-.icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-}
-
-/* 徽标 */
-.badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(50%, -50%);
-  padding: 2px 6px;
-  font-size: 20rpx;
-  line-height: 1;
-  border-radius: 10rpx;
-  background-color: var(--weui-color-error);
-  color: #FFFFFF;
-}
-
-/* Flex 布局 */
-.flex {
+/* 加载状态 */
+.loading {
   display: flex;
-}
-
-.flex-row {
-  flex-direction: row;
-}
-
-.flex-column {
   flex-direction: column;
-}
-
-.flex-center {
   align-items: center;
   justify-content: center;
+  padding: 120rpx 0;
 }
 
-.flex-between {
-  justify-content: space-between;
+.loading-spinner {
+  width: 64rpx;
+  height: 64rpx;
+  border: 4rpx solid #F5F5F5;
+  border-top-color: #07C160;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 24rpx;
 }
 
-.flex-around {
-  justify-content: space-around;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.flex-1 {
+/* 安全区域适配 */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 浮动按钮 */
+.fab {
+  position: fixed;
+  right: 32rpx;
+  bottom: 120rpx;
+  width: 112rpx;
+  height: 112rpx;
+  background: #07C160;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(7, 193, 96, 0.4);
+  z-index: 1000;
+}
+
+.fab:active {
+  opacity: 0.8;
+}
+
+.fab-icon {
+  font-size: 48rpx;
+  color: #ffffff;
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #E0E0E0;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  font-size: 40rpx;
+  background: #F5F5F5;
+}
+
+.list-item-content {
   flex: 1;
 }
 
-/* 间距 */
-.mt-xs { margin-top: 8px; }
-.mt-sm { margin-top: 12px; }
-.mt-md { margin-top: 16px; }
-.mt-lg { margin-top: 24px; }
-.mt-xl { margin-top: 32px; }
+.list-item-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
 
-.mb-xs { margin-bottom: 8px; }
-.mb-sm { margin-bottom: 12px; }
-.mb-md { margin-bottom: 16px; }
-.mb-lg { margin-bottom: 24px; }
-.mb-xl { margin-bottom: 32px; }
+.list-item-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
 
-.ml-xs { margin-left: 8px; }
-.ml-sm { margin-left: 12px; }
-.ml-md { margin-left: 16px; }
-.ml-lg { margin-left: 24px; }
-.ml-xl { margin-left: 32px; }
-
-.mr-xs { margin-right: 8px; }
-.mr-sm { margin-right: 12px; }
-.mr-md { margin-right: 16px; }
-.mr-lg { margin-right: 24px; }
-.mr-xl { margin-right: 32px; }
+.list-item-arrow {
+  font-size: 40rpx;
+  color: #CCCCCC;
+}

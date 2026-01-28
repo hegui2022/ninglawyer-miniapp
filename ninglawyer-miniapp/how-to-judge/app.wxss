@@ -1,4 +1,4 @@
-/* 码上签约小程序 - 全局样式 */
+/* 怎么判小程序 - 全局样式 */
 page {
   background-color: #F5F5F5;
   font-size: 28rpx;
@@ -38,20 +38,31 @@ page {
   margin-bottom: 24rpx;
 }
 
-.input-field {
-  width: 100%;
-  height: 80rpx;
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 64rpx;
   background: #F5F5F5;
-  border-radius: 12rpx;
+  border-radius: 32rpx;
   padding: 0 24rpx;
   font-size: 28rpx;
 }
 
-.textarea-field {
-  width: 100%;
-  min-height: 160rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
-  padding: 24rpx;
+.search-btn {
+  height: 64rpx;
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 32rpx;
   font-size: 28rpx;
+  font-weight: 600;
+  padding: 0 32rpx;
 }

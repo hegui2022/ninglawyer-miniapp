@@ -1,0 +1,275 @@
+/* pages/guide/guide.wxss */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  padding-bottom: calc(100rpx + env(safe-area-inset-bottom));
+}
+
+/* ==================== 顶部导航栏 ==================== */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #FFFFFF;
+  border-bottom: 1rpx solid #E5E5E5;
+}
+
+/* 状态栏 */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 44rpx;
+  padding: 0 32rpx;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.status-center {
+  font-size: 28rpx;
+  color: #000000;
+  font-weight: 500;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+}
+
+.status-icon {
+  width: 36rpx;
+  height: 36rpx;
+  font-size: 32rpx;
+  line-height: 1;
+}
+
+/* 标题栏 */
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #000000;
+}
+
+/* ==================== 内容列表区 ==================== */
+.content-list {
+  flex: 1;
+  padding: 0;
+}
+
+.card-group {
+  padding: 32rpx;
+  background-color: #FFFFFF;
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.card-title {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #000000;
+}
+
+.card-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 横幅图片区域 */
+.banner-section {
+  position: relative;
+  width: 100%;
+  height: 200rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.banner-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.banner-icon {
+  font-size: 80rpx;
+  opacity: 0.3;
+}
+
+.banner-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32rpx;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+/* 图文条目 */
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.item-title {
+  flex: 1;
+  font-size: 28rpx;
+  color: #000000;
+  padding-right: 20rpx;
+}
+
+.item-image {
+  width: 120rpx;
+  height: 90rpx;
+  border-radius: 8rpx;
+  background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.item-icon {
+  font-size: 60rpx;
+}
+
+/* 展开按钮 */
+.expand-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 0;
+  margin-top: 8rpx;
+}
+
+.expand-text {
+  font-size: 26rpx;
+  color: #4A90E2;
+  margin-right: 12rpx;
+}
+
+.expand-icon {
+  font-size: 24rpx;
+  color: #999999;
+  transition: transform 0.3s ease;
+}
+
+.expand-icon.rotate {
+  transform: rotate(180deg);
+}
+
+/* 展开内容 */
+.expand-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+}
+
+.expand-content.show {
+  max-height: 500rpx;
+}
+
+.expand-content.hide {
+  max-height: 0;
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background-color: #E5E5E5;
+  margin: 0 32rpx;
+}
+
+/* ==================== 底部 TabBar ==================== */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 100rpx;
+  background-color: #FFFFFF;
+  border-top: 1rpx solid #E5E5E5;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+}
+
+.tab-icon {
+  font-size: 44rpx;
+  line-height: 1;
+  margin-bottom: 6rpx;
+}
+
+.tab-text {
+  font-size: 22rpx;
+  line-height: 1.2;
+}
+
+/* 选中状态 */
+.tab-active .tab-icon,
+.tab-active .tab-text {
+  color: #07C160;
+}
+
+/* 未选中状态 */
+.tab-item:not(.tab-active) .tab-icon,
+.tab-item:not(.tab-active) .tab-text {
+  color: #999999;
+}

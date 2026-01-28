@@ -1,0 +1,88 @@
+<!--pages/contract-review/contract-review.wxml-->
+<view class="container">
+  <!-- 审查概况 -->
+  <view class="card">
+    <view class="section-title">审查概况</view>
+    <view class="summary-card summary-{{reviewData.risk_level}}">
+      <view class="summary-icon">{{reviewData.risk_icon}}</view>
+      <view class="summary-text">
+        <view class="summary-title">{{reviewData.overall_risk}}</view>
+        <view class="summary-desc">{{reviewData.risk_desc}}</view>
+      </view>
+    </view>
+    
+    <view class="risk-stats">
+      <view class="stat-item">
+        <text class="stat-number risk-high">{{reviewData.high_risks}}</text>
+        <text class="stat-label">高风险</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number risk-medium">{{reviewData.medium_risks}}</text>
+        <text class="stat-label">中风险</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number risk-low">{{reviewData.low_risks}}</text>
+        <text class="stat-label">低风险</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 风险详情 -->
+  <view class="card">
+    <view class="section-title">风险详情</view>
+    
+    <!-- 高风险 -->
+    <view class="risk-section" wx:if="{{reviewData.high_risks > 0}}">
+      <view class="risk-section-title risk-high">
+        🔴 高风险问题（{{reviewData.high_risks}}个）
+      </view>
+      <view class="risk-item" wx:for="{{reviewData.risks}}" wx:for-item="risk" wx:key="risk_id" wx:if="{{risk.level === '高风险'}}">
+        <view class="risk-item-title">{{risk.title}}</view>
+        <view class="risk-item-desc">{{risk.description}}</view>
+        <view class="risk-item-suggestion">💡 {{risk.suggestion}}</view>
+      </view>
+    </view>
+
+    <!-- 中风险 -->
+    <view class="risk-section" wx:if="{{reviewData.medium_risks > 0}}">
+      <view class="risk-section-title risk-medium">
+        🟡 中风险问题（{{reviewData.medium_risks}}个）
+      </view>
+      <view class="risk-item" wx:for="{{reviewData.risks}}" wx:for-item="risk" wx:key="risk_id" wx:if="{{risk.level === '中风险'}}">
+        <view class="risk-item-title">{{risk.title}}</view>
+        <view class="risk-item-desc">{{risk.description}}</view>
+        <view class="risk-item-suggestion">💡 {{risk.suggestion}}</view>
+      </view>
+    </view>
+
+    <!-- 低风险 -->
+    <view class="risk-section" wx:if="{{reviewData.low_risks > 0}}">
+      <view class="risk-section-title risk-low">
+        🟢 低风险问题（{{reviewData.low_risks}}个）
+      </view>
+      <view class="risk-item" wx:for="{{reviewData.risks}}" wx:for-item="risk" wx:key="risk_id" wx:if="{{risk.level === '低风险'}}">
+        <view class="risk-item-title">{{risk.title}}</view>
+        <view class="risk-item-desc">{{risk.description}}</view>
+        <view class="risk-item-suggestion">💡 {{risk.suggestion}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 免责声明 -->
+  <view class="tips">
+    <text class="tips-text">⚠️ 免责声明：本审查报告由 AI 自动生成，仅供参考，不构成正式法律意见。对于复杂的法律问题，建议咨询专业律师。</text>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <view class="btn btn-secondary" bindtap="goBack">返回</view>
+    <view class="btn" bindtap="editContract">修改合同</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

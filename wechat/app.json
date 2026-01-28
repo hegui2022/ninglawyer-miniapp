@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/contract-draft/contract-draft",
+    "pages/contract-list/contract-list",
+    "pages/contract-detail/contract-detail",
+    "pages/contract-review/contract-review",
+    "pages/contract-edit/contract-edit"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4A90E2",
+    "navigationBarTitleText": "宁律师",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4A90E2",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/contract-list/contract-list",
+        "text": "合同",
+        "iconPath": "images/contract.png",
+        "selectedIconPath": "images/contract-active.png"
+      },
+      {
+        "pagePath": "pages/contract-draft/contract-draft",
+        "text": "起草",
+        "iconPath": "images/draft.png",
+        "selectedIconPath": "images/draft-active.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 30000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}

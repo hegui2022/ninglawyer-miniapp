@@ -1,0 +1,89 @@
+<!--pages/contract-detail/contract-detail.wxml-->
+<view class="container">
+  <!-- 合同基本信息 -->
+  <view class="card">
+    <view class="section-title">基本信息</view>
+    <view class="info-row">
+      <text class="info-label">合同名称：</text>
+      <text class="info-value">{{contract.contract_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">合同类型：</text>
+      <text class="info-value">{{contract.contract_type_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">状态：</text>
+      <view class="tag tag-{{contract.status === 'signed' ? 'success' : 'primary'}}">
+        {{contract.status === 'signed' ? '已签署' : '草稿'}}
+      </view>
+    </view>
+    <view class="info-row">
+      <text class="info-label">版本：</text>
+      <text class="info-value">v{{contract.version}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">创建时间：</text>
+      <text class="info-value">{{contract.created_at}}</text>
+    </view>
+  </view>
+
+  <!-- 当事人信息 -->
+  <view class="card">
+    <view class="section-title">当事人信息</view>
+    <view class="info-row">
+      <text class="info-label">用人单位：</text>
+      <text class="info-value">{{contract.employer_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">劳动者：</text>
+      <text class="info-value">{{contract.employee_name}}</text>
+    </view>
+  </view>
+
+  <!-- 合同内容 -->
+  <view class="card">
+    <view class="section-title">合同内容</view>
+    <view class="contract-content">
+      <text class="content-text">{{contract.contract_content}}</text>
+    </view>
+  </view>
+
+  <!-- 审查结果 -->
+  <view class="card" wx:if="{{reviewData.has_review}}">
+    <view class="section-title">审查结果</view>
+    <view class="review-summary">
+      <view class="summary-item">
+        <text class="summary-label">整体风险：</text>
+        <text class="summary-value risk-{{reviewData.risk_level}}">{{reviewData.overall_risk}}</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-label">高风险：</text>
+        <text class="summary-value risk-high">{{reviewData.high_risks}} 个</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-label">中风险：</text>
+        <text class="summary-value risk-medium">{{reviewData.medium_risks}} 个</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-label">低风险：</text>
+        <text class="summary-value risk-low">{{reviewData.low_risks}} 个</text>
+      </view>
+    </view>
+    <view class="btn btn-secondary" bindtap="goToReview">查看详细报告</view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <view class="btn btn-secondary" bindtap="reviewContract" wx:if="{{!reviewData.has_review}}">
+      审查合同
+    </view>
+    <view class="btn" bindtap="editContract">
+      编辑合同
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

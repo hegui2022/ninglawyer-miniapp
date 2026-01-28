@@ -1,0 +1,118 @@
+<!--pages/contract-edit/contract-edit.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="title">编辑合同</view>
+    <view class="subtitle">{{contractData.contract_type}}</view>
+  </view>
+
+  <!-- 基础信息表单 -->
+  <view class="card">
+    <view class="card-title">基础信息</view>
+    <view class="form-group">
+      <text class="label">合同名称</text>
+      <input class="input" placeholder="请输入合同名称" value="{{contractData.name}}" bindinput="onNameChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">甲方（雇主）</text>
+      <input class="input" placeholder="请输入甲方名称" value="{{contractData.party_a}}" bindinput="onPartyAChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">乙方（员工）</text>
+      <input class="input" placeholder="请输入乙方姓名" value="{{contractData.party_b}}" bindinput="onPartyBChange" />
+    </view>
+  </view>
+
+  <!-- 关键条款 -->
+  <view class="card">
+    <view class="card-title">关键条款</view>
+    <view class="form-group">
+      <text class="label">合同期限</text>
+      <view class="duration-input">
+        <picker mode="date" value="{{contractData.start_date}}" end="{{contractData.end_date}}" bindchange="onStartDateChange">
+          <view class="picker">{{contractData.start_date || '选择开始日期'}}</view>
+        </picker>
+        <text class="duration-separator">至</text>
+        <picker mode="date" start="{{contractData.start_date}}" value="{{contractData.end_date}}" bindchange="onEndDateChange">
+          <view class="picker">{{contractData.end_date || '选择结束日期'}}</view>
+        </picker>
+      </view>
+    </view>
+    <view class="form-group">
+      <text class="label">试用期（月）</text>
+      <input class="input" type="number" placeholder="如：3" value="{{contractData.probation_months}}" bindinput="onProbationChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">工作内容</text>
+      <textarea class="textarea" placeholder="请输入工作内容" value="{{contractData.job_content}}" bindinput="onJobContentChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">工作地点</text>
+      <input class="input" placeholder="请输入工作地点" value="{{contractData.workplace}}" bindinput="onWorkplaceChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">月薪（元）</text>
+      <input class="input" type="digit" placeholder="请输入月薪" value="{{contractData.salary}}" bindinput="onSalaryChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">支付方式</text>
+      <input class="input" placeholder="如：每月10日通过银行转账" value="{{contractData.payment_method}}" bindinput="onPaymentMethodChange" />
+    </view>
+    <view class="form-group">
+      <text class="label">工作时间</text>
+      <input class="input" placeholder="如：标准工时制，9:00-18:00" value="{{contractData.work_hours}}" bindinput="onWorkHoursChange" />
+    </view>
+  </view>
+
+  <!-- 社保公积金 -->
+  <view class="card">
+    <view class="card-title">社保与公积金</view>
+    <view class="form-group switch-group">
+      <text class="label">缴纳社保</text>
+      <switch checked="{{contractData.has_insurance}}" bindchange="onInsuranceChange" color="#4A90E2" />
+    </view>
+    <view class="form-group switch-group">
+      <text class="label">缴纳公积金</text>
+      <switch checked="{{contractData.has_housing_fund}}" bindchange="onHousingFundChange" color="#4A90E2" />
+    </view>
+  </view>
+
+  <!-- 附加条款 -->
+  <view class="card">
+    <view class="card-title">附加条款</view>
+    <view class="form-group switch-group">
+      <text class="label">保密协议</text>
+      <switch checked="{{contractData.has_confidentiality}}" bindchange="onConfidentialityChange" color="#4A90E2" />
+    </view>
+    <view class="form-group switch-group">
+      <text class="label">竞业限制</text>
+      <switch checked="{{contractData.has_non_compete}}" bindchange="onNonCompeteChange" color="#4A90E2" />
+    </view>
+    <view class="form-group switch-group">
+      <text class="label">知识产权条款</text>
+      <switch checked="{{contractData.has_ip_clause}}" bindchange="onIpClauseChange" color="#4A90E2" />
+    </view>
+    <view class="form-group" wx:if="{{contractData.has_custom_clause}}">
+      <text class="label">自定义条款</text>
+      <textarea class="textarea" placeholder="请输入自定义条款内容" value="{{contractData.custom_clause}}" bindinput="onCustomClauseChange" />
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="card">
+    <view class="card-title">备注</view>
+    <view class="form-group">
+      <textarea class="textarea" placeholder="其他补充说明" value="{{contractData.notes}}" bindinput="onNotesChange" />
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <view class="btn btn-secondary" bindtap="goBack">取消</view>
+    <view class="btn" bindtap="saveContract">保存</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>保存中...</text>
+  </view>
+</view>

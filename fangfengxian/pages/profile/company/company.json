@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "home-indicator": "../../../components/home-indicator/home-indicator"
+  },
+  "navigationBarTitleText": "我的公司",
+  "navigationStyle": "custom"
+}

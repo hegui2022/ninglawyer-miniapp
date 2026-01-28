@@ -24,8 +24,15 @@ Page({
     const type = e.currentTarget.dataset.type;
     console.log('Go to function:', type);
 
+    if (type === 'company') {
+      // 跳转到我的公司页面
+      wx.navigateTo({
+        url: '/pages/profile/company/company'
+      });
+      return;
+    }
+
     const typeNames = {
-      company: '我的公司',
       position: '我的岗位'
     };
 

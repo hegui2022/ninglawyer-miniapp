@@ -1,0 +1,97 @@
+<!--pages/profile/company/company.wxml-->
+<view class="container">
+  <!-- 顶部横幅轮播图 -->
+  <view class="banner-section">
+    <view class="banner-image">
+      <text class="banner-bg">🏔️🌲</text>
+      <text class="banner-title">合规要闻</text>
+    </view>
+  </view>
+
+  <!-- 基础合规分类区 -->
+  <view class="compliance-section">
+    <!-- 分类标题 -->
+    <view class="category-header" bindtap="toggleCategory" data-category="basic">
+      <view class="category-icon">
+        <text>📄</text>
+      </view>
+      <text class="category-title">基础合规</text>
+      <text class="category-arrow">{{basicExpanded ? '▼' : '▶'}}</text>
+    </view>
+
+    <!-- 分类列表 -->
+    <view class="category-list {{basicExpanded ? 'expanded' : 'collapsed'}}">
+      <view class="category-item" bindtap="goToDetail" data-item="qualification">
+        <text class="item-text">资格资质合规</text>
+      </view>
+
+      <view class="category-item" bindtap="goToDetail" data-item="governance">
+        <text class="item-text">企业治理合规</text>
+      </view>
+
+      <view class="category-item" bindtap="goToDetail" data-item="finance">
+        <text class="item-text">财务合规</text>
+        <text class="item-arrow">›</text>
+      </view>
+
+      <view class="category-item" bindtap="goToDetail" data-item="labor">
+        <text class="item-text">劳动用工合规</text>
+        <text class="item-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分割线 -->
+  <view class="divider"></view>
+
+  <!-- 采购合规 -->
+  <view class="compliance-section" bindtap="goToDetail" data-item="procurement">
+    <view class="category-header no-arrow">
+      <view class="category-icon">
+        <text>📋</text>
+      </view>
+      <text class="category-title single-item">采购合规</text>
+    </view>
+  </view>
+
+  <!-- 分割线 -->
+  <view class="divider"></view>
+
+  <!-- 其他功能列表 -->
+  <view class="function-section">
+    <!-- 合规审计 -->
+    <view class="function-item" bindtap="goToFunction" data-type="audit">
+      <view class="function-icon">
+        <text>📄</text>
+      </view>
+      <text class="function-name">合规审计</text>
+    </view>
+
+    <!-- 合规培训 -->
+    <view class="function-item" bindtap="goToFunction" data-type="training">
+      <view class="function-icon">
+        <text>📄</text>
+      </view>
+      <text class="function-name">合规培训</text>
+    </view>
+
+    <!-- 合规文化 -->
+    <view class="function-item" bindtap="goToFunction" data-type="culture">
+      <view class="function-icon">
+        <text>📄</text>
+      </view>
+      <text class="function-name">合规文化</text>
+    </view>
+  </view>
+
+  <!-- 悬浮功能按钮 -->
+  <view class="fab-button" bindtap="goToBuild">
+    <view class="fab-icon">
+      <text>⚙️</text>
+    </view>
+    <text class="fab-text">搭建</text>
+  </view>
+
+  <!-- Home 指示条 -->
+  <home-indicator></home-indicator>
+</view>

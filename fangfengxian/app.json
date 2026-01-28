@@ -8,6 +8,7 @@
     "pages/discover/discover",
     "pages/profile/profile",
     "pages/profile/company/company",
+    "pages/profile/company/data-compliance/data-compliance",
     "pages/department/department"
   ],
   "window": {

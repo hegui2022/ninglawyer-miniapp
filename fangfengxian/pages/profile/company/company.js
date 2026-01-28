@@ -45,6 +45,13 @@ Page({
     // });
   },
 
+  // 跳转到数据合规页面
+  goToDataCompliance() {
+    wx.navigateTo({
+      url: '/pages/profile/company/data-compliance/data-compliance'
+    });
+  },
+
   // 跳转到功能
   goToFunction(e) {
     const type = e.currentTarget.dataset.type;

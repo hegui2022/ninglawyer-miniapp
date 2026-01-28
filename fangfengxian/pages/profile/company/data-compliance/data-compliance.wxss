@@ -1,0 +1,118 @@
+/* pages/profile/company/data-compliance/data-compliance.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  padding-bottom: 80rpx;
+}
+
+/* ==================== 模块通用样式 ==================== */
+.module-section {
+  padding: 0 32rpx;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.header-title {
+  font-size: 32rpx;
+  color: #000000;
+  font-weight: bold;
+}
+
+.header-link {
+  font-size: 26rpx;
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+/* ==================== 子区域 ==================== */
+.sub-section {
+  margin-bottom: 32rpx;
+}
+
+.sub-title {
+  font-size: 28rpx;
+  color: #000000;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+  padding-left: 4rpx;
+}
+
+.sub-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+  transition: all 0.3s ease;
+}
+
+.sub-item:active {
+  background-color: #F8F8F8;
+}
+
+.sub-item:last-child {
+  border-bottom: none;
+}
+
+.item-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.item-icon {
+  font-size: 24rpx;
+  color: #2196F3;
+  margin-right: 12rpx;
+}
+
+.item-arrow {
+  font-size: 32rpx;
+  color: #CCCCCC;
+}
+
+/* ==================== 制度列表 ==================== */
+.system-list {
+  padding-top: 8rpx;
+}
+
+.system-item {
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+  transition: all 0.3s ease;
+}
+
+.system-item:active {
+  background-color: #F8F8F8;
+}
+
+.system-item:last-child {
+  border-bottom: none;
+}
+
+.system-text {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.5;
+}
+
+/* ==================== 分割线 ==================== */
+.divider {
+  height: 1rpx;
+  background-color: #E5E5E5;
+  margin: 32rpx 0;
+}

@@ -57,6 +57,19 @@
   <!-- 分割线 -->
   <view class="divider"></view>
 
+  <!-- 数据合规 -->
+  <view class="compliance-section" bindtap="goToDataCompliance">
+    <view class="category-header no-arrow">
+      <view class="category-icon">
+        <text>📋</text>
+      </view>
+      <text class="category-title single-item">数据合规</text>
+    </view>
+  </view>
+
+  <!-- 分割线 -->
+  <view class="divider"></view>
+
   <!-- 其他功能列表 -->
   <view class="function-section">
     <!-- 合规审计 -->

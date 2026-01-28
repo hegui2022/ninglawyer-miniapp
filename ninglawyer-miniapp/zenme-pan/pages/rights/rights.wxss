@@ -1,0 +1,151 @@
+/* 维权指导页面样式 */
+.rights-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 120rpx;
+}
+
+.tabs {
+  background: #ffffff;
+  display: flex;
+  padding: 24rpx;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx;
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.tab-item.active {
+  color: #07C160;
+  font-weight: 600;
+}
+
+.tab-content {
+  padding: 24rpx;
+}
+
+/* 步骤列表 */
+.step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.step-item {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  display: flex;
+  gap: 24rpx;
+}
+
+.step-number {
+  width: 64rpx;
+  height: 64rpx;
+  background: #07C160;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.step-desc {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
+/* 法律列表 */
+.law-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.law-card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+}
+
+.law-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #07C160;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.law-content {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.8;
+}
+
+/* 案例列表 */
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.case-card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+}
+
+.case-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.case-court,
+.case-result,
+.case-date {
+  font-size: 24rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.case-result {
+  color: #07C160;
+}
+
+/* 咨询按钮 */
+.consult-btn {
+  position: fixed;
+  bottom: 24rpx;
+  left: 24rpx;
+  right: 24rpx;
+  background: #2196F3;
+  color: #ffffff;
+  border-radius: 48rpx;
+  padding: 24rpx;
+  text-align: center;
+  font-size: 28rpx;
+}

@@ -24,11 +24,11 @@ def text_to_speech(text: str, runtime: ToolRuntime) -> str:
         ctx = new_context(method="tts.synthesize")
         tts_client = TTSClient(ctx=ctx)
         
-        # 使用男性声音（云州），适合律师人设
+        # 使用男性声音（天才同桌），适合律师人设
         audio_url, audio_size = tts_client.synthesize(
             uid="legal_agent_user",
             text=text,
-            speaker="zh_male_m191_uranus_bigtts",  # 男性声音，适合律师
+            speaker="saturn_zh_male_tiancaitongzhuo_tob",  # 天才同桌：聪明理性的男声
             audio_format="mp3",
             sample_rate=24000,
             speech_rate=0,  # 正常语速

@@ -1,34 +1,95 @@
-<!-- 码上签约 - 签署页 -->
-<view class="sign-page">
-  <view class="contract-preview" wx:if="{{contract}}">
-    <view class="preview-header">
-      <text class="contract-name">{{contract.name}}</text>
-      <view class="contract-info">
-        <text class="info-item">{{contract.type}}</text>
-        <text class="info-item">金额: ¥{{contract.amount}}</text>
+<!-- 合同签署页面 -->
+<view class="sign-page" wx:if="{{contract}}">
+  <!-- 合同摘要 -->
+  <view class="contract-summary">
+    <text class="contract-title">{{contract.title}}</text>
+    <view class="contract-info">
+      <text class="info-label">甲方：</text>
+      <text class="info-value">{{contract.partyA.name}}</text>
+    </view>
+    <view class="contract-info">
+      <text class="info-label">乙方：</text>
+      <text class="info-value">{{contract.partyB.name}}</text>
+    </view>
+    <view class="contract-info">
+      <text class="info-label">期限：</text>
+      <text class="info-value">{{contract.contractTerm.startDate}} 至 {{contract.contractTerm.endDate || '无固定期限'}}</text>
+    </view>
+    <view class="btn-detail" bindtap="onDetail">查看详情</view>
+  </view>
+  
+  <!-- 签署区域 -->
+  <view class="sign-section">
+    <view class="section-title">签署区域</view>
+    
+    <!-- 甲方签署 -->
+    <view class="party-sign">
+      <view class="party-header">
+        <text class="party-name">甲方（{{contract.partyA.name}}）</text>
+        <view class="sign-status">
+          <text class="status-dot" style="background: {{partyASigned ? '#07C160' : '#CCCCCC'}};"></text>
+          <text class="status-text">{{partyASigned ? '已签署' : '未签署'}}</text>
+        </view>
+      </view>
+      
+      <view class="signature-display" wx:if="{{partyASigned}}">
+        <image class="signature-image" src="{{partyASignature}}" mode="aspectFit"></image>
+      </view>
+      
+      <view class="signature-placeholder" wx:if="{{!partyASigned}}" bindtap="onSignPartyA">
+        <text class="placeholder-text">点击此处签署</text>
       </view>
     </view>
-    <view class="preview-content">
-      <text class="preview-text">{{contract.content}}</text>
+    
+    <!-- 乙方签署 -->
+    <view class="party-sign">
+      <view class="party-header">
+        <text class="party-name">乙方（{{contract.partyB.name}}）</text>
+        <view class="sign-status">
+          <text class="status-dot" style="background: {{partyBSigned ? '#07C160' : '#CCCCCC'}};"></text>
+          <text class="status-text">{{partyBSigned ? '已签署' : '未签署'}}</text>
+        </view>
+      </view>
+      
+      <view class="signature-display" wx:if="{{partyBSigned}}">
+        <image class="signature-image" src="{{partyBSignature}}" mode="aspectFit"></image>
+      </view>
+      
+      <view class="signature-placeholder" wx:if="{{!partyBSigned}}" bindtap="onSignPartyB">
+        <text class="placeholder-text">点击此处签署</text>
+      </view>
     </view>
   </view>
   
-  <view class="signature-section">
-    <view class="section-title">签名</view>
-    <view class="signature-area">
-      <image class="signature-image" src="{{signatureImage}}" mode="aspectFit" wx:if="{{signatureImage}}"></image>
-      <view class="signature-placeholder" wx:if="{{!signatureImage}}">
-        <text class="placeholder-text">请上传签名图片</text>
-      </view>
+  <!-- 手写签名区域 -->
+  <view class="sign-canvas" wx:if="{{currentSigner}}">
+    <view class="canvas-header">
+      <text class="canvas-title">{{currentSigner === 'partyA' ? '甲方' : '乙方'}}签署</text>
+      <text class="canvas-tip">请在下方区域签名</text>
     </view>
-    <button class="btn-upload" bindtap="onChooseSignature" wx:if="{{!signatureImage}}">
-      上传签名
-    </button>
+    
+    <view class="canvas-wrapper">
+      <canvas
+        canvas-id="signature"
+        class="signature-canvas"
+        style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;"
+        bindtouchstart="onTouchStart"
+        bindtouchmove="onTouchMove"
+        bindtouchend="onTouchEnd"
+      ></canvas>
+    </view>
+    
+    <view class="canvas-actions">
+      <button class="btn-clear" bindtap="clearCanvas">重写</button>
+      <button class="btn-cancel" bindtap="onCancelSignature">取消</button>
+      <button class="btn-confirm" bindtap="onConfirmSignature" disabled="{{!hasSignature}}">确认</button>
+    </view>
   </view>
   
-  <view class="action-section">
-    <button class="btn-sign" bindtap="onSign" disabled="{{signing || !signatureImage}}">
-      {{signing ? '签署中...' : '确认签署'}}
+  <!-- 底部操作 -->
+  <view class="bottom-actions">
+    <button class="btn-finish" bindtap="onFinish" disabled="{{signing}}">
+      {{signing ? '保存中...' : '完成签署'}}
     </button>
   </view>
 </view>

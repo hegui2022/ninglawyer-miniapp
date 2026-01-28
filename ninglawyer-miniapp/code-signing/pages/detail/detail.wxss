@@ -1,0 +1,306 @@
+/* 合同详情页面样式 */
+.detail-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 180rpx;
+}
+
+/* 头部信息 */
+.detail-header {
+  background: #ffffff;
+  padding: 48rpx 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.detail-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333333;
+  display: block;
+  margin-bottom: 24rpx;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.status-badge {
+  font-size: 22rpx;
+  color: #ffffff;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.create-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 内容区域 */
+.detail-content {
+  padding: 0 24rpx;
+}
+
+.content-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 24rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 2rpx solid #F5F5F5;
+}
+
+/* 双方信息卡片 */
+.party-card {
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.party-card:last-child {
+  margin-bottom: 0;
+}
+
+.party-tag {
+  font-size: 22rpx;
+  color: #ffffff;
+  background: #07C160;
+  padding: 6rpx 16rpx;
+  border-radius: 4rpx;
+  display: inline-block;
+  margin-bottom: 16rpx;
+}
+
+.party-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.party-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.party-detail {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+/* 信息网格 */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.item-label {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.item-value {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.item-value.highlight {
+  color: #07C160;
+  font-weight: 600;
+}
+
+/* 文本块 */
+.text-block {
+  margin-bottom: 24rpx;
+}
+
+.text-block:last-child {
+  margin-bottom: 0;
+}
+
+.text-label {
+  font-size: 26rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.text-content {
+  font-size: 28rpx;
+  color: #333333;
+  line-height: 1.8;
+  padding: 20rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+}
+
+/* 信息行 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.row-label {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.row-value {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 签署信息 */
+.sign-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.sign-item {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.sign-label {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.sign-image {
+  width: 100%;
+  height: 200rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+}
+
+.sign-time {
+  font-size: 24rpx;
+  color: #999999;
+  text-align: center;
+  display: block;
+}
+
+/* 底部操作 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  padding: 24rpx;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-edit,
+.btn-delete,
+.btn-share,
+.btn-download {
+  background: #F5F5F5;
+  color: #666666;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+}
+
+.btn-delete {
+  background: #FFF3F0;
+  color: #F44336;
+}
+
+.btn-share {
+  background: #FF9800;
+  color: #ffffff;
+}
+
+.btn-download {
+  background: #07C160;
+  color: #ffffff;
+}
+
+/* 分享菜单 */
+.share-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 100;
+}
+
+.share-menu {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 48rpx 32rpx 32rpx;
+}
+
+.menu-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 48rpx;
+}
+
+.menu-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32rpx;
+  margin-bottom: 48rpx;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.menu-icon {
+  font-size: 64rpx;
+}
+
+.menu-text {
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.menu-close {
+  font-size: 28rpx;
+  color: #666666;
+  text-align: center;
+  padding: 24rpx;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+}

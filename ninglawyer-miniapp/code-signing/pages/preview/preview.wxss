@@ -1,0 +1,156 @@
+/* 合同预览页面样式 */
+.preview-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 160rpx;
+}
+
+/* 合同头部 */
+.contract-header {
+  background: #ffffff;
+  padding: 48rpx 32rpx;
+  text-align: center;
+  border-bottom: 2rpx solid #F5F5F5;
+}
+
+.contract-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.contract-date {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 合同内容 */
+.contract-content {
+  background: #ffffff;
+  margin: 24rpx;
+  padding: 48rpx 32rpx;
+  border-radius: 16rpx;
+}
+
+.content-section {
+  margin-bottom: 48rpx;
+}
+
+.content-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 24rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 2rpx solid #F5F5F5;
+}
+
+.section-content {
+  font-size: 28rpx;
+  color: #333333;
+  line-height: 2;
+  margin-bottom: 16rpx;
+}
+
+.section-content:last-child {
+  margin-bottom: 0;
+}
+
+.highlight {
+  color: #07C160;
+  font-weight: 600;
+}
+
+.content-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.content-text {
+  display: block;
+  padding-left: 16rpx;
+  color: #666666;
+}
+
+/* 双方信息 */
+.party-info {
+  margin-bottom: 32rpx;
+}
+
+.party-info:last-child {
+  margin-bottom: 0;
+}
+
+.party-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 16rpx;
+}
+
+.party-detail {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 2;
+  padding-left: 32rpx;
+}
+
+.party-label {
+  font-weight: 600;
+  margin-right: 8rpx;
+}
+
+.party-value {
+  color: #333333;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  padding: 24rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-edit {
+  background: #F5F5F5;
+  color: #666666;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.btn-share {
+  background: #FF9800;
+  color: #ffffff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.btn-sign {
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}

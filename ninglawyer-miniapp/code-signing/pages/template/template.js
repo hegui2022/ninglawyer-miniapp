@@ -136,16 +136,10 @@ Page({
   
   onTemplateTap(e) {
     const template = e.currentTarget.dataset.template;
-    wx.showModal({
-      title: '使用模板',
-      content: `确定使用"${template.name}"创建合同吗？`,
-      success: (res) => {
-        if (res.confirm) {
-          wx.navigateTo({
-            url: '/pages/create/create?templateId=' + template.id
-          });
-        }
-      }
+    const templateData = encodeURIComponent(JSON.stringify(template));
+    
+    wx.navigateTo({
+      url: `/pages/draft/draft?template=${templateData}`
     });
   }
 });

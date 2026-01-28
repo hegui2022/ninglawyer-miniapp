@@ -4,6 +4,8 @@
     "pages/index/index",
     "pages/create/create",
     "pages/template/template",
+    "pages/draft/draft",
+    "pages/preview/preview",
     "pages/sign/sign",
     "pages/record/record",
     "pages/detail/detail"

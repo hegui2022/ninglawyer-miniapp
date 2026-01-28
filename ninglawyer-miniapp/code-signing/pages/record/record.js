@@ -1,44 +1,102 @@
-// 码上签约 - 签署记录页
+// 合同列表页面
 Page({
   data: {
-    recordList: [],
-    loading: false
+    contracts: [],
+    filteredContracts: [],
+    currentTab: 'all',
+    tabs: [
+      { id: 'all', name: '全部' },
+      { id: 'draft', name: '草稿' },
+      { id: 'signed', name: '已签署' },
+      { id: 'expired', name: '已过期' }
+    ]
   },
   
   onLoad() {
-    this.loadRecords();
+    this.loadContracts();
   },
   
-  loadRecords() {
-    this.setData({ loading: true });
+  onShow() {
+    // 每次显示页面都刷新数据
+    this.loadContracts();
+  },
+  
+  loadContracts() {
+    const contracts = wx.getStorageSync('contracts') || [];
     
-    wx.request({
-      url: getApp().globalData.config.apiUrl + '/contract/sign-records',
-      method: 'GET',
-      header: {
-        'Authorization': wx.getStorageSync('token')
-      },
-      success: (res) => {
-        if (res.data.code === 200) {
-          this.setData({
-            recordList: res.data.data || []
-          });
+    // 检查合同是否过期
+    const processedContracts = contracts.map(contract => {
+      if (contract.status === 'signed' && contract.contractTerm.endDate) {
+        const endDate = new Date(contract.contractTerm.endDate);
+        const now = new Date();
+        if (endDate < now) {
+          return { ...contract, status: 'expired' };
         }
-      },
-      complete: () => {
-        this.setData({ loading: false });
       }
+      return contract;
+    });
+    
+    // 更新存储
+    wx.setStorageSync('contracts', processedContracts);
+    
+    this.setData({
+      contracts: processedContracts,
+      filteredContracts: processedContracts
     });
   },
   
-  onViewDetail(e) {
-    const id = e.currentTarget.dataset.id;
+  onTabChange(e) {
+    const tabId = e.currentTarget.dataset.id;
+    this.setData({
+      currentTab: tabId
+    });
+    this.filterContracts();
+  },
+  
+  filterContracts() {
+    const { currentTab, contracts } = this.data;
+    
+    let filtered = contracts;
+    
+    if (currentTab !== 'all') {
+      filtered = contracts.filter(c => c.status === currentTab);
+    }
+    
+    this.setData({
+      filteredContracts: filtered
+    });
+  },
+  
+  onContractTap(e) {
+    const contract = e.currentTarget.dataset.contract;
+    const content = encodeURIComponent(JSON.stringify(contract));
+    
     wx.navigateTo({
-      url: '/pages/detail/detail?id=' + id
+      url: `/pages/detail/detail?content=${content}`
     });
   },
   
-  onRefresh() {
-    this.loadRecords();
+  onCreateContract() {
+    wx.navigateTo({
+      url: '/pages/template/template'
+    });
+  },
+  
+  onStatusText(status) {
+    const statusMap = {
+      'draft': '草稿',
+      'signed': '已签署',
+      'expired': '已过期'
+    };
+    return statusMap[status] || status;
+  },
+  
+  onStatusColor(status) {
+    const colorMap = {
+      'draft': '#FF9800',
+      'signed': '#07C160',
+      'expired': '#F44336'
+    };
+    return colorMap[status] || '#999999';
   }
 });

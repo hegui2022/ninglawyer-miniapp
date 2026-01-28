@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/guide/guide",
+    "pages/article/article",
     "pages/login/login"
   ],
   "window": {

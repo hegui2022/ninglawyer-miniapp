@@ -1,0 +1,84 @@
+<!--pages/article/article.wxml-->
+<view class="container">
+  <!-- 顶部导航与标题区 -->
+  <view class="nav-section">
+    <!-- 返回按钮 -->
+    <view class="back-button" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+
+    <!-- 文章标题 -->
+    <view class="article-title">网络及数据安全技术措施</view>
+
+    <!-- 文章标签 -->
+    <view class="article-tag">
+      <text class="tag-text">网络安</text>
+      <text class="tag-icon">✏️</text>
+    </view>
+  </view>
+
+  <!-- 核心内容区 -->
+  <view class="content-section">
+    <!-- 正文卡片 -->
+    <view class="content-card">
+      <!-- 三条技术措施说明 -->
+      <view class="content-item">
+        <text class="item-number">1、</text>
+        <text class="item-text">公司采取了防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施，如公司部界了专业防火墙、办公桌面安装了杀毒软件；</text>
+      </view>
+
+      <view class="content-item">
+        <text class="item-number">2、</text>
+        <text class="item-text">公司采取了监测、记录网络运行状态、网络安全事件的技术措施，如公司部署的防火墙具备网络异常监测和运行日志功能；</text>
+      </view>
+
+      <view class="content-item">
+        <text class="item-number">3、</text>
+        <text class="item-text">公司采取了备份、加密、访问控制等必要措施，保障数据免遭泄密、窃取、篡改、毁损、丢失。</text>
+      </view>
+
+      <!-- 小标题 -->
+      <view class="sub-title">(四) 网络安全等级保护</view>
+
+      <!-- 正文 -->
+      <view class="content-text">根据我们对公司提供的资料的核查和访谈，公司业务经营所使用的信息系统均实施第三级信息安</view>
+    </view>
+
+    <!-- 付费提示 -->
+    <view class="pay-prompt" bindtap="handlePay">
+      <text class="pay-text">付费20元</text>
+    </view>
+  </view>
+
+  <!-- 精选留言区 -->
+  <view class="comment-section">
+    <view class="comment-header">
+      <view class="comment-title">精选留言</view>
+      <view class="comment-button" bindtap="handleComment">留言</view>
+    </view>
+
+    <!-- 留言列表 -->
+    <view class="comment-list">
+      <!-- 第一条留言 -->
+      <view class="comment-item">
+        <view class="comment-avatar female">👩</view>
+        <view class="comment-content-wrapper">
+          <view class="comment-name">王律师</view>
+          <view class="comment-text">公司与其员工已签订了《保密与竞业限制协议》。</view>
+        </view>
+      </view>
+
+      <!-- 第二条留言 -->
+      <view class="comment-item">
+        <view class="comment-avatar male">👨</view>
+        <view class="comment-content-wrapper">
+          <view class="comment-name">张律师</view>
+          <view class="comment-text"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 Home 指示条 -->
+  <view class="home-indicator"></view>
+</view>

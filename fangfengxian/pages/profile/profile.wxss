@@ -1,0 +1,30 @@
+/* pages/profile/profile.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  padding-bottom: 120rpx;
+}
+
+.content-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120rpx - 120rpx);
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.placeholder-icon {
+  font-size: 120rpx;
+  opacity: 0.3;
+}
+
+.placeholder-text {
+  font-size: 32rpx;
+  color: #999999;
+}

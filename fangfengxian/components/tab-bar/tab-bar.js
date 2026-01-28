@@ -10,14 +10,24 @@ Component({
   data: {
     tabs: [
       {
-        pagePath: '/pages/guide/guide',
-        text: '指引',
-        icon: '📋'
+        pagePath: '/pages/obligation/obligation',
+        text: '义务',
+        icon: '📜'
       },
       {
         pagePath: '/pages/manage/manage',
         text: '管理',
         icon: '⚙️'
+      },
+      {
+        pagePath: '/pages/discover/discover',
+        text: '发现',
+        icon: '🔍'
+      },
+      {
+        pagePath: '/pages/profile/profile',
+        text: '我的',
+        icon: '👤'
       }
     ]
   },

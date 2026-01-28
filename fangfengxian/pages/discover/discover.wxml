@@ -1,0 +1,16 @@
+<!--pages/discover/discover.wxml-->
+<view class="container">
+  <!-- 顶部导航栏组件 -->
+  <nav-bar title="发现" showBack="{{false}}"></nav-bar>
+
+  <!-- 内容区域 -->
+  <view class="content-section">
+    <view class="placeholder">
+      <text class="placeholder-icon">🔍</text>
+      <text class="placeholder-text">发现页面</text>
+    </view>
+  </view>
+
+  <!-- TabBar 组件 -->
+  <tab-bar currentPath="/pages/discover/discover"></tab-bar>
+</view>

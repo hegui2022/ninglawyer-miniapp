@@ -34,9 +34,13 @@ fangfengxian/
 │       └── tab-bar.json
 ├── pages/                     # 页面目录
 │   ├── login/                 # 登录页
-│   ├── guide/                 # 指引页（首页）
-│   │   └── article/           # 文章详情页（子页面）
-│   └── manage/                # 管理页
+│   ├── guide/                 # 指引页
+│   │   └── article/           # 文章详情页
+│   ├── obligation/            # 义务页（TabBar）
+│   ├── manage/                # 管理页（TabBar）
+│   ├── discover/              # 发现页（TabBar）
+│   ├── profile/               # 我的页（TabBar）
+│   └── shareholders/          # 股东会页
 ├── images/                    # 图片资源
 │   └── tabbar/                # TabBar 图标
 └── app.json                   # 应用配置
@@ -169,6 +173,26 @@ fangfengxian/
 - nav-bar: 顶部导航
 - tab-bar: 底部导航栏
 
+### 5. 股东会页 (pages/shareholders)
+**功能**: 股东会进行中页面，支持从召集到表决的全流程会议操作。
+
+**主要功能**:
+- 会议状态显示（进行中）
+- 会议类型切换（临时会议/定期会议）
+- 召集会议模块（召集人信息、会议通知书）
+- 主持会议模块（会议方式选择、会议记录）
+- 会议表决模块（投票入口）
+- TabBar 导航
+
+**组件使用**:
+- nav-bar: 顶部导航（带返回）
+- tab-bar: 底部导航栏
+
+### 6. 其他 TabBar 页面
+- **义务页** (pages/obligation): 展示企业合规义务
+- **发现页** (pages/discover): 发现和探索功能
+- **我的页** (pages/profile): 个人中心和设置
+
 ## 组件化开发优势
 
 ### 1. 代码复用
@@ -223,21 +247,33 @@ fangfengxian/
 {
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#FF6B6B",
+    "selectedColor": "#4CAF50",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [
       {
-        "pagePath": "pages/guide/guide",
-        "text": "指引",
-        "iconPath": "images/tabbar/guide.png",
-        "selectedIconPath": "images/tabbar/guide-active.png"
+        "pagePath": "pages/obligation/obligation",
+        "text": "义务",
+        "iconPath": "images/tabbar/obligation.png",
+        "selectedIconPath": "images/tabbar/obligation-active.png"
       },
       {
         "pagePath": "pages/manage/manage",
         "text": "管理",
         "iconPath": "images/tabbar/manage.png",
         "selectedIconPath": "images/tabbar/manage-active.png"
+      },
+      {
+        "pagePath": "pages/discover/discover",
+        "text": "发现",
+        "iconPath": "images/tabbar/discover.png",
+        "selectedIconPath": "images/tabbar/discover-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tabbar/profile.png",
+        "selectedIconPath": "images/tabbar/profile-active.png"
       }
     ]
   }

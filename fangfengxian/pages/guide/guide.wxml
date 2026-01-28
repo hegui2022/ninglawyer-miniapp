@@ -81,6 +81,6 @@
     </view>
   </view>
 
-  <!-- TabBar 组件 -->
-  <tab-bar currentPath="/pages/guide/guide"></tab-bar>
+  <!-- Home 指示条组件 -->
+  <home-indicator></home-indicator>
 </view>

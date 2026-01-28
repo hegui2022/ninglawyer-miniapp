@@ -3,7 +3,11 @@
     "pages/login/login",
     "pages/guide/guide",
     "pages/guide/article/article",
-    "pages/manage/manage"
+    "pages/obligation/obligation",
+    "pages/manage/manage",
+    "pages/discover/discover",
+    "pages/profile/profile",
+    "pages/shareholders/shareholders"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -15,21 +19,33 @@
   },
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#FF6B6B",
+    "selectedColor": "#4CAF50",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [
       {
-        "pagePath": "pages/guide/guide",
-        "text": "指引",
-        "iconPath": "images/tabbar/guide.png",
-        "selectedIconPath": "images/tabbar/guide-active.png"
+        "pagePath": "pages/obligation/obligation",
+        "text": "义务",
+        "iconPath": "images/tabbar/obligation.png",
+        "selectedIconPath": "images/tabbar/obligation-active.png"
       },
       {
         "pagePath": "pages/manage/manage",
         "text": "管理",
         "iconPath": "images/tabbar/manage.png",
         "selectedIconPath": "images/tabbar/manage-active.png"
+      },
+      {
+        "pagePath": "pages/discover/discover",
+        "text": "发现",
+        "iconPath": "images/tabbar/discover.png",
+        "selectedIconPath": "images/tabbar/discover-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tabbar/profile.png",
+        "selectedIconPath": "images/tabbar/profile-active.png"
       }
     ]
   },

@@ -57,10 +57,17 @@ Page({
       duration: 1500
     });
 
-    // 实际应该跳转到对应部门页面
-    // wx.navigateTo({
-    //   url: `/pages/department/department?dept=${dept}`
-    // });
+    // 股东会跳转到专门的页面
+    if (dept === 'shareholders') {
+      wx.navigateTo({
+        url: '/pages/shareholders/shareholders'
+      });
+    } else {
+      // 其他部门暂时使用 toast 提示
+      // wx.navigateTo({
+      //   url: `/pages/department/department?dept=${dept}`
+      // });
+    }
   },
 
   // 跳转到通知详情

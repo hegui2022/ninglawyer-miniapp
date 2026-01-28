@@ -1,0 +1,46 @@
+<!-- 消息通知页面 -->
+<view class="notification-page">
+  <!-- 标签栏 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{index === activeTab ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="*this"
+      bindtap="onTabChange" 
+      data-index="{{index}}"
+    >
+      <text class="tab-text">{{item}}</text>
+    </view>
+  </view>
+  
+  <!-- 通知列表 -->
+  <scroll-view class="notification-list" scroll-y>
+    <view class="action-bar">
+      <text class="action-btn" bindtap="onMarkAllRead">全部标为已读</text>
+    </view>
+    
+    <view 
+      class="notification-item {{item.isRead ? '' : 'unread'}}" 
+      wx:for="{{getActiveNotifications()}}" 
+      wx:key="id"
+      bindtap="onNotificationTap" 
+      data-notification="{{item}}"
+    >
+      <view class="notification-icon">{{item.icon}}</view>
+      <view class="notification-content">
+        <view class="notification-header">
+          <text class="notification-title">{{item.title}}</text>
+          <text class="notification-time">{{item.time}}</text>
+        </view>
+        <text class="notification-desc">{{item.content}}</text>
+      </view>
+      <view class="unread-dot" wx:if="{{!item.isRead}}"></view>
+    </view>
+    
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{getActiveNotifications().length === 0}}">
+      <view class="empty-icon">📭</view>
+      <text class="empty-text">暂无通知</text>
+    </view>
+  </scroll-view>
+</view>

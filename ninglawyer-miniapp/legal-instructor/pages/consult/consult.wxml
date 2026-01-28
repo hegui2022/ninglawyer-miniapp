@@ -1,0 +1,100 @@
+<!-- 咨询对话页面 -->
+<view class="consult-page">
+  <!-- 消息列表 -->
+  <scroll-view 
+    class="message-list" 
+    scroll-y 
+    scroll-into-view="{{scrollToView}}" 
+    scroll-with-animation
+  >
+    <view 
+      class="message-item message-{{item.type}}" 
+      id="msg-{{item.id}}" 
+      wx:for="{{messages}}" 
+      wx:key="id"
+    >
+      <image 
+        class="message-avatar" 
+        src="{{item.type === 'user' ? '/assets/images/default-avatar.png' : (lawyerInfo ? lawyerInfo.avatar : 'https://via.placeholder.com/100/07C160/ffffff?text=⚖️')}}" 
+        mode="aspectFill"
+      ></image>
+      
+      <view class="message-content">
+        <text class="message-time">{{item.time}}</text>
+        
+        <!-- 系统消息 -->
+        <view class="message-bubble system-bubble" wx:if="{{item.type === 'system'}}">
+          <text>{{item.content}}</text>
+        </view>
+        
+        <!-- 用户消息 -->
+        <view class="message-bubble user-bubble" wx:if="{{item.type === 'user'}}">
+          <text>{{item.content}}</text>
+        </view>
+        
+        <!-- AI消息 -->
+        <view class="message-bubble ai-bubble" wx:if="{{item.type === 'ai'}}">
+          <text>{{item.content}}</text>
+        </view>
+        
+        <!-- 图片消息 -->
+        <view class="message-bubble image-bubble" wx:if="{{item.type === 'image'}}">
+          <image class="message-image" src="{{item.content}}" mode="widthFix" bindtap="onViewImage" data-url="{{item.content}}"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 输入中提示 -->
+    <view class="typing-indicator" wx:if="{{isTyping}}">
+      <view class="typing-avatar">
+        <image src="{{lawyerInfo ? lawyerInfo.avatar : 'https://via.placeholder.com/100/07C160/ffffff?text=⚖️'}}" mode="aspectFill"></image>
+      </view>
+      <view class="typing-text">
+        <text class="typing-dot"></text>
+        <text class="typing-dot"></text>
+        <text class="typing-dot"></text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 快捷问题 -->
+  <view class="quick-questions" wx:if="{{messages.length <= 1}}">
+    <scroll-view class="questions-scroll" scroll-x>
+      <view 
+        class="question-item" 
+        wx:for="{{quickQuestions}}" 
+        wx:key="*this"
+        bindtap="onQuickQuestion"
+        data-question="{{item}}"
+      >
+        <text>{{item}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-wrapper">
+      <button class="action-btn" bindtap="onChooseImage">
+        <text class="icon-image">📷</text>
+      </button>
+      
+      <input 
+        class="input-field" 
+        value="{{inputText}}" 
+        placeholder="输入您的问题..." 
+        bindinput="onInput" 
+        confirm-type="send" 
+        bindconfirm="onSend"
+      />
+      
+      <button class="action-btn" bindtap="onVoiceInput">
+        <text class="icon-voice">🎤</text>
+      </button>
+    </view>
+    
+    <button class="send-btn {{inputText ? 'active' : ''}}" bindtap="onSend" disabled="{{!inputText}}">
+      发送
+    </button>
+  </view>
+</view>

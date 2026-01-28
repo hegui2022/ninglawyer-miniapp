@@ -99,6 +99,10 @@
   background: #E8F8F0;
   border-radius: 50%;
   padding: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
 }
 
 .service-title {

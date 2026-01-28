@@ -2,277 +2,236 @@
 
 ## 项目概述
 
-宁律师法律咨询小程序矩阵是一个基于 AI 技术的全方位法律服务平台，采用微信小程序矩阵架构，为企业及个人提供从咨询到维权的全流程法律服务。
+宁律师法律咨询小程序矩阵是基于 AI 技术提供全方位法律服务的微信小程序生态系统，采用矩阵架构设计，核心理念是"代码即法律"，将律师技能嵌入工作流，实现企业管理和风险防控一体化。
 
-### 核心理念
-**代码即法律** - 将律师技能嵌入工作流，实现企业管理和风险防控一体化
+### 小程序矩阵结构
 
-## 系统架构
+1. **法律教官（主小程序）**
+   - 导航中心，提供法律咨询入口
+   - 整合各专业领域宁律师
+   - 用户管理和数据统计
 
-### 小程序矩阵
-1. **法律教官**（主程序）
-   - 导航中心，统一入口
-   - 用户账号管理
-   - 服务推荐与引导
-
-2. **宁律师家族**（子程序群）
-   - 宁律师·民事：民事纠纷、侵权责任、债务纠纷
-   - 宁律师·刑事：刑事辩护、取保候审、减刑申请
-   - 宁律师·劳动：劳动合同、社保公积金、工伤赔偿
-   - 宁律师·公司：公司设立、股权结构、合规管理
-   - 宁律师·知识产权：商标、专利、著作权
-   - 宁律师·婚姻：离婚、抚养权、财产分割
-   - 宁律师·合同：合同起草、审查、修改
+2. **宁律师家族（专业领域子小程序）**
+   - 民事宁律师
+   - 刑事宁律师
+   - 合同宁律师
+   - 劳动宁律师
+   - 公司宁律师
+   - 知识产权宁律师
+   - 婚姻宁律师
 
 3. **码上签约**
-   - 合同创建与模板
-   - 在线签署
-   - 存证管理
+   - 合同模板选择
+   - 在线合同起草
+   - 合同签署管理
 
 4. **理约**
-   - 合同履约跟踪
-   - 到期提醒
-   - 争议预警
+   - 合同履约管理
+   - 履约提醒
+   - 履约记录
 
 5. **怎么判**
-   - 案例搜索
-   - 智能分析
-   - 判决预测
+   - 违约判断
+   - 维权指导
+   - 判例查询
 
 6. **防风险**
-   - 风险评估
+   - 企业风险扫描
    - 合规检查
    - 风险预警
 
+### 业务流程
+
+咨询（宁律师）→ 起草（宁律师·合同）→ 签署（码上签约）→ 履约（理约）→ 违约（怎么判）→ 维权（怎么判）
+
 ## 技术栈
 
-### 后端
-- **AI 模型**: doubao-seed (豆包 Agent 优化版)
-- **框架**: LangChain, LangGraph
-- **语音**: 豆包语音 (ASR/TTS)
-- **知识库**: coze-knowledge-base (RAG)
-- **数据库**: PostgreSQL (业务数据), Milvus (向量), Redis (缓存), Neo4j (知识图谱), S3 (文件存储)
-- **API**: Flask (RESTful)
-
 ### 前端
-- **框架**: 微信小程序原生框架
-- **组件化**: 自定义组件库
-- **设计**: 微信/企业微信风格
+- 微信小程序原生框架
+- 组件化开发
+- 微信小程序云开发（可选）
 
-## 功能特性
+### 后端
+- Flask（RESTful API）
+- LangChain（AI Agent）
+- LangGraph（工作流编排）
 
-### 1. 智能咨询
-- 自然语言对话
-- 多轮上下文理解
-- 语音交互（ASR/TTS）
-- 知识库 RAG 检索
+### AI 能力
+- 大语言模型：doubao-seed（豆包 Agent 优化版）
+- 语音：豆包语音（TTS/ASR）
+- 知识库：coze-knowledge-base
+- 向量检索：Milvus
 
-### 2. 合同服务
-- 智能起草
-- 合同审查
-- 在线签署
-- 履约跟踪
+### 数据存储
+- PostgreSQL（关系型数据）
+- Milvus（向量数据）
+- Redis（缓存）
+- S3（对象存储）
 
-### 3. 风险管理
-- 风险评估
-- 合规检查
-- 预警提示
-
-### 4. 案例分析
-- 案例搜索
-- 智能分析
-- 判决预测
-
-## 目录结构
+## 项目结构
 
 ```
 ninglawyer-miniapp/
-├── src/                      # 源代码
-│   ├── agents/              # AI Agent
-│   │   ├── ning_lawyer_template.py    # 基类模板
-│   │   ├── lawyer_civil.py            # 民事律师
-│   │   ├── lawyer_criminal.py         # 刑事律师
-│   │   ├── lawyer_contract.py         # 合同律师
-│   │   ├── lawyer_labor.py            # 劳动律师
-│   │   ├── lawyer_company.py          # 公司律师
-│   │   ├── lawyer_ip.py               # 知识产权律师
-│   │   ├── lawyer_marriage.py         # 婚姻律师
-│   │   ├── lawyer_factory.py          # 工厂类
-│   │   └── master_agent.py            # 主控 Agent
-│   ├── tools/               # 工具
-│   │   ├── legal_search.py            # 法律检索
-│   │   ├── contract_analysis.py       # 合同分析
-│   │   ├── risk_assessment.py         # 风险评估
-│   │   └── case_search.py             # 案例搜索
-│   ├── skills/              # 技能
-│   │   ├── consultation.py            # 咨询技能
-│   │   ├── drafting.py                # 起草技能
-│   │   └── review.py                  # 审查技能
-│   ├── api/                 # API 接口
-│   │   ├── consultation.py            # 咨询接口
-│   │   ├── contract.py                # 合同接口
-│   │   └── routes.py                  # 路由注册
-│   ├── storage/             # 存储
-│   │   ├── db.py                      # 数据库
-│   │   ├── vector_store.py            # 向量存储
-│   │   └── cache.py                   # 缓存
-│   └── config/              # 配置
-│       └── models.py                  # 数据模型
-├── config/                  # 配置文件
-│   └── agent_llm_config.json          # LLM 配置
-├── components/              # 公共组件
-│   ├── nav-bar/                      # 导航栏
-│   ├── service-card/                 # 服务卡片
-│   ├── lawyer-avatar/                # 律师头像
-│   ├── message-item/                 # 消息项
-│   ├── loading/                      # 加载中
-│   └── empty/                        # 空状态
-├── legal-instructor/         # 法律教官小程序
+├── legal-instructor/          # 法律教官主小程序
+│   ├── pages/
+│   │   ├── index/             # 首页
+│   │   ├── login/             # 登录页
+│   │   ├── consult/           # 咨询对话页
+│   │   ├── lawyer-family/     # 律师家族页
+│   │   ├── notification/      # 消息通知页
+│   │   ├── profile/           # 个人中心页
+│   │   └── statistics/        # 数据统计页
+│   ├── components/            # 自定义组件
+│   ├── utils/                 # 工具函数
+│   └── app.json               # 小程序配置
+│
+├── lawyer-family/             # 宁律师家族子小程序
 │   └── pages/
-│       ├── index/                    # 首页
-│       └── lawyer-family/            # 宁律师家族
-├── code-signing/             # 码上签约小程序
+│       ├── civil/             # 民事宁律师
+│       ├── criminal/          # 刑事宁律师
+│       ├── contract/          # 合同宁律师
+│       ├── labor/             # 劳动宁律师
+│       ├── company/           # 公司宁律师
+│       ├── ip/                # 知识产权宁律师
+│       └── marriage/          # 婚姻宁律师
+│
+├── code-signing/              # 码上签约小程序
+│   ├── pages/
+│   │   ├── index/             # 首页
+│   │   ├── template/          # 合同模板页
+│   │   ├── draft/             # 合同起草页
+│   │   ├── sign/              # 合同签署页
+│   │   └── list/              # 合同列表页
+│   └── components/
+│       └── contract-editor/   # 合同编辑器组件
+│
+├── lyue/                      # 理约小程序
 │   └── pages/
-│       ├── index/                    # 首页
-│       ├── create/                   # 创建合同
-│       └── sign/                     # 签署
-├── manage-contract/          # 理约小程序
+│       ├── index/             # 首页
+│       ├── contract/          # 合同履约页
+│       └── reminder/          # 履约提醒页
+│
+├── zenme-pan/                 # 怎么判小程序
 │   └── pages/
-│       ├── list/                     # 合同列表
-│       └── performance/              # 履约跟踪
-├── how-to-judge/             # 怎么判小程序
-│   └── pages/
-│       ├── search/                   # 案例搜索
-│       └── analyze/                  # 智能分析
-├── prevent-risk/             # 防风险小程序
-│   └── pages/
-│       └── index/                    # 首页
-├── scripts/                 # 脚本
-│   ├── deploy.sh                     # 部署
-│   ├── start.sh                      # 启动
-│   └── stop.sh                       # 停止
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
+│       ├── index/             # 首页
+│       ├── breach/            # 违约判断页
+│       ├── rights/            # 维权指导页
+│       └── cases/             # 判例查询页
+│
+└── feng-fengxian/             # 防风险小程序
+    └── pages/
+        ├── index/             # 首页
+        ├── scan/              # 风险扫描页
+        └── report/            # 风险报告页
 ```
 
-## 快速开始
+## 核心功能
 
-### 环境要求
-- Python 3.9+
-- Node.js 16+
-- Docker & Docker Compose
-- 微信开发者工具
+### 法律教官
+- [x] 首页导航
+- [x] 用户登录（手机号验证码/微信登录）
+- [x] 咨询对话（文本、图片输入，AI 回复）
+- [x] 律师家族（7 个专业领域）
+- [x] 消息通知（系统消息、分类查看）
+- [x] 数据统计（咨询次数、合同数量、满意度、节省成本）
+- [x] 个人中心（用户信息、服务入口）
 
-### 安装依赖
+### 码上签约
+- [x] 首页（服务入口、合同概览）
+- [x] 合同模板选择（分类筛选、关键词搜索）
+- [ ] 合同起草（基于模板在线编辑）
+- [ ] 合同签署（电子签名）
+- [ ] 合同列表（状态管理、查看详情）
 
+### 理约
+- [ ] 合同履约管理
+- [ ] 履约提醒
+- [ ] 履约记录
+
+### 怎么判
+- [ ] 违约判断
+- [ ] 维权指导
+- [ ] 判例查询
+
+### 防风险
+- [ ] 风险扫描
+- [ ] 合规检查
+- [ ] 风险预警
+
+## 设计规范
+
+### UI 风格
+- 完全采用微信和企业微信风格
+- 主色调：#07C160（微信绿）
+- 辅助色：#FF9800（橙色）、#F44336（红色）、#2196F3（蓝色）
+- 圆角：16rpx / 12rpx
+- 间距：24rpx / 16rpx
+
+### 组件规范
+- 所有自定义组件放在 `components/` 目录
+- 组件命名采用 kebab-case（如：chat-message）
+- 组件使用统一的生命周期和数据流
+
+### 代码规范
+- 组件式开发，高可读性、维护性、扩展性
+- 开发一个模块测试一个，确保无 BUG
+- 前后端分离架构
+- RESTful API 设计
+
+## 部署指南
+
+### 前端部署
+1. 使用微信开发者工具打开各小程序项目
+2. 配置小程序 AppID
+3. 配置服务器域名（后端 API 地址）
+4. 上传代码并提交审核
+
+### 后端部署
+1. 安装依赖：
 ```bash
-# 后端依赖
 pip install -r requirements.txt
-
-# 初始化数据库
-python scripts/init_db.py
 ```
 
-### 启动服务
-
+2. 配置环境变量：
 ```bash
-# 使用 Docker Compose
-docker-compose up -d
-
-# 或使用脚本
-./scripts/start.sh
+export COZE_WORKSPACE_PATH=/path/to/workspace
+export COZE_WORKLOAD_IDENTITY_API_KEY=your_api_key
+export COZE_INTEGRATION_MODEL_BASE_URL=your_base_url
 ```
 
-### 配置
-
-编辑 `config/agent_llm_config.json` 配置 AI 模型参数：
-
-```json
-{
-    "config": {
-        "model": "doubao-seed-1-6-251015",
-        "temperature": 0.7,
-        "top_p": 0.9,
-        "max_completion_tokens": 10000
-    }
-}
-```
-
-### 小程序开发
-
-1. 使用微信开发者工具打开对应小程序目录
-2. 配置 `app.js` 中的 API 地址
-3. 编译并预览
-
-## API 文档
-
-### 咨询服务
-- `POST /api/consultation/chat` - 咨询对话
-- `GET /api/consultation/history` - 咨询历史
-
-### 合同服务
-- `POST /api/contract/create` - 创建合同
-- `POST /api/contract/draft` - 起草合同
-- `POST /api/contract/sign` - 签署合同
-- `GET /api/contract/list` - 合同列表
-- `GET /api/contract/performance` - 履约跟踪
-
-### 风险服务
-- `GET /api/risk/profile` - 风险档案
-- `POST /api/risk/analyze` - 风险分析
-
-## 部署
-
+3. 启动服务：
 ```bash
-# 部署到生产环境
-./scripts/deploy.sh prod
+python src/main.py
 ```
 
-## 测试
+## 开发计划
 
-```bash
-# 运行单元测试
-pytest tests/
+### 阶段一（已完成）
+- 法律教官主小程序基础功能
+- 登录功能
+- 咨询对话
+- 消息通知
+- 数据统计
 
-# 运行集成测试
-pytest tests/integration/
-```
+### 阶段二（进行中）
+- 码上签约完整功能
+- 合同起草
+- 合同签署
 
-## 开发规范
+### 阶段三（待开发）
+- 理约功能
+- 怎么判功能
+- 防风险功能
 
-### 代码风格
-- Python: PEP 8
-- JavaScript: ESLint
-- 使用类型注解
-- 编写单元测试
-
-### Git 提交
-```
-feat: 新功能
-fix: 修复
-docs: 文档
-style: 格式
-refactor: 重构
-test: 测试
-chore: 构建
-```
-
-## 贡献指南
-
-1. Fork 项目
-2. 创建功能分支
-3. 提交变更
-4. 推送到分支
-5. 创建 Pull Request
-
-## 许可证
-
-Copyright © 2024 宁律师团队. All rights reserved.
+### 阶段四（待开发）
+- 宁律师家族 7 个专业领域小程序
+- 全流程打通
+- 数据分析和可视化
 
 ## 联系方式
 
-- 官网: https://ninglawyer.com
-- 邮箱: contact@ninglawyer.com
-- 微信: ninglawyer_bot
+如有问题或建议，请联系开发团队。
+
+---
+
+**宁律师·让法律服务触手可及**

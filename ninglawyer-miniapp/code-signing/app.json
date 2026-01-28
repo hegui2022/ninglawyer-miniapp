@@ -3,6 +3,7 @@
   "pages": [
     "pages/index/index",
     "pages/create/create",
+    "pages/template/template",
     "pages/sign/sign",
     "pages/record/record",
     "pages/detail/detail"

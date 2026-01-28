@@ -7,7 +7,7 @@ Page({
         id: 'civil',
         name: '宁律师·民事',
         domain: '民事',
-        avatar: '/assets/images/lawyers/civil.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=民事',
         description: '合同纠纷、侵权责任、婚姻家庭',
         helpCount: 12580,
         rating: 4.9
@@ -16,7 +16,7 @@ Page({
         id: 'criminal',
         name: '宁律师·刑事',
         domain: '刑事',
-        avatar: '/assets/images/lawyers/criminal.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=刑事',
         description: '刑事辩护、取保候审、减刑假释',
         helpCount: 9680,
         rating: 4.8
@@ -25,7 +25,7 @@ Page({
         id: 'labor',
         name: '宁律师·劳动',
         domain: '劳动',
-        avatar: '/assets/images/lawyers/labor.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=劳动',
         description: '劳动合同、工资纠纷、工伤赔偿',
         helpCount: 11200,
         rating: 4.9
@@ -34,7 +34,7 @@ Page({
         id: 'company',
         name: '宁律师·公司',
         domain: '公司',
-        avatar: '/assets/images/lawyers/company.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=公司',
         description: '公司设立、股权设计、公司并购',
         helpCount: 8900,
         rating: 4.8
@@ -43,7 +43,7 @@ Page({
         id: 'ip',
         name: '宁律师·知识产权',
         domain: '知识产权',
-        avatar: '/assets/images/lawyers/ip.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=知识产权',
         description: '专利申请、商标注册、侵权维权',
         helpCount: 7800,
         rating: 4.9
@@ -52,7 +52,7 @@ Page({
         id: 'marriage',
         name: '宁律师·婚姻',
         domain: '婚姻',
-        avatar: '/assets/images/lawyers/marriage.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=婚姻',
         description: '离婚诉讼、抚养权、财产分割',
         helpCount: 13500,
         rating: 4.9
@@ -61,7 +61,7 @@ Page({
         id: 'contract',
         name: '宁律师·合同',
         domain: '合同',
-        avatar: '/assets/images/lawyers/contract.png',
+        avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=合同',
         description: '合同起草、审查、风险分析',
         helpCount: 8650,
         rating: 4.8

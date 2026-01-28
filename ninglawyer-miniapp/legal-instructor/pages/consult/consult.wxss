@@ -1,0 +1,229 @@
+/* 咨询对话页面样式 */
+.consult-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F5F5F5;
+}
+
+/* 消息列表 */
+.message-list {
+  flex: 1;
+  padding: 24rpx;
+  overflow-y: auto;
+}
+
+.message-item {
+  display: flex;
+  margin-bottom: 32rpx;
+}
+
+.message-item.message-system {
+  justify-content: center;
+}
+
+.message-item.message-user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #F5F5F5;
+  margin: 0 16rpx;
+  flex-shrink: 0;
+}
+
+.message-content {
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-time {
+  font-size: 20rpx;
+  color: #999999;
+  margin-bottom: 8rpx;
+}
+
+.message-item.message-user .message-time {
+  text-align: right;
+}
+
+.message-bubble {
+  padding: 24rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.system-bubble {
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+}
+
+.user-bubble {
+  background: #07C160;
+  color: #ffffff;
+  border-top-right-radius: 4rpx;
+}
+
+.ai-bubble {
+  background: #ffffff;
+  color: #333333;
+  border-top-left-radius: 4rpx;
+}
+
+.image-bubble {
+  padding: 0;
+  background: transparent;
+}
+
+.message-image {
+  max-width: 100%;
+  border-radius: 12rpx;
+}
+
+/* 输入中提示 */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  padding: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.typing-avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 16rpx;
+}
+
+.typing-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.typing-text {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.typing-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #CCCCCC;
+  animation: typing 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-8rpx);
+  }
+}
+
+/* 快捷问题 */
+.quick-questions {
+  padding: 16rpx 24rpx;
+  background: #ffffff;
+  border-top: 1rpx solid #E0E0E0;
+}
+
+.questions-scroll {
+  white-space: nowrap;
+}
+
+.question-item {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  background: #E8F5E9;
+  color: #07C160;
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  margin-right: 16rpx;
+}
+
+/* 输入区域 */
+.input-section {
+  background: #ffffff;
+  padding: 16rpx 24rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1rpx solid #E0E0E0;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #F5F5F5;
+  border-radius: 48rpx;
+  padding: 0 16rpx;
+  height: 80rpx;
+}
+
+.action-btn {
+  width: 64rpx;
+  height: 64rpx;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.icon-image,
+.icon-voice {
+  font-size: 36rpx;
+}
+
+.input-field {
+  flex: 1;
+  height: 100%;
+  font-size: 28rpx;
+  background: transparent;
+}
+
+.send-btn {
+  width: 120rpx;
+  height: 64rpx;
+  background: #CCCCCC;
+  color: #ffffff;
+  border: none;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.send-btn.active {
+  background: #07C160;
+}
+
+.send-btn::after {
+  border: none;
+}

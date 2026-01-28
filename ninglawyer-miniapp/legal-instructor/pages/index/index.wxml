@@ -32,7 +32,7 @@
     </view>
     <view class="services-grid">
       <view class="service-item" wx:for="{{services}}" wx:key="id" bindtap="onServiceTap" data-url="{{item.url}}">
-        <image class="service-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        <view class="service-icon">{{item.icon}}</view>
         <text class="service-title">{{item.title}}</text>
         <text class="service-desc">{{item.description}}</text>
       </view>
@@ -46,18 +46,11 @@
       <text class="section-more" bindtap="onGoLawyerFamily">全部 ></text>
     </view>
     <view class="lawyer-list">
-      <view class="lawyer-item">
-        <image class="lawyer-avatar" src="/assets/images/lawyers/civil.png" mode="aspectFill"></image>
+      <view class="lawyer-item" wx:for="{{lawyers}}" wx:key="id" bindtap="onLawyerTap" data-id="{{item.id}}">
+        <image class="lawyer-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
         <view class="lawyer-info">
-          <text class="lawyer-name">宁律师·民事</text>
-          <text class="lawyer-domain">合同纠纷 · 婚姻家庭</text>
-        </view>
-      </view>
-      <view class="lawyer-item">
-        <image class="lawyer-avatar" src="/assets/images/lawyers/contract.png" mode="aspectFill"></image>
-        <view class="lawyer-info">
-          <text class="lawyer-name">宁律师·合同</text>
-          <text class="lawyer-domain">合同起草 · 风险审查</text>
+          <text class="lawyer-name">{{item.name}}</text>
+          <text class="lawyer-domain">{{item.description}}</text>
         </view>
       </view>
     </view>
@@ -65,7 +58,7 @@
   
   <!-- 快捷咨询 -->
   <view class="quick-consult">
-    <button class="btn-primary btn-large" bindtap="onGoConsult">
+    <button class="btn-primary btn-large" bindtap="onLawyerTap" data-id="civil">
       开始咨询
     </button>
   </view>

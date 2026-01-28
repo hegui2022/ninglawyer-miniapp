@@ -1,119 +1,95 @@
-// 码上签约 - 首页（补充完整）
+// 码上签约 - 首页（使用网络图片）
 Page({
   data: {
-    banners: [
-      {
-        id: 1,
-        image: '/assets/images/banner1.png',
-        title: '智能签约，高效便捷'
-      },
-      {
-        id: 2,
-        image: '/assets/images/banner2.png',
-        title: '法律保障，安全可靠'
-      }
-    ],
+    stats: {
+      total: 128,
+      signed: 96,
+      pending: 32
+    },
     quickActions: [
       {
         id: 1,
-        icon: '/assets/icons/contract-create.png',
+        icon: '📝',
         title: '创建合同',
-        page: '/pages/create/create'
+        desc: '快速创建新合同',
+        url: '/pages/create/create'
       },
       {
         id: 2,
-        icon: '/assets/icons/sign.png',
-        title: '待签署',
-        page: '/pages/sign/sign'
+        icon: '📋',
+        title: '合同模板',
+        desc: '选择模板创建',
+        url: '/pages/template/template'
       },
       {
         id: 3,
-        icon: '/assets/icons/record.png',
+        icon: '✍️',
         title: '签署记录',
-        page: '/pages/record/record'
+        desc: '查看签署历史',
+        url: '/pages/record/record'
       },
       {
         id: 4,
-        icon: '/assets/icons/template.png',
-        title: '合同模板',
-        page: '/pages/template/template'
+        icon: '🔍',
+        title: '搜索合同',
+        desc: '快速查找合同',
+        url: '/pages/search/search'
       }
     ],
-    recentContracts: [],
-    stats: {
-      total: 0,
-      pending: 0,
-      completed: 0
-    }
+    recentContracts: [
+      {
+        id: 1,
+        name: '劳动合同',
+        type: '劳动合同',
+        status: 'signed',
+        date: '2024-01-10',
+        amount: '15000'
+      },
+      {
+        id: 2,
+        name: '服务合同',
+        type: '服务合同',
+        status: 'pending',
+        date: '2024-01-08',
+        amount: '50000'
+      },
+      {
+        id: 3,
+        name: '采购合同',
+        type: '采购合同',
+        status: 'signed',
+        date: '2024-01-05',
+        amount: '30000'
+      }
+    ]
   },
   
   onLoad() {
     this.loadStats();
-    this.loadRecentContracts();
-  },
-  
-  onShow() {
-    this.loadStats();
-    this.loadRecentContracts();
-  },
-  
-  onBannerChange(e) {
-    this.setData({
-      currentBanner: e.detail.current
-    });
   },
   
   loadStats() {
-    wx.request({
-      url: getApp().globalData.config.apiUrl + '/contract/stats',
-      method: 'GET',
-      header: {
-        'Authorization': wx.getStorageSync('token')
-      },
-      success: (res) => {
-        if (res.data.code === 200) {
-          this.setData({
-            stats: res.data.data
-          });
-        }
-      }
-    });
-  },
-  
-  loadRecentContracts() {
-    wx.request({
-      url: getApp().globalData.config.apiUrl + '/contract/recent',
-      method: 'GET',
-      header: {
-        'Authorization': wx.getStorageSync('token')
-      },
-      success: (res) => {
-        if (res.data.code === 200) {
-          this.setData({
-            recentContracts: res.data.data
-          });
-        }
-      }
-    });
+    // 加载统计数据
   },
   
   onQuickAction(e) {
-    const action = e.currentTarget.dataset.action;
-    wx.navigateTo({
-      url: action.page
-    });
+    const url = e.currentTarget.dataset.url;
+    if (url && url.includes('create')) {
+      wx.navigateTo({
+        url: '/pages/create/create'
+      });
+    } else {
+      wx.showToast({
+        title: '功能开发中',
+        icon: 'none'
+      });
+    }
   },
   
-  onContractDetail(e) {
+  onContractTap(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/detail/detail?id=${id}`
-    });
-  },
-  
-  onCreateContract() {
-    wx.navigateTo({
-      url: '/pages/create/create'
+      url: '/pages/detail/detail?id=' + id
     });
   }
 });

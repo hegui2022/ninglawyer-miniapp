@@ -28,7 +28,10 @@
     <view class="section-title">我的服务</view>
     <view class="service-list">
       <view class="service-item" wx:for="{{serviceList}}" wx:key="id" bindtap="onServiceTap" data-id="{{item.id}}">
-        <view class="service-icon">{{item.icon}}</view>
+        <view class="service-icon-wrapper">
+          <view class="service-icon">{{item.icon}}</view>
+          <view class="badge" wx:if="{{item.id === 'notification' && unreadCount > 0}}">{{unreadCount}}</view>
+        </view>
         <text class="service-name">{{item.name}}</text>
         <text class="service-arrow">›</text>
       </view>

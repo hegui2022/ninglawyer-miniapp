@@ -1,74 +1,72 @@
 <!-- 码上签约 - 首页 -->
 <view class="index-page">
-  <!-- 轮播图 -->
-  <swiper class="banner-swiper" indicator-dots indicator-color="rgba(255,255,255,0.3)" indicator-active-color="#07C160" autoplay interval="3000" bindchange="onBannerChange">
-    <swiper-item wx:for="{{banners}}" wx:key="id">
-      <image class="banner-image" src="{{item.image}}" mode="aspectFill"></image>
-      <view class="banner-title">{{item.title}}</view>
-    </swiper-item>
-  </swiper>
-  
-  <!-- 统计数据 -->
-  <view class="stats-card card">
-    <view class="stat-item">
-      <text class="stat-value">{{stats.total}}</text>
-      <text class="stat-label">合同总数</text>
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="stats-header">
+      <text class="stats-title">合同概览</text>
+      <text class="stats-date">本月</text>
     </view>
-    <view class="stat-divider"></view>
-    <view class="stat-item">
-      <text class="stat-value primary">{{stats.pending}}</text>
-      <text class="stat-label">待签署</text>
-    </view>
-    <view class="stat-divider"></view>
-    <view class="stat-item">
-      <text class="stat-value success">{{stats.completed}}</text>
-      <text class="stat-label">已完成</text>
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-value">{{stats.total}}</text>
+        <text class="stats-label">总合同</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value stats-success">{{stats.signed}}</text>
+        <text class="stats-label">已签署</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value stats-warning">{{stats.pending}}</text>
+        <text class="stats-label">待签署</text>
+      </view>
     </view>
   </view>
   
   <!-- 快捷操作 -->
-  <view class="quick-actions card">
-    <view class="card-header">
-      <text class="card-title">快捷操作</text>
-    </view>
-    <view class="actions-grid">
-      <view class="action-item" wx:for="{{quickActions}}" wx:key="id" bindtap="onQuickAction" data-action="{{item}}">
-        <image class="action-icon" src="{{item.icon}}" mode="aspectFit"></image>
-        <text class="action-label">{{item.title}}</text>
-      </view>
+  <view class="quick-actions">
+    <view class="action-item" wx:for="{{quickActions}}" wx:key="id" bindtap="onQuickAction" data-url="{{item.url}}">
+      <view class="action-icon">{{item.icon}}</view>
+      <text class="action-title">{{item.title}}</text>
+      <text class="action-desc">{{item.desc}}</text>
     </view>
   </view>
   
   <!-- 最近合同 -->
-  <view class="recent-contracts card">
-    <view class="card-header">
-      <text class="card-title">最近合同</text>
-      <text class="view-more" bindtap="onViewAll">查看全部 ></text>
+  <view class="recent-section">
+    <view class="section-header">
+      <text class="section-title">最近合同</text>
+      <text class="section-more">查看全部 ></text>
     </view>
     
-    <view wx:if="{{recentContracts.length > 0}}" class="contract-list">
-      <view class="contract-item" wx:for="{{recentContracts}}" wx:key="id" bindtap="onContractDetail" data-id="{{item.id}}">
-        <view class="contract-info">
-          <text class="contract-title">{{item.title}}</text>
-          <text class="contract-time">{{item.createTime}}</text>
+    <view class="contract-list">
+      <view 
+        class="contract-item" 
+        wx:for="{{recentContracts}}" 
+        wx:key="id"
+        bindtap="onContractTap"
+        data-id="{{item.id}}"
+      >
+        <view class="contract-left">
+          <view class="contract-icon">📄</view>
+          <view class="contract-info">
+            <text class="contract-name">{{item.name}}</text>
+            <text class="contract-type">{{item.type}}</text>
+          </view>
         </view>
-        <view class="contract-status status-tag status-tag-{{item.statusClass}}">
-          {{item.statusText}}
+        <view class="contract-right">
+          <view class="contract-status status-{{item.status}}">
+            {{item.status === 'signed' ? '已签署' : '待签署'}}
+          </view>
+          <text class="contract-date">{{item.date}}</text>
         </view>
       </view>
     </view>
-    
-    <view wx:else class="empty-contract">
-      <image class="empty-icon" src="/assets/images/empty.png" mode="aspectFit"></image>
-      <text class="empty-text">暂无合同，点击下方按钮创建</text>
-    </view>
   </view>
   
-  <!-- 底部创建按钮 -->
-  <view class="create-btn-wrapper">
-    <button class="btn btn-primary btn-block create-btn" bindtap="onCreateContract">
-      <text class="btn-icon">+</text>
-      <text>创建新合同</text>
+  <!-- 创建按钮 -->
+  <view class="fab-section">
+    <button class="fab-btn" bindtap="onQuickAction" data-url="/pages/create/create">
+      <text class="fab-icon">+</text>
     </button>
   </view>
 </view>

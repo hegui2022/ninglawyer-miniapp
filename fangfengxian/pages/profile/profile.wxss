@@ -5,26 +5,178 @@
   padding-bottom: 120rpx;
 }
 
-.content-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 120rpx - 120rpx);
+/* ==================== 个人信息区 ==================== */
+.profile-section {
+  padding: 32rpx;
 }
 
-.placeholder {
+.profile-section {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   gap: 24rpx;
 }
 
-.placeholder-icon {
-  font-size: 120rpx;
-  opacity: 0.3;
+/* 头像 */
+.avatar-section {
+  flex-shrink: 0;
 }
 
-.placeholder-text {
-  font-size: 32rpx;
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-text {
+  font-size: 64rpx;
+}
+
+/* 信息区 */
+.info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.info-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.name {
+  font-size: 36rpx;
+  color: #000000;
+  font-weight: bold;
+}
+
+.position {
+  font-size: 24rpx;
   color: #999999;
+}
+
+/* 功能按钮 */
+.info-button {
+  padding: 12rpx 24rpx;
+  background-color: #FFFFFF;
+  border: 1rpx solid #E5E5E5;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.button-text {
+  font-size: 24rpx;
+  color: #000000;
+  font-weight: 500;
+}
+
+/* 标签 */
+.tags-section {
+  display: flex;
+  flex-direction: row;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 8rpx 20rpx;
+  background-color: #F5F5F5;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.tag-text {
+  font-size: 22rpx;
+  color: #666666;
+}
+
+/* ==================== 功能入口列表 ==================== */
+.function-list {
+  margin-top: 32rpx;
+  padding: 0 32rpx;
+}
+
+.function-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  transition: all 0.3s ease;
+}
+
+.function-item:active {
+  background-color: #F8F8F8;
+}
+
+.function-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+/* 不同功能图标的颜色 */
+.function-icon.company {
+  background-color: #F3E5F5;
+}
+
+.function-icon.position {
+  background-color: #F5F5F5;
+}
+
+.icon-text {
+  font-size: 40rpx;
+}
+
+.function-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.function-name {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.function-name.company {
+  color: #9C27B0;
+}
+
+.function-name.position {
+  color: #2196F3;
+}
+
+.arrow {
+  font-size: 48rpx;
+  color: #CCCCCC;
+}
+
+/* ==================== 分割线 ==================== */
+.divider {
+  height: 1rpx;
+  background-color: #F0F0F0;
+  margin-left: 104rpx;
 }

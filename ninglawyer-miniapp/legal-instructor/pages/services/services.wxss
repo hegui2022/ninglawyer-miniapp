@@ -1,0 +1,125 @@
+/* 法律教官 - 服务列表样式 */
+.services-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding: 24rpx;
+  padding-bottom: 120rpx;
+}
+
+.category-tabs {
+  display: flex;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin-bottom: 24rpx;
+  gap: 16rpx;
+}
+
+.tab-item {
+  flex-shrink: 0;
+  padding: 16rpx 32rpx;
+  background: #F5F5F5;
+  border-radius: 32rpx;
+}
+
+.tab-item.active {
+  background: #07C160;
+}
+
+.tab-text {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.tab-item.active .tab-text {
+  color: #ffffff;
+}
+
+.service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.service-item {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+}
+
+.service-icon {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  background: #E8F5E9;
+  border-radius: 50%;
+  margin-right: 24rpx;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.service-desc {
+  font-size: 24rpx;
+  color: #999999;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.service-meta {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.service-price {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #F44336;
+}
+
+.service-category {
+  font-size: 22rpx;
+  color: #07C160;
+  background: #E8F5E9;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.service-arrow {
+  font-size: 40rpx;
+  color: #CCCCCC;
+}
+
+.empty-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}

@@ -1,1 +1,34 @@
-<view class="sign-page"><text>sign</text></view>
+<!-- 码上签约 - 签署页 -->
+<view class="sign-page">
+  <view class="contract-preview" wx:if="{{contract}}">
+    <view class="preview-header">
+      <text class="contract-name">{{contract.name}}</text>
+      <view class="contract-info">
+        <text class="info-item">{{contract.type}}</text>
+        <text class="info-item">金额: ¥{{contract.amount}}</text>
+      </view>
+    </view>
+    <view class="preview-content">
+      <text class="preview-text">{{contract.content}}</text>
+    </view>
+  </view>
+  
+  <view class="signature-section">
+    <view class="section-title">签名</view>
+    <view class="signature-area">
+      <image class="signature-image" src="{{signatureImage}}" mode="aspectFit" wx:if="{{signatureImage}}"></image>
+      <view class="signature-placeholder" wx:if="{{!signatureImage}}">
+        <text class="placeholder-text">请上传签名图片</text>
+      </view>
+    </view>
+    <button class="btn-upload" bindtap="onChooseSignature" wx:if="{{!signatureImage}}">
+      上传签名
+    </button>
+  </view>
+  
+  <view class="action-section">
+    <button class="btn-sign" bindtap="onSign" disabled="{{signing || !signatureImage}}">
+      {{signing ? '签署中...' : '确认签署'}}
+    </button>
+  </view>
+</view>

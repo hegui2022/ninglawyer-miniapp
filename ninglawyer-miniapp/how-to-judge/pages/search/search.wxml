@@ -1,0 +1,47 @@
+<!-- 怎么判 - 案例搜索 -->
+<view class="search-page">
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索案例、法条、判决..." value="{{keyword}}" bindinput="onKeywordInput" confirm-type="search" bindconfirm="onSearch" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+  
+  <view class="filter-section">
+    <view class="filter-item" wx:for="{{filters}}" wx:key="key">
+      <picker mode="selector" range="{{item.options}}" value="{{item.value}}" bindchange="onFilterChange" data-key="{{item.key}}">
+        <view class="picker-view">
+          <text class="picker-label">{{item.name}}: {{item.options[item.value]}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+  
+  <view class="result-section" wx:if="{{results.length > 0}}">
+    <view class="result-header">
+      <text class="result-count">找到 {{results.length}} 个结果</text>
+    </view>
+    <view class="result-list">
+      <view class="result-item" wx:for="{{results}}" wx:key="id" bindtap="onViewDetail" data-id="{{item.id}}">
+        <view class="result-title">{{item.title}}</view>
+        <view class="result-meta">
+          <text class="result-tag">{{item.court}}</text>
+          <text class="result-date">{{item.date}}</text>
+        </view>
+        <view class="result-summary">{{item.summary}}</view>
+        <view class="result-keywords">
+          <text class="keyword-tag" wx:for="{{item.keywords}}" wx:key="*this">#{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="empty-section" wx:if="{{results.length === 0 && !searching}}">
+    <view class="empty-icon">📋</view>
+    <text class="empty-text">暂无搜索结果</text>
+  </view>
+  
+  <view class="loading-section" wx:if="{{searching}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">搜索中...</text>
+  </view>
+</view>

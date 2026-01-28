@@ -1,1 +1,21 @@
-<view class="record-page"><text>record</text></view>
+<!-- 码上签约 - 签署记录 -->
+<view class="record-page">
+  <view class="record-list" wx:if="{{recordList.length > 0}}">
+    <view class="record-item" wx:for="{{recordList}}" wx:key="id" bindtap="onViewDetail" data-id="{{item.id}}">
+      <view class="record-header">
+        <text class="record-name">{{item.contractName}}</text>
+        <view class="record-status status-{{item.status}}">
+          {{item.status === 'signed' ? '已签署' : '待签署'}}
+        </view>
+      </view>
+      <view class="record-meta">
+        <text class="record-party">{{item.party}}</text>
+        <text class="record-time">{{item.signTime}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="empty-section" wx:if="{{recordList.length === 0 && !loading}}">
+    <text class="empty-text">暂无签署记录</text>
+  </view>
+</view>

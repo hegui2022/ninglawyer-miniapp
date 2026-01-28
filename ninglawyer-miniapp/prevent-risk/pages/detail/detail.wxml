@@ -1,0 +1,38 @@
+<!-- 防风险详情页 -->
+<view class="detail-page">
+  <view class="risk-header" wx:if="{{riskInfo}}">
+    <text class="risk-title">{{riskInfo.title}}</text>
+    <view class="risk-level risk-{{riskInfo.level}}">
+      {{riskInfo.level === 'high' ? '高风险' : riskInfo.level === 'medium' ? '中风险' : '低风险'}}
+    </view>
+  </view>
+  
+  <view class="section">
+    <view class="section-title">风险描述</view>
+    <view class="section-content">
+      <text class="text-content">{{riskInfo.description}}</text>
+    </view>
+  </view>
+  
+  <view class="section">
+    <view class="section-title">影响范围</view>
+    <view class="section-content">
+      <text class="text-content">{{riskInfo.impact}}</text>
+    </view>
+  </view>
+  
+  <view class="section">
+    <view class="section-title">处理建议</view>
+    <view class="suggestion-list">
+      <view class="suggestion-item" wx:for="{{suggestions}}" wx:key="index">
+        <view class="suggestion-icon">
+          <text class="icon-check">✓</text>
+        </view>
+        <view class="suggestion-content">
+          <text class="suggestion-text">{{item}}</text>
+          <button class="btn-implement" size="mini" bindtap="onImplementSuggestion" data-index="{{index}}">采纳</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

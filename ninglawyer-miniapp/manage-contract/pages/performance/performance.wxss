@@ -1,0 +1,238 @@
+/* 理约 - 履约跟踪样式 */
+.performance-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding: 24rpx;
+  padding-bottom: 120rpx;
+}
+
+.header-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contract-info {
+  flex: 1;
+}
+
+.contract-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.contract-type {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.contract-status {
+  padding: 8rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.status-active {
+  background: #E8F5E9;
+  color: #07C160;
+}
+
+.status-completed {
+  background: #E3F2FD;
+  color: #2196F3;
+}
+
+.status-terminated {
+  background: #FFEBEE;
+  color: #F44336;
+}
+
+.timeline-section,
+.obligation-section,
+.alert-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 24rpx;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 12rpx;
+  top: 32rpx;
+  bottom: -32rpx;
+  width: 2rpx;
+  background: #E0E0E0;
+}
+
+.timeline-dot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-dot.status-completed {
+  background: #07C160;
+}
+
+.timeline-dot.status-pending {
+  background: #FFC107;
+}
+
+.timeline-dot.status-overdue {
+  background: #F44336;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.timeline-date {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.timeline-desc {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.obligation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.obligation-item {
+  padding: 24rpx;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+}
+
+.obligation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.obligation-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.obligation-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.obligation-badge.status-completed {
+  background: #E8F5E9;
+  color: #07C160;
+}
+
+.obligation-badge.status-pending {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+
+.obligation-badge.status-overdue {
+  background: #FFEBEE;
+  color: #F44336;
+}
+
+.obligation-meta {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.obligation-deadline,
+.obligation-party {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.alert-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 24rpx;
+  background: #FFF3E0;
+  border-radius: 12rpx;
+  border-left: 4rpx solid #FF9800;
+}
+
+.alert-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.alert-message {
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 1.5;
+}

@@ -1,0 +1,58 @@
+<!-- 法律教官 - 律师详情 -->
+<view class="lawyer-detail-page">
+  <view class="header-section" wx:if="{{lawyer}}">
+    <view class="avatar-section">
+      <image class="avatar" src="{{lawyer.avatar}}" mode="aspectFill"></image>
+      <view class="status-badge status-{{lawyer.status}}">
+        {{lawyer.status === 'online' ? '在线' : '离线'}}
+      </view>
+    </view>
+    <view class="info-section">
+      <text class="lawyer-name">{{lawyer.name}}</text>
+      <text class="lawyer-title">{{lawyer.title}}</text>
+      <view class="lawyer-tags">
+        <text class="tag" wx:for="{{lawyer.tags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="intro-section" wx:if="{{lawyer}}">
+    <view class="section-title">简介</view>
+    <view class="section-content">
+      <text class="text-content">{{lawyer.introduction}}</text>
+    </view>
+  </view>
+  
+  <view class="expertise-section" wx:if="{{lawyer}}">
+    <view class="section-title">擅长领域</view>
+    <view class="expertise-list">
+      <view class="expertise-item" wx:for="{{lawyer.expertise}}" wx:key="*this">
+        <text class="expertise-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="stats-section" wx:if="{{lawyer}}">
+    <view class="stats-item">
+      <text class="stats-value">{{lawyer.consultCount}}</text>
+      <text class="stats-label">咨询次数</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-value">{{lawyer.rating}}</text>
+      <text class="stats-label">评分</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-value">{{lawyer.experience}}</text>
+      <text class="stats-label">从业年限</text>
+    </view>
+  </view>
+  
+  <view class="action-section">
+    <button class="btn-consult" bindtap="onStartConsultation" wx:if="{{lawyer && lawyer.status === 'online'}}">
+      立即咨询
+    </button>
+    <button class="btn-consult disabled" disabled wx:if="{{lawyer && lawyer.status !== 'online'}}">
+      律师离线
+    </button>
+  </view>
+</view>

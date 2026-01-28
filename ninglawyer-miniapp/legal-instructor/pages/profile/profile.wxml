@@ -1,0 +1,41 @@
+<!-- 法律教官 - 个人中心 -->
+<view class="profile-page">
+  <view class="header-section" wx:if="{{userInfo}}">
+    <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.name || '用户'}}</text>
+      <text class="user-phone">{{userInfo.phone || ''}}</text>
+    </view>
+    <button class="btn-edit" size="mini">编辑</button>
+  </view>
+  
+  <view class="stats-section">
+    <view class="stats-item">
+      <text class="stats-value">0</text>
+      <text class="stats-label">咨询</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-value">0</text>
+      <text class="stats-label">合同</text>
+    </view>
+    <view class="stats-item">
+      <text class="stats-value">0</text>
+      <text class="stats-label">收藏</text>
+    </view>
+  </view>
+  
+  <view class="service-section">
+    <view class="section-title">我的服务</view>
+    <view class="service-list">
+      <view class="service-item" wx:for="{{serviceList}}" wx:key="id" bindtap="onServiceTap" data-id="{{item.id}}">
+        <view class="service-icon">{{item.icon}}</view>
+        <text class="service-name">{{item.name}}</text>
+        <text class="service-arrow">›</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="action-section">
+    <button class="btn-logout" bindtap="onLogout">退出登录</button>
+  </view>
+</view>

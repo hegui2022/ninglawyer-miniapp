@@ -1,0 +1,178 @@
+/* 法律教官 - 律师详情样式 */
+.lawyer-detail-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding: 24rpx;
+  padding-bottom: 120rpx;
+}
+
+.header-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.avatar-section {
+  position: relative;
+  margin-right: 32rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: #F5F5F5;
+}
+
+.status-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.status-online {
+  background: #E8F5E9;
+  color: #07C160;
+}
+
+.status-offline {
+  background: #FFEBEE;
+  color: #F44336;
+}
+
+.info-section {
+  flex: 1;
+}
+
+.lawyer-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.lawyer-title {
+  font-size: 26rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.lawyer-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.tag {
+  padding: 6rpx 16rpx;
+  background: #E8F5E9;
+  color: #07C160;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+}
+
+.intro-section,
+.expertise-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 24rpx;
+}
+
+.section-content {
+  padding: 24rpx;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+}
+
+.text-content {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.expertise-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.expertise-item {
+  padding: 16rpx 24rpx;
+  background: #E3F2FD;
+  color: #2196F3;
+  border-radius: 24rpx;
+}
+
+.expertise-text {
+  font-size: 26rpx;
+}
+
+.stats-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  justify-content: space-around;
+}
+
+.stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-value {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #07C160;
+  margin-bottom: 12rpx;
+}
+
+.stats-label {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.action-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  background: #ffffff;
+  border-top: 1rpx solid #E0E0E0;
+}
+
+.btn-consult {
+  width: 100%;
+  height: 88rpx;
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.btn-consult.disabled {
+  background: #CCCCCC;
+}

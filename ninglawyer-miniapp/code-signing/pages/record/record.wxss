@@ -1,1 +1,72 @@
-.record-page { min-height: 100vh; }
+/* 码上签约 - 签署记录样式 */
+.record-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding: 24rpx;
+}
+
+.record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.record-item {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+}
+
+.record-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.record-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.record-status {
+  padding: 8rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.status-signed {
+  background: #E8F5E9;
+  color: #07C160;
+}
+
+.status-pending {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+
+.record-meta {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.record-party,
+.record-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.empty-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}

@@ -39,16 +39,10 @@ Page({
       finance: '财务部'
     };
 
-    wx.showToast({
-      title: `进入${deptNames[dept]}`,
-      icon: 'none',
-      duration: 1500
+    // 跳转到部门页面
+    wx.navigateTo({
+      url: `/pages/department/department?dept=${dept}`
     });
-
-    // 实际应该跳转到对应部门页面
-    // wx.navigateTo({
-    //   url: `/pages/department/department?dept=${dept}`
-    // });
   },
 
   // 跳转到违规举报

@@ -6,7 +6,8 @@
     "pages/obligation/obligation",
     "pages/manage/manage",
     "pages/discover/discover",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/department/department"
   ],
   "window": {
     "backgroundTextStyle": "light",

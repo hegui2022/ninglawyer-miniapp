@@ -1,0 +1,81 @@
+<!-- 履约提醒页面 -->
+<view class="reminder-page">
+  <!-- 过滤器 -->
+  <view class="filter-tabs">
+    <view 
+      class="filter-tab {{filterType === item.id ? 'active' : ''}}" 
+      wx:for="{{filterTypes}}" 
+      wx:key="id"
+      data-type="{{item.id}}"
+      bindtap="onFilterChange"
+    >
+      <text class="tab-name">{{item.name}}</text>
+    </view>
+  </view>
+  
+  <!-- 提醒列表 -->
+  <view class="reminder-list" wx:if="{{reminders.length > 0}}">
+    <view 
+      class="reminder-card" 
+      wx:for="{{reminders}}" 
+      wx:key="id"
+      data-reminder="{{item}}"
+      bindtap="onReminderTap"
+    >
+      <view class="card-header">
+        <view class="card-left">
+          <text class="card-icon">{{onTypeIcon(item.type)}}</text>
+          <text class="card-title">{{item.title}}</text>
+        </view>
+        <view class="importance-badge" style="background: {{onImportanceColor(item.importance)}};">
+          <text class="importance-dot"></text>
+        </view>
+      </view>
+      
+      <view class="card-body">
+        <view class="card-info">
+          <text class="info-label">合同：</text>
+          <text class="info-value">{{item.contractTitle}}</text>
+        </view>
+        <view class="card-info">
+          <text class="info-label">人员：</text>
+          <text class="info-value">{{item.partyB}}</text>
+        </view>
+        <view class="card-info">
+          <text class="info-label">时间：</text>
+          <text class="info-value">{{item.date}}</text>
+        </view>
+        <view class="card-info" wx:if="{{item.nextDate && item.status !== 'completed'}}">
+          <text class="info-label">下次：</text>
+          <text class="info-value next-date">{{item.nextDate}}</text>
+        </view>
+      </view>
+      
+      <view class="card-footer">
+        <view class="status-badge {{item.status}}">
+          {{item.status === 'pending' ? '待处理' : item.status === 'active' ? '进行中' : '已完成'}}
+        </view>
+        <text class="card-action" wx:if="{{item.status !== 'completed'}}">点击完成</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{reminders.length === 0}}">
+    <image class="empty-icon" src="https://via.placeholder.com/200x200/07C160/ffffff?text=🔔" mode="aspectFit"></image>
+    <text class="empty-text">暂无提醒</text>
+    <button class="btn-add" bindtap="onAddReminder">添加提醒</button>
+  </view>
+  
+  <!-- 底部操作 -->
+  <view class="bottom-actions">
+    <button class="btn-settings" bindtap="onSettings">
+      <text class="btn-icon">⚙️</text>
+      <text class="btn-text">提醒设置</text>
+    </button>
+    <button class="btn-add-main" bindtap="onAddReminder">
+      <text class="btn-icon">+</text>
+      <text class="btn-text">添加提醒</text>
+    </button>
+  </view>
+</view>

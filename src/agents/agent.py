@@ -52,7 +52,7 @@ def build_agent(ctx=None):
     return create_agent(
         model=llm,
         system_prompt=cfg.get("sp"),
-        tools=[recognize_speech, recognize_speech_from_base64, text_to_speech, search_legal_knowledge],
+        tools=[recognize_speech, recognize_speech_from_base64, search_legal_knowledge],
         checkpointer=get_memory_saver(),
         state_schema=AgentState,
     )

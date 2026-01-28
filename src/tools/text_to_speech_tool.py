@@ -71,7 +71,8 @@ def text_to_speech(text: str, runtime: ToolRuntime) -> str:
             expire_time=3600  # 1小时有效期
         )
         
-        return f"语音已生成，访问地址：{signed_url}"
+        # 返回格式化的语音链接（方便后续提取）
+        return f"（语音链接：{signed_url}）"
         
     except Exception as e:
         return f"语音合成失败：{str(e)}"

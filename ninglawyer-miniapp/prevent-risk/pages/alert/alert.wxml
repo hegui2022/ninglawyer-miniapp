@@ -1,0 +1,130 @@
+<!--pages/alert/alert.wxml-->
+<view class="container">
+  <!-- 预警概览 -->
+  <view class="card alert-overview">
+    <view class="overview-header">
+      <text class="overview-title">预警概览</text>
+      <view class="refresh-btn" bindtap="refreshAlerts">
+        <text class="refresh-icon">🔄</text>
+        <text class="refresh-text">刷新</text>
+      </view>
+    </view>
+    <view class="overview-stats">
+      <view class="stat-item" bindtap="filterAlert" data-level="high">
+        <view class="stat-icon bg-danger">
+          <text class="iconfont">🔴</text>
+        </view>
+        <view class="stat-info">
+          <text class="stat-value">{{alertCount.high}}</text>
+          <text class="stat-label">紧急预警</text>
+        </view>
+      </view>
+      <view class="stat-item" bindtap="filterAlert" data-level="medium">
+        <view class="stat-icon bg-warning">
+          <text class="iconfont">🟡</text>
+        </view>
+        <view class="stat-info">
+          <text class="stat-value">{{alertCount.medium}}</text>
+          <text class="stat-label">重要预警</text>
+        </view>
+      </view>
+      <view class="stat-item" bindtap="filterAlert" data-level="low">
+        <view class="stat-icon bg-info">
+          <text class="iconfont">🔵</text>
+        </view>
+        <view class="stat-info">
+          <text class="stat-value">{{alertCount.low}}</text>
+          <text class="stat-label">一般预警</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预警列表 -->
+  <view class="card alert-list">
+    <view class="card-header">
+      <text class="card-title">预警列表</text>
+      <view class="filter-tabs">
+        <text
+          class="tab-item {{filterLevel === item.value ? 'active' : ''}}"
+          wx:for="{{tabs}}"
+          wx:key="value"
+          bindtap="switchFilter"
+          data-value="{{item.value}}"
+        >
+          {{item.name}}
+        </text>
+      </view>
+    </view>
+    <view class="alert-items">
+      <view
+        class="alert-item alert-{{item.level}}"
+        wx:for="{{filteredAlerts}}"
+        wx:key="id"
+        bindtap="viewAlertDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="alert-header">
+          <view class="alert-left">
+            <view class="alert-badge">
+              <text class="badge-icon">{{item.level === 'high' ? '🔴' : item.level === 'medium' ? '🟡' : '🔵'}}</text>
+            </view>
+            <view class="alert-title-group">
+              <text class="alert-title">{{item.title}}</text>
+              <text class="alert-time">{{item.time}}</text>
+            </view>
+          </view>
+          <view class="alert-status">
+            <text class="status-text {{item.handled ? 'handled' : 'pending'}}">
+              {{item.handled ? '已处理' : '待处理'}}
+            </text>
+          </view>
+        </view>
+        <view class="alert-content">
+          <text class="alert-desc">{{item.desc}}</text>
+        </view>
+        <view class="alert-actions">
+          <button class="btn btn-small btn-primary" bindtap="handleAlert" data-id="{{item.id}}" wx:if="{{!item.handled}}">
+            处理
+          </button>
+          <button class="btn btn-small btn-outline" bindtap="viewDetail" data-id="{{item.id}}">
+            详情
+          </button>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{filteredAlerts.length === 0}}">
+      <text class="empty-text">暂无预警信息</text>
+    </view>
+  </view>
+
+  <!-- 预警设置 -->
+  <view class="card alert-settings">
+    <view class="card-header">
+      <text class="card-title">预警设置</text>
+    </view>
+    <view class="setting-list">
+      <view class="setting-item">
+        <view class="setting-label">
+          <text class="setting-name">开启通知</text>
+          <text class="setting-desc">接收风险预警通知</text>
+        </view>
+        <switch checked="{{notificationEnabled}}" bindchange="toggleNotification" color="#07C160" />
+      </view>
+      <view class="setting-item">
+        <view class="setting-label">
+          <text class="setting-name">声音提醒</text>
+          <text class="setting-desc">预警时播放声音</text>
+        </view>
+        <switch checked="{{soundEnabled}}" bindchange="toggleSound" color="#07C160" />
+      </view>
+      <view class="setting-item">
+        <view class="setting-label">
+          <text class="setting-name">震动提醒</text>
+          <text class="setting-desc">预警时震动</text>
+        </view>
+        <switch checked="{{vibrateEnabled}}" bindchange="toggleVibrate" color="#07C160" />
+      </view>
+    </view>
+  </view>
+</view>

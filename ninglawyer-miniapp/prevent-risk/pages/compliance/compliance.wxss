@@ -1,0 +1,215 @@
+/* pages/compliance/compliance.wxss */
+
+/* 检查类型 */
+.check-types {
+  margin-bottom: 24rpx;
+}
+
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+}
+
+.type-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 24rpx;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  background-color: #ffffff;
+  transition: all 0.3s;
+}
+
+.type-item.active {
+  border-color: #07C160;
+  background-color: rgba(7, 193, 96, 0.05);
+}
+
+.type-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.type-name {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 合规要求列表 */
+.compliance-list {
+  margin-bottom: 24rpx;
+}
+
+.check-count {
+  font-size: 24rpx;
+  color: #07C160;
+  font-weight: 500;
+}
+
+.compliance-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.compliance-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.compliance-item:last-child {
+  border-bottom: none;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.item-check {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+}
+
+.item-check.passed {
+  background-color: #07C160;
+}
+
+.item-check.failed {
+  background-color: #F44336;
+}
+
+.check-icon {
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.item-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.item-right {
+  margin-left: 16rpx;
+}
+
+.item-status {
+  padding: 8rpx 16rpx;
+  border-radius: 4rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.item-status.pass {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: #07C160;
+}
+
+.item-status.fail {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+}
+
+/* 未通过详情 */
+.failed-items {
+  margin-bottom: 24rpx;
+}
+
+.failed-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.failed-item {
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  background-color: #fff5f5;
+  border-radius: 12rpx;
+  border-left: 4rpx solid #F44336;
+}
+
+.failed-icon {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+  font-size: 32rpx;
+}
+
+.failed-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.failed-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.failed-reason {
+  font-size: 24rpx;
+  color: #666666;
+  margin-bottom: 12rpx;
+}
+
+.failed-suggestion {
+  display: flex;
+  align-items: flex-start;
+  padding: 16rpx;
+  background-color: #ffffff;
+  border-radius: 8rpx;
+}
+
+.suggestion-label {
+  font-size: 24rpx;
+  color: #666666;
+  margin-right: 8rpx;
+  flex-shrink: 0;
+}
+
+.suggestion-text {
+  flex: 1;
+  font-size: 24rpx;
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  padding: 24rpx 0;
+}
+
+.action-buttons .btn {
+  margin-bottom: 16rpx;
+}
+
+.action-buttons .btn:last-child {
+  margin-bottom: 0;
+}

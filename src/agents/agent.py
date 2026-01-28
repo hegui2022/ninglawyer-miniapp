@@ -10,6 +10,7 @@ from storage.memory.memory_saver import get_memory_saver
 from tools.speech_recognition_tool import recognize_speech, recognize_speech_from_base64
 from tools.text_to_speech_tool import text_to_speech
 from tools.knowledge_base_tool import search_legal_knowledge
+from tools.contract_drafting_tool import contract_drafting_assistant, get_contract_templates
 
 LLM_CONFIG = "config/agent_llm_config.json"
 
@@ -52,7 +53,7 @@ def build_agent(ctx=None):
     return create_agent(
         model=llm,
         system_prompt=cfg.get("sp"),
-        tools=[recognize_speech, recognize_speech_from_base64, search_legal_knowledge],
+        tools=[recognize_speech, recognize_speech_from_base64, search_legal_knowledge, contract_drafting_assistant, get_contract_templates],
         checkpointer=get_memory_saver(),
         state_schema=AgentState,
     )

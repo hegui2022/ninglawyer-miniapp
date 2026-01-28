@@ -29,9 +29,8 @@ fangfengxian/
 │       └── home-indicator.json
 ├── pages/                     # 页面目录
 │   ├── login/                 # 登录页
-│   ├── guide/                 # 指引页（首页）
-│   │   └── article/           # 文章详情页（子页面）
-│   └── article/               # 旧文章页（已废弃）
+│   └── guide/                 # 指引页（首页）
+│       └── article/           # 文章详情页（子页面）
 └── app.json                   # 应用配置
 ```
 

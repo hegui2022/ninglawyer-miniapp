@@ -11,6 +11,7 @@ from tools.contract_skills import (
     salary_skill,
     termination_skill,
 )
+from tools.contract_skills.smart_parser import smart_input_parser
 
 
 class BaseScenarioAgent:
@@ -48,6 +49,10 @@ class StandardLaborContractAgent(BaseScenarioAgent):
         ]
         self.current_step = 0
         self.collected_info = {}
+    
+    def get_step_prompt(self) -> str:
+        """获取当前步骤的提示"""
+        return self._get_step_prompt()
     
     def _get_step_prompt(self) -> str:
         """获取当前步骤的提示"""
@@ -89,67 +94,20 @@ class StandardLaborContractAgent(BaseScenarioAgent):
         return "合同已生成！"
     
     def _parse_input(self, user_input: str, step_name: str) -> Dict[str, Any]:
-        """解析用户输入（简化版）"""
-        # 这里应该使用 LLM 来解析，暂时简化处理
-        result = {}
-        
-        lines = user_input.split('\n')
-        for line in lines:
-            if '：' in line or ':' in line:
-                if '：' in line:
-                    key, value = line.split('：', 1)
-                else:
-                    key, value = line.split(':', 1)
-                
-                key = key.strip()
-                value = value.strip()
-                
-                # 根据步骤名称映射字段
-                if step_name == "basic_info":
-                    mapping = {
-                        "单位名称": "employer_name",
-                        "单位地址": "employer_address",
-                        "法定代表人": "employer_legal_rep",
-                        "联系电话": "employer_contact",
-                        "姓名": "employee_name",
-                        "身份证号码": "employee_id",
-                        "住址": "employee_address",
-                        "紧急联系人": "employee_emergency_contact",
-                    }
-                    if key in mapping:
-                        result[mapping[key]] = value
-                
-                elif step_name == "contract_term":
-                    if "开始日期" in key:
-                        result["start_date"] = value
-                    elif "结束日期" in key:
-                        result["end_date"] = value
-                    elif "合同类型" in key:
-                        if "固定" in value:
-                            result["contract_type"] = "fixed_term"
-                        elif "无固定" in value:
-                            result["contract_type"] = "no_fixed_term"
-                    elif "试用期" in key and ("是" in value or "有" in value):
-                        result["has_probation"] = True
-                
-                elif step_name == "work_content":
-                    if "岗位" in key:
-                        result["position"] = value
-                    elif "地点" in key:
-                        result["work_location"] = value
-                    elif "职责" in key:
-                        result["job_responsibilities"] = value
-                
-                elif step_name == "salary":
-                    if "基本工资" in key:
-                        result["base_salary"] = value
-                    elif "发薪日" in key:
-                        result["pay_day"] = value
-                    result["salary_type"] = "monthly"
-                    result["performance_bonus"] = 0
-                    result["allowances"] = 0
-        
-        return result
+        """解析用户输入（使用智能解析器）"""
+        # 使用智能解析器
+        if step_name == "basic_info":
+            return smart_input_parser.parse_basic_info(user_input)
+        elif step_name == "contract_term":
+            return smart_input_parser.parse_contract_term(user_input)
+        elif step_name == "work_content":
+            return smart_input_parser.parse_work_content(user_input)
+        elif step_name == "salary":
+            return smart_input_parser.parse_salary(user_input)
+        elif step_name == "termination":
+            return smart_input_parser.parse_termination(user_input)
+        else:
+            return {}
     
     def _generate_contract(self) -> str:
         """生成合同"""
@@ -205,6 +163,10 @@ class PartTimeContractAgent(BaseScenarioAgent):
         ]
         self.current_step = 0
         self.collected_info = {}
+    
+    def get_step_prompt(self) -> str:
+        """获取当前步骤的提示"""
+        return "非全日制用工合同的信息收集流程与标准劳动合同类似，请按标准流程填写信息。"
     
     def start(self, user_input: str) -> str:
         """开始收集信息"""

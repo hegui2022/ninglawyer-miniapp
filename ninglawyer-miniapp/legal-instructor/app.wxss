@@ -1,0 +1,318 @@
+/**
+ * 法律教官小程序全局样式
+ * 采用微信企业微信设计风格
+ */
+
+/* 全局变量 */
+page {
+  --weui-font-size-base: 17px;
+  --weui-font-size-caption: 13px;
+  --weui-font-size-heading: 20px;
+  
+  --weui-color-primary: #07C160;
+  --weui-color-primary-active: #06AD56;
+  --weui-color-primary-disabled: #A0E8B5;
+  
+  --weui-color-warning: #FA9D3B;
+  --weui-color-error: #FA5151;
+  --weui-color-info: #10AEFF;
+  --weui-color-success: #07C160;
+  
+  --weui-text-color-primary: #111111;
+  --weui-text-color-secondary: #666666;
+  --weui-text-color-placeholder: #B2B2B2;
+  --weui-text-color-link: #576B95;
+  
+  --weui-bg-color-default: #FFFFFF;
+  --weui-bg-color-active: #F7F7F7;
+  --weui-bg-color-disabled: #F0F0F0;
+  
+  --weui-border-color-default: #E5E5E5;
+  --weui-border-color-active: #D9D9D9;
+  --weui-border-color-disabled: #EFEFEF;
+  
+  --weui-radius-base: 8px;
+  --weui-radius-large: 12px;
+  
+  --weui-spacing-base: 16px;
+  --weui-spacing-large: 24px;
+  
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", STHeiti, "Microsoft Yahei", Tahoma, Simsun, sans-serif;
+  background-color: #F7F7F7;
+  color: var(--weui-text-color-primary);
+}
+
+/* 容器 */
+.container {
+  min-height: 100vh;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 页面 */
+.page {
+  min-height: 100vh;
+  background-color: #F7F7F7;
+}
+
+/* 卡片 */
+.card {
+  background-color: var(--weui-bg-color-default);
+  border-radius: var(--weui-radius-base);
+  padding: var(--weui-spacing-base);
+  margin: var(--weui-spacing-base);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: var(--weui-font-size-base);
+  font-weight: 600;
+  color: var(--weui-text-color-primary);
+  margin-bottom: var(--weui-spacing-base);
+}
+
+.card-content {
+  font-size: var(--weui-font-size-base);
+  color: var(--weui-text-color-secondary);
+  line-height: 1.6;
+}
+
+/* 按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 var(--weui-spacing-large);
+  font-size: var(--weui-font-size-base);
+  border-radius: var(--weui-radius-base);
+  border: none;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: var(--weui-color-primary);
+  color: #FFFFFF;
+}
+
+.btn-primary:active {
+  background-color: var(--weui-color-primary-active);
+}
+
+.btn-primary:disabled {
+  background-color: var(--weui-color-primary-disabled);
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: var(--weui-text-color-primary);
+  border: 1rpx solid var(--weui-border-color-default);
+}
+
+.btn-secondary:active {
+  background-color: var(--weui-bg-color-active);
+}
+
+.btn-large {
+  height: 56px;
+  font-size: var(--weui-font-size-heading);
+}
+
+.btn-small {
+  height: 32px;
+  padding: 0 var(--weui-spacing-base);
+  font-size: var(--weui-font-size-caption);
+}
+
+/* 文本 */
+.text-primary {
+  color: var(--weui-text-color-primary);
+}
+
+.text-secondary {
+  color: var(--weui-text-color-secondary);
+}
+
+.text-placeholder {
+  color: var(--weui-text-color-placeholder);
+}
+
+.text-link {
+  color: var(--weui-text-color-link);
+}
+
+.text-success {
+  color: var(--weui-color-success);
+}
+
+.text-warning {
+  color: var(--weui-color-warning);
+}
+
+.text-error {
+  color: var(--weui-color-error);
+}
+
+.text-info {
+  color: var(--weui-color-info);
+}
+
+/* 标题 */
+.title {
+  font-size: var(--weui-font-size-heading);
+  font-weight: 600;
+  color: var(--weui-text-color-primary);
+}
+
+.subtitle {
+  font-size: var(--weui-font-size-base);
+  color: var(--weui-text-color-secondary);
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: var(--weui-font-size-caption);
+  border-radius: 4px;
+  background-color: var(--weui-bg-color-active);
+  color: var(--weui-text-color-secondary);
+}
+
+.tag-primary {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: var(--weui-color-primary);
+}
+
+.tag-success {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: var(--weui-color-success);
+}
+
+.tag-warning {
+  background-color: rgba(250, 157, 59, 0.1);
+  color: var(--weui-color-warning);
+}
+
+.tag-error {
+  background-color: rgba(250, 81, 81, 0.1);
+  color: var(--weui-color-error);
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background-color: var(--weui-border-color-default);
+  margin: var(--weui-spacing-base) 0;
+}
+
+/* 加载中 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loading-text {
+  margin-left: 16rpx;
+  color: var(--weui-text-color-secondary);
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: var(--weui-spacing-base);
+}
+
+.empty-text {
+  font-size: var(--weui-font-size-base);
+  color: var(--weui-text-color-secondary);
+}
+
+/* 图标 */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+}
+
+/* 徽标 */
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  padding: 2px 6px;
+  font-size: 20rpx;
+  line-height: 1;
+  border-radius: 10rpx;
+  background-color: var(--weui-color-error);
+  color: #FFFFFF;
+}
+
+/* Flex 布局 */
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+.flex-around {
+  justify-content: space-around;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* 间距 */
+.mt-xs { margin-top: 8px; }
+.mt-sm { margin-top: 12px; }
+.mt-md { margin-top: 16px; }
+.mt-lg { margin-top: 24px; }
+.mt-xl { margin-top: 32px; }
+
+.mb-xs { margin-bottom: 8px; }
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 16px; }
+.mb-lg { margin-bottom: 24px; }
+.mb-xl { margin-bottom: 32px; }
+
+.ml-xs { margin-left: 8px; }
+.ml-sm { margin-left: 12px; }
+.ml-md { margin-left: 16px; }
+.ml-lg { margin-left: 24px; }
+.ml-xl { margin-left: 32px; }
+
+.mr-xs { margin-right: 8px; }
+.mr-sm { margin-right: 12px; }
+.mr-md { margin-right: 16px; }
+.mr-lg { margin-right: 24px; }
+.mr-xl { margin-right: 32px; }

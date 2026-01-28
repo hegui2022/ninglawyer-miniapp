@@ -1,0 +1,4 @@
+<!-- loading 组件 -->
+<view class="component-loading">
+  <!-- 组件内容 -->
+</view>

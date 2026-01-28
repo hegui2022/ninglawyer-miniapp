@@ -1,0 +1,94 @@
+<!-- 首页 -->
+<view class="page">
+  <!-- 轮播图 -->
+  <view class="banner-section">
+    <swiper 
+      class="banner-swiper"
+      indicator-dots="{{true}}"
+      autoplay="{{true}}"
+      interval="5000"
+      duration="500"
+      indicator-color="rgba(255, 255, 255, 0.5)"
+      indicator-active-color="#FFFFFF"
+    >
+      <swiper-item wx:for="{{banners}}" wx:key="index">
+        <view class="banner-item">
+          <image class="banner-image" src="{{item.image}}" mode="aspectFill" />
+          <view class="banner-content">
+            <text class="banner-title">{{item.title}}</text>
+            <text class="banner-subtitle">{{item.subtitle}}</text>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 服务入口 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">服务入口</text>
+      <text class="section-more" bindtap="goToService" data-url="/pages/services/services">更多 ›</text>
+    </view>
+    <view class="services-grid">
+      <view 
+        class="service-item"
+        wx:for="{{services}}"
+        wx:key="id"
+        bindtap="goToService"
+        data-url="{{item.url}}"
+      >
+        <view class="service-icon" style="background-color: {{item.color}}20;">
+          <text>{{item.icon}}</text>
+        </view>
+        <text class="service-name">{{item.name}}</text>
+        <text class="service-desc">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门咨询 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">热门咨询</text>
+    </view>
+    <view class="consultation-list">
+      <view 
+        class="consultation-item"
+        wx:for="{{hotConsultations}}"
+        wx:key="id"
+        bindtap="goToHotConsultation"
+        data-domain="{{item.domain}}"
+      >
+        <view class="consultation-content">
+          <text class="consultation-title">{{item.title}}</text>
+          <view class="consultation-meta">
+            <text class="consultation-count">{{item.count}}次咨询</text>
+            <text class="consultation-lawyer">{{item.lawyer}}</text>
+          </view>
+        </view>
+        <view class="consultation-arrow">›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最新动态 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最新动态</text>
+    </view>
+    <view class="news-list">
+      <view 
+        class="news-item"
+        wx:for="{{news}}"
+        wx:key="id"
+        bindtap="goToNewsDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="news-content">
+          <text class="news-title">{{item.title}}</text>
+          <text class="news-date">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

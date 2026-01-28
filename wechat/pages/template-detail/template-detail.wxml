@@ -1,0 +1,91 @@
+<!--pages/template-detail/template-detail.wxml-->
+<view class="container">
+  <!-- 模板头部 -->
+  <view class="header">
+    <view class="icon">{{template.icon}}</view>
+    <view class="title-group">
+      <view class="title">{{template.template_name}}</view>
+      <view class="type">{{template.type_name}}</view>
+    </view>
+  </view>
+
+  <!-- 模板描述 -->
+  <view class="card">
+    <view class="card-title">模板描述</view>
+    <view class="description">{{template.description}}</view>
+  </view>
+
+  <!-- 模板内容 -->
+  <view class="card">
+    <view class="card-title">模板内容</view>
+    
+    <view class="content-group">
+      <view class="content-label">合同双方</view>
+      <view class="content-value">
+        <text>甲方：{{content.party_a}}</text>
+        <text>乙方：{{content.party_b}}</text>
+      </view>
+    </view>
+
+    <view class="content-group" wx:if="{{content.start_date}}">
+      <view class="content-label">合同期限</view>
+      <view class="content-value">
+        <text>{{content.start_date}} 至 {{content.end_date}}</text>
+        <text wx:if="{{content.probation_months > 0}}">试用期：{{content.probation_months}} 个月</text>
+      </view>
+    </view>
+
+    <view class="content-group" wx:if="{{content.job_content}}">
+      <view class="content-label">工作内容</view>
+      <view class="content-value">{{content.job_content}}</view>
+    </view>
+
+    <view class="content-group" wx:if="{{content.workplace}}">
+      <view class="content-label">工作地点</view>
+      <view class="content-value">{{content.workplace}}</view>
+    </view>
+
+    <view class="content-group" wx:if="{{content.salary}}">
+      <view class="content-label">劳动报酬</view>
+      <view class="content-value">
+        <text>月薪：{{content.salary}} 元</text>
+        <text wx:if="{{content.payment_method}}">支付方式：{{content.payment_method}}</text>
+      </view>
+    </view>
+
+    <view class="content-group" wx:if="{{content.work_hours}}">
+      <view class="content-label">工作时间</view>
+      <view class="content-value">{{content.work_hours}}</view>
+    </view>
+
+    <view class="content-group">
+      <view class="content-label">社会保险</view>
+      <view class="content-value">{{content.has_insurance ? '✅ 已包含' : '❌ 未包含'}}</view>
+    </view>
+
+    <view class="content-group">
+      <view class="content-label">住房公积金</view>
+      <view class="content-value">{{content.has_housing_fund ? '✅ 已包含' : '❌ 未包含'}}</view>
+    </view>
+
+    <view class="content-group" wx:if="{{content.has_confidentiality || content.has_non_compete || content.has_ip_clause}}">
+      <view class="content-label">附加条款</view>
+      <view class="content-value">
+        <text wx:if="{{content.has_confidentiality}}">✅ 保密协议</text>
+        <text wx:if="{{content.has_non_compete}}">✅ 竞业限制</text>
+        <text wx:if="{{content.has_ip_clause}}">✅ 知识产权</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <view class="btn btn-secondary" bindtap="goBack">返回</view>
+    <view class="btn" bindtap="useTemplate">使用此模板</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

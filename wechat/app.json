@@ -5,7 +5,9 @@
     "pages/contract-list/contract-list",
     "pages/contract-detail/contract-detail",
     "pages/contract-review/contract-review",
-    "pages/contract-edit/contract-edit"
+    "pages/contract-edit/contract-edit",
+    "pages/template-list/template-list",
+    "pages/template-detail/template-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

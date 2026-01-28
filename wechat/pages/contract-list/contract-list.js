@@ -6,19 +6,52 @@ Page({
     contracts: [],
     filterType: 'all',
     loading: false,
+    pagination: {
+      page: 1,
+      page_size: 10,
+      total: 0,
+      total_pages: 0,
+      has_more: true
+    }
   },
 
   onLoad() {
-    this.loadContracts();
+    this.loadContracts(true);
   },
 
   onShow() {
     // 页面显示时刷新列表
-    this.loadContracts();
+    this.refreshContracts();
+  },
+
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.refreshContracts();
+  },
+
+  // 上拉加载更多
+  onReachBottom() {
+    if (this.data.pagination.has_more && !this.data.loading) {
+      this.loadContracts(false);
+    }
+  },
+
+  // 刷新列表
+  refreshContracts() {
+    this.setData({
+      pagination: {
+        page: 1,
+        page_size: 10,
+        total: 0,
+        total_pages: 0,
+        has_more: true
+      }
+    });
+    this.loadContracts(true);
   },
 
   // 加载合同列表
-  loadContracts() {
+  loadContracts(isRefresh = false) {
     this.setData({ loading: true });
 
     app.request({
@@ -26,33 +59,53 @@ Page({
       method: 'GET',
       data: {
         status: this.data.filterType === 'all' ? '' : this.data.filterType,
-        limit: 50
+        page: this.data.pagination.page,
+        page_size: this.data.pagination.page_size
       },
       success: (res) => {
         if (res.code === 0 && res.data) {
-          // 格式化合同类型名称
-          const contracts = res.data.map(contract => ({
+          const { contracts, pagination } = res.data;
+          
+          // 格式化合同数据
+          const formattedContracts = contracts.map(contract => ({
             ...contract,
             contract_type_name: this.getContractTypeName(contract.contract_type),
             created_at: this.formatDate(contract.created_at)
           }));
 
-          this.setData({ contracts });
+          // 合并或替换数据
+          const newContracts = isRefresh ? formattedContracts : [...this.data.contracts, ...formattedContracts];
+          
+          this.setData({
+            contracts: newContracts,
+            pagination: pagination
+          });
         }
       },
       fail: (err) => {
         console.error('加载合同列表失败', err);
+        wx.showToast({
+          title: '加载失败',
+          icon: 'none'
+        });
       },
       complete: () => {
         this.setData({ loading: false });
+        
+        // 停止下拉刷新
+        if (isRefresh) {
+          wx.stopPullDownRefresh();
+        }
       }
     });
   },
 
   // 设置筛选条件
   setFilter(type) {
+    if (this.data.filterType === type) return;
+    
     this.setData({ filterType: type });
-    this.loadContracts();
+    this.refreshContracts();
   },
 
   // 跳转到合同详情
@@ -66,6 +119,13 @@ Page({
   goToDraft() {
     wx.navigateTo({
       url: '/pages/contract-draft/contract-draft'
+    });
+  },
+
+  // 跳转到模板库
+  goToTemplates() {
+    wx.navigateTo({
+      url: '/pages/template-list/template-list'
     });
   },
 

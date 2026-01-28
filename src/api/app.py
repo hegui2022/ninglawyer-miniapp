@@ -3,7 +3,7 @@
 Flask RESTful API
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import os
 from typing import Dict, Any
@@ -12,11 +12,13 @@ from coze_coding_dev_sdk.database import get_session
 from storage.database.contract_manager import (
     contract_manager,
     contract_review_manager,
+    contract_template_manager,
     ContractCreate,
     ContractUpdate,
 )
 from tools.contract_reviewer import contract_reviewer
 from tools.contract_drafter_master import ContractDraftingMaster
+from utils.document_generator import document_generator
 
 
 app = Flask(__name__)
@@ -153,23 +155,40 @@ def save_contract():
 
 @app.route('/api/contract/list', methods=['GET'])
 def list_contracts():
-    """获取合同列表"""
+    """获取合同列表（支持分页）"""
     try:
         contract_type = request.args.get('contract_type')
         status = request.args.get('status')
-        limit = int(request.args.get('limit', 20))
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('page_size', 10))
+        
+        # 计算偏移量
+        offset = (page - 1) * page_size
+        limit = page_size
         
         db = get_session()
         try:
+            # 获取合同列表
             contracts = contract_manager.get_contracts(
                 db,
                 contract_type=contract_type,
                 status=status,
+                offset=offset,
                 limit=limit
+            )
+            
+            # 获取总数
+            total = contract_manager.count_contracts(
+                db,
+                contract_type=contract_type,
+                status=status
             )
             
             contract_list = []
             for contract in contracts:
+                # 获取最新审查记录
+                latest_review = contract_review_manager.get_latest_review(db, contract.id)
+                
                 contract_list.append({
                     "id": contract.id,
                     "contract_name": contract.contract_name,
@@ -179,9 +198,23 @@ def list_contracts():
                     "status": contract.status,
                     "version": contract.version,
                     "created_at": contract.created_at.isoformat(),
+                    "has_review": latest_review is not None,
+                    "overall_risk": latest_review.overall_risk if latest_review else None
                 })
             
-            return jsonify(success_response(contract_list))
+            # 计算总页数
+            total_pages = (total + page_size - 1) // page_size
+            
+            return jsonify(success_response({
+                "contracts": contract_list,
+                "pagination": {
+                    "page": page,
+                    "page_size": page_size,
+                    "total": total,
+                    "total_pages": total_pages,
+                    "has_more": page < total_pages
+                }
+            }))
         finally:
             db.close()
     except Exception as e:
@@ -306,6 +339,154 @@ def get_contract_review(contract_id: int):
                 "low_risks": review.low_risks,
                 "review_result": review.review_result,
                 "created_at": review.created_at.isoformat(),
+            }))
+        finally:
+            db.close()
+    except Exception as e:
+        return jsonify(error_response(message=str(e)))
+
+
+@app.route('/api/contract/<int:contract_id>/download', methods=['GET'])
+def download_contract(contract_id: int):
+    """下载合同文件（PDF/Word）"""
+    try:
+        # 获取格式参数，默认 pdf
+        file_format = request.args.get('format', 'pdf')
+        if file_format not in ['pdf', 'docx']:
+            return jsonify(error_response(code=400, message="不支持的文件格式，仅支持 pdf 和 docx"))
+        
+        # 获取合同数据
+        db = get_session()
+        try:
+            contract = contract_manager.get_contract_by_id(db, contract_id)
+            if not contract:
+                return jsonify(error_response(code=404, message="合同不存在"))
+            
+            # 构造合同数据
+            contract_data = {
+                'id': contract.id,
+                'contract_name': contract.contract_name,
+                'contract_type': contract.contract_type,
+                'contract_content': contract.contract_content if isinstance(contract.contract_content, dict) else {},
+            }
+            
+            # 生成文件
+            if file_format == 'pdf':
+                filepath = document_generator.generate_pdf(contract_data)
+                filename = f"{contract.contract_name or '合同'}.pdf"
+                mimetype = 'application/pdf'
+            else:
+                filepath = document_generator.generate_word(contract_data)
+                filename = f"{contract.contract_name or '合同'}.docx"
+                mimetype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            
+            # 返回文件
+            return send_file(
+                filepath,
+                as_attachment=True,
+                download_name=filename,
+                mimetype=mimetype
+            )
+        finally:
+            db.close()
+    except Exception as e:
+        return jsonify(error_response(message=str(e)))
+
+
+@app.route('/api/template/list', methods=['GET'])
+def list_templates():
+    """获取模板列表"""
+    try:
+        template_type = request.args.get('template_type')
+        is_active = request.args.get('is_active', 'true').lower() == 'true'
+        limit = int(request.args.get('limit', 100))
+        
+        db = get_session()
+        try:
+            templates = contract_template_manager.get_templates(
+                db,
+                template_type=template_type,
+                is_active=is_active,
+                limit=limit
+            )
+            
+            template_list = []
+            for template in templates:
+                template_list.append({
+                    "id": template.id,
+                    "template_name": template.template_name,
+                    "template_type": template.template_type,
+                    "description": template.description,
+                    "is_active": template.is_active,
+                    "created_at": template.created_at.isoformat(),
+                })
+            
+            return jsonify(success_response(template_list))
+        finally:
+            db.close()
+    except Exception as e:
+        return jsonify(error_response(message=str(e)))
+
+
+@app.route('/api/template/<int:template_id>', methods=['GET'])
+def get_template(template_id: int):
+    """获取模板详情"""
+    try:
+        db = get_session()
+        try:
+            template = contract_template_manager.get_template_by_id(db, template_id)
+            if not template:
+                return jsonify(error_response(code=404, message="模板不存在"))
+            
+            return jsonify(success_response({
+                "id": template.id,
+                "template_name": template.template_name,
+                "template_type": template.template_type,
+                "template_content": template.template_content,
+                "description": template.description,
+                "is_active": template.is_active,
+                "created_at": template.created_at.isoformat(),
+                "updated_at": template.updated_at.isoformat() if template.updated_at else None,
+            }))
+        finally:
+            db.close()
+    except Exception as e:
+        return jsonify(error_response(message=str(e)))
+
+
+@app.route('/api/template/<int:template_id>/use', methods=['POST'])
+def use_template(template_id: int):
+    """使用模板创建合同"""
+    try:
+        data = request.get_json()
+        contract_name = data.get('contract_name')
+        
+        if not contract_name:
+            return jsonify(error_response(code=400, message="请提供合同名称"))
+        
+        db = get_session()
+        try:
+            # 获取模板
+            template = contract_template_manager.get_template_by_id(db, template_id)
+            if not template:
+                return jsonify(error_response(code=404, message="模板不存在"))
+            
+            # 创建合同
+            contract = contract_manager.create_contract(
+                db,
+                ContractCreate(
+                    contract_name=contract_name,
+                    contract_type=template.template_type,
+                    employer_name=template.template_content.get('party_a', ''),
+                    employee_name=template.template_content.get('party_b', ''),
+                    contract_content=template.template_content,
+                    status='draft'
+                )
+            )
+            
+            return jsonify(success_response({
+                "contract_id": contract.id,
+                "message": "合同创建成功"
             }))
         finally:
             db.close()

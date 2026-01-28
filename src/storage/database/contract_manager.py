@@ -106,7 +106,8 @@ class ContractManager:
         limit: int = 100,
         contract_type: Optional[str] = None,
         status: Optional[str] = None,
-        user_id: Optional[int] = None
+        user_id: Optional[int] = None,
+        offset: Optional[int] = None
     ) -> List[Contract]:
         """获取合同列表"""
         query = db.query(Contract)
@@ -118,7 +119,29 @@ class ContractManager:
         if user_id:
             query = query.filter(Contract.user_id == user_id)
         
+        # 使用 offset 参数如果提供，否则使用 skip
+        skip = offset if offset is not None else skip
+        
         return query.order_by(Contract.created_at.desc()).offset(skip).limit(limit).all()
+    
+    def count_contracts(
+        self,
+        db: Session,
+        contract_type: Optional[str] = None,
+        status: Optional[str] = None,
+        user_id: Optional[int] = None
+    ) -> int:
+        """统计合同数量"""
+        query = db.query(Contract)
+        
+        if contract_type:
+            query = query.filter(Contract.contract_type == contract_type)
+        if status:
+            query = query.filter(Contract.status == status)
+        if user_id:
+            query = query.filter(Contract.user_id == user_id)
+        
+        return query.count()
     
     def update_contract(self, db: Session, contract_id: int, contract_in: ContractUpdate) -> Optional[Contract]:
         """更新合同"""

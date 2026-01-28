@@ -11,6 +11,9 @@
     <view class="filter-item {{filterType === 'signed' ? 'active' : ''}}" bindtap="setFilter('signed')">
       已签署
     </view>
+    <view class="filter-item" bindtap="goToTemplates">
+      📋 模板库
+    </view>
   </view>
 
   <!-- 合同列表 -->

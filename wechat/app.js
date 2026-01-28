@@ -32,20 +32,33 @@ App({
 
   // 统一请求方法
   request(options) {
-    const { url, method = 'GET', data = {}, success, fail } = options;
+    const { url, method = 'GET', data = {}, responseType = 'json', success, fail } = options;
     const fullUrl = `${this.globalData.apiBase}${url}`;
+    
+    const header = {
+      'content-type': 'application/json',
+      'Authorization': `Bearer ${this.globalData.token}`
+    };
+    
+    // 如果不是 json 格式，移除 content-type
+    if (responseType !== 'json') {
+      delete header['content-type'];
+    }
     
     wx.request({
       url: fullUrl,
       method: method,
       data: data,
-      header: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${this.globalData.token}`
-      },
+      header: header,
+      responseType: responseType,
       success: (res) => {
         if (res.statusCode === 200) {
-          if (success) success(res.data);
+          if (responseType === 'json') {
+            if (success) success(res.data);
+          } else {
+            // arraybuffer 等其他类型直接返回数据
+            if (success) success(res.data);
+          }
         } else {
           wx.showToast({
             title: res.data.message || '请求失败',

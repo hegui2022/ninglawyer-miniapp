@@ -77,8 +77,11 @@
     <view class="btn btn-secondary" bindtap="reviewContract" wx:if="{{!reviewData.has_review}}">
       审查合同
     </view>
-    <view class="btn" bindtap="editContract">
+    <view class="btn btn-secondary" bindtap="editContract">
       编辑合同
+    </view>
+    <view class="btn" bindtap="downloadContract">
+      导出 PDF
     </view>
   </view>
 

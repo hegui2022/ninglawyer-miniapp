@@ -2,36 +2,38 @@
  * 法律教官小程序入口
  */
 
+// 导入配置
+const config = require('./utils/config.js');
+
 App({
   globalData: {
     // API 基础地址（开发环境）
-    config: {
-      apiUrl: 'http://localhost:5000/api',
-      baseUrl: 'http://localhost:5000'
-    },
-    
+    config: config.config,
+
     // 用户信息
     userInfo: null,
-    
+
     // 登录状态
     isLogin: false,
-    
+
     // Token
     token: null,
-    
+
     // 系统信息
     systemInfo: null
   },
 
   onLaunch() {
     console.log('法律教官小程序启动');
-    
+    console.log('当前环境:', config.ENV);
+    console.log('API 地址:', config.config.apiUrl);
+
     // 检查登录状态
     this.checkLoginStatus();
-    
+
     // 获取系统信息
     this.getSystemInfo();
-    
+
     // 初始化错误监听
     this.initErrorMonitor();
   },
@@ -62,7 +64,7 @@ App({
     if (token) {
       this.globalData.token = token;
       this.globalData.isLogin = true;
-      
+
       // 获取用户信息
       this.getUserInfo();
     }
@@ -86,7 +88,7 @@ App({
    */
   fetchUserInfo() {
     if (!this.globalData.isLogin) return;
-    
+
     this.request({
       url: '/user/info',
       method: 'GET'
@@ -99,6 +101,118 @@ App({
       console.error('获取用户信息失败:', err);
     });
   },
+
+  /**
+   * 获取系统信息
+   */
+  getSystemInfo() {
+    const systemInfo = wx.getSystemInfoSync();
+    this.globalData.systemInfo = systemInfo;
+    console.log('系统信息:', systemInfo);
+  },
+
+  /**
+   * 初始化错误监听
+   */
+  initErrorMonitor() {
+    // 监听小程序错误
+    wx.onError((error) => {
+      console.error('小程序错误:', error);
+      // TODO: 上报错误到服务器
+    });
+
+    // 监听小程序未处理的 Promise reject
+    wx.onUnhandledRejection((res) => {
+      console.error('未处理的 Promise reject:', res);
+      // TODO: 上报错误到服务器
+    });
+  },
+
+  /**
+   * 统一的请求方法
+   */
+  request(options) {
+    const { url, method = 'GET', data = {}, header = {} } = options;
+    const fullUrl = this.globalData.config.apiUrl + url;
+
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: fullUrl,
+        method: method,
+        data: data,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': this.globalData.token || '',
+          ...header
+        },
+        timeout: this.globalData.config.timeout,
+        success: (res) => {
+          if (res.statusCode === 200) {
+            if (res.data.code === 0 || res.data.code === 200) {
+              resolve(res.data);
+            } else {
+              wx.showToast({
+                title: res.data.message || '请求失败',
+                icon: 'none'
+              });
+              reject(res.data);
+            }
+          } else {
+            wx.showToast({
+              title: '网络错误',
+              icon: 'none'
+            });
+            reject({ message: '网络错误' });
+          }
+        },
+        fail: (err) => {
+          console.error('请求失败:', err);
+          wx.showToast({
+            title: '网络连接失败',
+            icon: 'none'
+          });
+          reject(err);
+        }
+      });
+    });
+  },
+
+  /**
+   * 上传文件
+   */
+  uploadFile(options) {
+    const { filePath, name = 'file', formData = {} } = options;
+    const fullUrl = this.globalData.config.baseUrl + '/upload';
+
+    return new Promise((resolve, reject) => {
+      wx.uploadFile({
+        url: fullUrl,
+        filePath: filePath,
+        name: name,
+        formData: formData,
+        header: {
+          'Authorization': this.globalData.token || ''
+        },
+        success: (res) => {
+          try {
+            const data = JSON.parse(res.data);
+            if (data.code === 0) {
+              resolve(data.data);
+            } else {
+              reject(new Error(data.message || '上传失败'));
+            }
+          } catch (error) {
+            reject(error);
+          }
+        },
+        fail: (err) => {
+          console.error('上传失败:', err);
+          reject(err);
+        }
+      });
+    });
+  }
+});,
 
   /**
    * 获取系统信息

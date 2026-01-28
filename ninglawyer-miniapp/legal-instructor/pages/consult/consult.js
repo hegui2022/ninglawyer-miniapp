@@ -1,4 +1,6 @@
-// 咨询对话页面
+// pages/consult/consult.js - 咨询对话页面（连接真实后端）
+const app = getApp()
+
 Page({
   data: {
     lawyerInfo: null,
@@ -11,15 +13,17 @@ Page({
       '离婚需要什么手续',
       '工伤赔偿标准是什么',
       '公司违法解除劳动合同怎么办'
-    ]
+    ],
+    // 当前法律领域
+    currentDomain: 'civil'
   },
 
   onLoad(options) {
-    const lawyerId = options.lawyerId;
+    const lawyerId = options.lawyerId || 'civil';
     if (lawyerId) {
       this.loadLawyerInfo(lawyerId);
     }
-    
+
     // 初始化欢迎消息
     this.initWelcomeMessage();
   },
@@ -33,7 +37,6 @@ Page({
 
   // 加载律师信息
   loadLawyerInfo(lawyerId) {
-    // 这里从参数获取或从API获取
     const lawyers = {
       'civil': { id: 'civil', name: '宁律师·民事', avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=民事', description: '民事纠纷专家' },
       'criminal': { id: 'criminal', name: '宁律师·刑事', avatar: 'https://via.placeholder.com/100/07C160/ffffff?text=刑事', description: '刑事辩护专家' },
@@ -45,7 +48,8 @@ Page({
     };
 
     this.setData({
-      lawyerInfo: lawyers[lawyerId] || lawyers['civil']
+      lawyerInfo: lawyers[lawyerId] || lawyers['civil'],
+      currentDomain: lawyerId
     });
   },
 
@@ -71,7 +75,7 @@ Page({
   },
 
   // 发送消息
-  onSend() {
+  async onSend() {
     const inputText = this.data.inputText.trim();
     if (!inputText) return;
 
@@ -90,33 +94,137 @@ Page({
       scrollToView: 'msg-' + userMessage.id
     });
 
-    // 模拟AI回复
-    this.simulateAIReply(inputText);
+    // 调用真实后端 API
+    try {
+      await this.sendToBackend(inputText);
+    } catch (error) {
+      console.error('咨询失败', error);
+      this.handleError(error);
+    }
   },
 
-  // 模拟AI回复
-  simulateAIReply(question) {
-    setTimeout(() => {
-      const replies = [
-        '根据您的描述，我建议您首先收集相关证据，包括合同、聊天记录等。然后可以考虑以下几种解决方式...',
-        '这是一个常见的法律问题。根据《民法典》相关规定，您有权要求对方承担违约责任...',
-        '针对您的情况，建议您先与对方进行协商，如果协商不成，可以考虑通过法律途径解决...',
-        '您的这个问题涉及到多个法律方面，我建议您提供更详细的信息，以便我给出更准确的建议...'
-      ];
+  // 发送到后端 API（真实调用）
+  async sendToBackend(question) {
+    const apiUrl = app.globalData.config.apiUrl;
 
-      const reply = {
+    try {
+      wx.showLoading({
+        title: '思考中...',
+        mask: true
+      });
+
+      const response = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `${apiUrl}/consultation/consult`,
+          method: 'POST',
+          data: {
+            domain: this.data.currentDomain,
+            question: question,
+            chat_history: this.getChatHistory()
+          },
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': wx.getStorageSync('token') || ''
+          },
+          timeout: 30000,
+          success: (res) => {
+            if (res.statusCode === 200 && res.data.code === 0) {
+              resolve(res.data);
+            } else {
+              reject(new Error(res.data.message || '请求失败'));
+            }
+          },
+          fail: (err) => {
+            reject(err);
+          }
+        });
+      });
+
+      // 添加 AI 回复
+      const aiMessage = {
         id: Date.now(),
         type: 'ai',
-        content: replies[Math.floor(Math.random() * replies.length)],
+        content: response.data.answer,
         time: this.formatTime(new Date())
       };
 
       this.setData({
-        messages: [...this.data.messages, reply],
+        messages: [...this.data.messages, aiMessage],
         isTyping: false,
-        scrollToView: 'msg-' + reply.id
+        scrollToView: 'msg-' + aiMessage.id
       });
-    }, 1500);
+
+      // 保存对话历史到本地存储
+      this.saveChatHistory();
+
+    } catch (error) {
+      throw error;
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  // 获取对话历史
+  getChatHistory() {
+    return this.data.messages.map(msg => ({
+      role: msg.type === 'user' ? 'user' : 'assistant',
+      content: msg.content
+    }));
+  },
+
+  // 保存对话历史
+  saveChatHistory() {
+    const historyKey = `chat_history_${this.data.currentDomain}`;
+    try {
+      wx.setStorageSync(historyKey, this.getChatHistory());
+    } catch (error) {
+      console.error('保存对话历史失败', error);
+    }
+  },
+
+  // 加载对话历史
+  loadChatHistory() {
+    const historyKey = `chat_history_${this.data.currentDomain}`;
+    try {
+      const history = wx.getStorageSync(historyKey);
+      if (history && history.length > 0) {
+        const messages = history.map((msg, index) => ({
+          id: Date.now() - (history.length - index) * 1000,
+          type: msg.role === 'user' ? 'user' : 'ai',
+          content: msg.content,
+          time: this.formatTime(new Date(Date.now() - (history.length - index) * 1000))
+        }));
+
+        this.setData({
+          messages: messages
+        });
+      }
+    } catch (error) {
+      console.error('加载对话历史失败', error);
+    }
+  },
+
+  // 错误处理
+  handleError(error) {
+    console.error('咨询失败', error);
+
+    const errorMessage = {
+      id: Date.now(),
+      type: 'error',
+      content: '抱歉，咨询出现问题，请稍后重试。\n\n错误信息：' + (error.message || '网络错误'),
+      time: this.formatTime(new Date())
+    };
+
+    this.setData({
+      messages: [...this.data.messages, errorMessage],
+      isTyping: false
+    });
+
+    wx.showToast({
+      title: '咨询失败，请稍后重试',
+      icon: 'none',
+      duration: 2000
+    });
   },
 
   // 点击快捷问题
@@ -136,7 +244,7 @@ Page({
       sourceType: ['album', 'camera'],
       success: (res) => {
         const tempFilePaths = res.tempFilePaths;
-        
+
         // 发送图片消息
         tempFilePaths.forEach((filePath) => {
           const message = {
@@ -149,9 +257,99 @@ Page({
           this.setData({
             messages: [...this.data.messages, message]
           });
+
+          // TODO: 上传图片到后端，进行图片分析
+          this.uploadImageForAnalysis(filePath);
         });
       }
     });
+  },
+
+  // 上传图片进行分析
+  async uploadImageForAnalysis(filePath) {
+    try {
+      wx.showLoading({
+        title: '分析中...',
+        mask: true
+      });
+
+      const apiUrl = app.globalData.config.apiUrl;
+
+      // 先上传图片
+      const uploadResponse = await new Promise((resolve, reject) => {
+        wx.uploadFile({
+          url: `${apiUrl}/upload`,
+          filePath: filePath,
+          name: 'file',
+          header: {
+            'Authorization': wx.getStorageSync('token') || ''
+          },
+          success: (res) => {
+            try {
+              const data = JSON.parse(res.data);
+              if (data.code === 0) {
+                resolve(data.data);
+              } else {
+                reject(new Error(data.message || '上传失败'));
+              }
+            } catch (error) {
+              reject(error);
+            }
+          },
+          fail: (err) => {
+            reject(err);
+          }
+        });
+      });
+
+      // 发送图片分析请求
+      const analysisResponse = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `${apiUrl}/consultation/analyze-image`,
+          method: 'POST',
+          data: {
+            image_url: uploadResponse.url,
+            domain: this.data.currentDomain
+          },
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': wx.getStorageSync('token') || ''
+          },
+          success: (res) => {
+            if (res.statusCode === 200 && res.data.code === 0) {
+              resolve(res.data);
+            } else {
+              reject(new Error(res.data.message || '分析失败'));
+            }
+          },
+          fail: (err) => {
+            reject(err);
+          }
+        });
+      });
+
+      // 添加 AI 回复
+      const aiMessage = {
+        id: Date.now(),
+        type: 'ai',
+        content: analysisResponse.data.answer,
+        time: this.formatTime(new Date())
+      };
+
+      this.setData({
+        messages: [...this.data.messages, aiMessage],
+        scrollToView: 'msg-' + aiMessage.id
+      });
+
+    } catch (error) {
+      console.error('图片分析失败', error);
+      wx.showToast({
+        title: '图片分析失败',
+        icon: 'none'
+      });
+    } finally {
+      wx.hideLoading();
+    }
   },
 
   // 语音输入
@@ -177,19 +375,50 @@ Page({
     return `${hours}:${minutes}`;
   },
 
-  // 滚动到底部
-  scrollToBottom() {
-    this.setData({
-      scrollToView: ''
+  // 清空对话
+  onClearChat() {
+    wx.showModal({
+      title: '清空对话',
+      content: '确定要清空当前对话吗？',
+      success: (res) => {
+        if (res.confirm) {
+          // 清空消息
+          this.setData({
+            messages: []
+          });
+
+          // 清空本地存储
+          const historyKey = `chat_history_${this.data.currentDomain}`;
+          try {
+            wx.removeStorageSync(historyKey);
+          } catch (error) {
+            console.error('清空对话历史失败', error);
+          }
+
+          // 重新初始化欢迎消息
+          this.initWelcomeMessage();
+
+          wx.showToast({
+            title: '已清空',
+            icon: 'success'
+          });
+        }
+      }
     });
-    setTimeout(() => {
-      const messages = this.data.messages;
-      if (messages.length > 0) {
-        this.setData({
-          scrollToView: 'msg-' + messages[messages.length - 1].id
+  },
+
+  // 复制内容
+  onCopyContent(e) {
+    const content = e.currentTarget.dataset.content;
+    wx.setClipboardData({
+      data: content,
+      success: () => {
+        wx.showToast({
+          title: '已复制',
+          icon: 'success'
         });
       }
-    }, 100);
+    });
   },
 
   onShareAppMessage() {

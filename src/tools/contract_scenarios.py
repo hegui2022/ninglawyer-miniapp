@@ -26,6 +26,20 @@ from tools.contract_skills.retired_skills import (
     retired_payment_skill,
     retired_termination_skill,
 )
+from tools.contract_skills.project_skills import (
+    project_info_skill,
+    project_term_skill,
+    project_content_skill,
+    project_payment_skill,
+    project_termination_skill,
+)
+from tools.contract_skills.dispatch_skills import (
+    dispatch_info_skill,
+    dispatch_term_skill,
+    dispatch_content_skill,
+    dispatch_payment_skill,
+    dispatch_responsibility_skill,
+)
 from tools.contract_skills.smart_parser import smart_input_parser
 
 
@@ -92,7 +106,7 @@ class StandardLaborContractAgent(BaseScenarioAgent):
         if self.current_step < len(self.steps):
             step_name, step_title, skill = self.steps[self.current_step]
             
-            # 解析用户输入（这里简化处理，实际应该使用 LLM）
+            # 解析用户输入（使用智能解析器）
             parsed_info = self._parse_input(user_input, step_name)
             self.collected_info.update(parsed_info)
             
@@ -556,6 +570,350 @@ class RetiredReemploymentAgent(BaseScenarioAgent):
         contract_parts.append("4. 本协议一式两份，甲乙双方各执一份。\n\n")
         contract_parts.append("甲方（盖章）：__________\n\n")
         contract_parts.append("乙方（签字）：__________\n\n")
+        contract_parts.append(f"签订日期：__________年____月____日\n")
+        
+        # 重置状态
+        self.current_step = 0
+        self.collected_info = {}
+        
+        return "".join(contract_parts)
+
+
+class ProjectContractAgent(BaseScenarioAgent):
+    """项目制合同代理"""
+    
+    def __init__(self):
+        super().__init__("project")
+        self.steps = [
+            ("project_info", "项目基本信息", project_info_skill),
+            ("project_term", "项目期限", project_term_skill),
+            ("project_content", "项目内容", project_content_skill),
+            ("project_payment", "项目报酬", project_payment_skill),
+            ("project_termination", "项目终止", project_termination_skill),
+        ]
+        self.current_step = 0
+        self.collected_info = {}
+    
+    def get_step_prompt(self) -> str:
+        """获取当前步骤的提示"""
+        if self.current_step >= len(self.steps):
+            return self._generate_contract()
+        
+        step_name, step_title, skill = self.steps[self.current_step]
+        prompt = skill.get_prompt_template()
+        
+        return f"""
+## 📝 {step_title}
+
+{prompt}
+"""
+    
+    def start(self, user_input: str) -> str:
+        """开始收集信息"""
+        return self.get_step_prompt()
+    
+    def process(self, user_input: str, collected_info: Dict[str, Any]) -> str:
+        """处理用户输入"""
+        # 保存已收集的信息
+        self.collected_info = collected_info
+        
+        # 处理当前步骤的输入
+        if self.current_step < len(self.steps):
+            step_name, step_title, skill = self.steps[self.current_step]
+            
+            # 解析用户输入（简化处理）
+            parsed_info = self._parse_input(user_input, step_name)
+            self.collected_info.update(parsed_info)
+            
+            # 移动到下一步
+            self.current_step += 1
+            
+            if self.current_step >= len(self.steps):
+                # 所有信息收集完成，生成合同
+                return self._generate_contract()
+            else:
+                # 继续收集下一步
+                return self._get_step_prompt()
+        
+        return "项目制合同已生成！"
+    
+    def _get_step_prompt(self) -> str:
+        """获取当前步骤的提示"""
+        if self.current_step >= len(self.steps):
+            return self._generate_contract()
+        
+        step_name, step_title, skill = self.steps[self.current_step]
+        prompt = skill.get_prompt_template()
+        
+        return f"""
+## 📝 {step_title}
+
+{prompt}
+"""
+    
+    def _parse_input(self, user_input: str, step_name: str) -> Dict[str, Any]:
+        """解析用户输入"""
+        result = {}
+        
+        lines = user_input.split('\n')
+        for line in lines:
+            if '：' in line or ':' in line:
+                if '：' in line:
+                    key, value = line.split('：', 1)
+                else:
+                    key, value = line.split(':', 1)
+                
+                key = key.strip()
+                value = value.strip()
+                
+                if step_name == "project_info":
+                    if "单位名称" in key or "甲方" in key and "名称" in key:
+                        result["employer_name"] = value
+                    elif "单位地址" in key:
+                        result["employer_address"] = value
+                    elif "法定代表人" in key:
+                        result["employer_legal_rep"] = value
+                    elif "联系电话" in key and "甲方" in user_input[:20]:
+                        result["employer_contact"] = value
+                    elif "姓名" in key:
+                        result["employee_name"] = value
+                    elif "身份证" in key:
+                        result["employee_id"] = value
+                    elif "住址" in key:
+                        result["employee_address"] = value
+                    elif "电话" in key:
+                        result["employee_phone"] = value
+                    elif "紧急联系人" in key:
+                        result["emergency_contact"] = value
+                
+                elif step_name == "project_term":
+                    if "开始日期" in key:
+                        result["start_date"] = value
+                    elif "工期" in key or "预计工期" in key:
+                        result["project_duration"] = value
+                    elif "工作地点" in key:
+                        result["project_location"] = value
+                    elif "交付标准" in key:
+                        result["delivery_standard"] = value
+                
+                elif step_name == "project_content":
+                    if "项目名称" in key:
+                        result["project_name"] = value
+                    elif "项目范围" in key:
+                        result["project_scope"] = value
+                    elif "交付物" in key:
+                        result["project_deliverables"] = value
+                
+                elif step_name == "project_payment":
+                    if "总金额" in key:
+                        result["total_amount"] = value
+                    elif "付款方式" in key or "付款条款" in key:
+                        result["payment_terms"] = value
+                    elif "质保金" in key and "是" in value:
+                        result["has_retention"] = True
+                
+                elif step_name == "project_termination":
+                    if "完成条件" in key:
+                        result["completion_conditions"] = value
+                    elif "违约责任" in key or "违约" in key:
+                        result["breach_penalty"] = value
+        
+        return result
+    
+    def _generate_contract(self) -> str:
+        """生成项目制合同"""
+        contract_parts = []
+        
+        contract_parts.append("# 项目制合同\n\n")
+        contract_parts.append(project_info_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(project_term_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(project_content_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(project_payment_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(project_termination_skill.generate(self.collected_info))
+        
+        contract_parts.append("\n\n六、其他\n\n")
+        contract_parts.append("1. 本合同一式两份，甲乙双方各执一份。\n")
+        contract_parts.append("2. 本合同未尽事宜，双方可另行协商补充。\n")
+        contract_parts.append("3. 本合同自双方签字盖章之日起生效。\n\n")
+        contract_parts.append("甲方（盖章）：__________\n\n")
+        contract_parts.append("乙方（签字）：__________\n\n")
+        contract_parts.append(f"签订日期：__________年____月____日\n")
+        
+        # 重置状态
+        self.current_step = 0
+        self.collected_info = {}
+        
+        return "".join(contract_parts)
+
+
+class DispatchContractAgent(BaseScenarioAgent):
+    """劳务派遣合同代理"""
+    
+    def __init__(self):
+        super().__init__("dispatch")
+        self.steps = [
+            ("dispatch_info", "劳务派遣基本信息", dispatch_info_skill),
+            ("dispatch_term", "派遣期限", dispatch_term_skill),
+            ("dispatch_content", "工作内容", dispatch_content_skill),
+            ("dispatch_payment", "报酬与福利", dispatch_payment_skill),
+            ("dispatch_responsibility", "责任与义务", dispatch_responsibility_skill),
+        ]
+        self.current_step = 0
+        self.collected_info = {}
+    
+    def get_step_prompt(self) -> str:
+        """获取当前步骤的提示"""
+        if self.current_step >= len(self.steps):
+            return self._generate_contract()
+        
+        step_name, step_title, skill = self.steps[self.current_step]
+        prompt = skill.get_prompt_template()
+        
+        return f"""
+## 📝 {step_title}
+
+{prompt}
+"""
+    
+    def start(self, user_input: str) -> str:
+        """开始收集信息"""
+        return self.get_step_prompt()
+    
+    def process(self, user_input: str, collected_info: Dict[str, Any]) -> str:
+        """处理用户输入"""
+        # 保存已收集的信息
+        self.collected_info = collected_info
+        
+        # 处理当前步骤的输入
+        if self.current_step < len(self.steps):
+            step_name, step_title, skill = self.steps[self.current_step]
+            
+            # 解析用户输入（简化处理）
+            parsed_info = self._parse_input(user_input, step_name)
+            self.collected_info.update(parsed_info)
+            
+            # 移动到下一步
+            self.current_step += 1
+            
+            if self.current_step >= len(self.steps):
+                # 所有信息收集完成，生成合同
+                return self._generate_contract()
+            else:
+                # 继续收集下一步
+                return self._get_step_prompt()
+        
+        return "劳务派遣合同已生成！"
+    
+    def _get_step_prompt(self) -> str:
+        """获取当前步骤的提示"""
+        if self.current_step >= len(self.steps):
+            return self._generate_contract()
+        
+        step_name, step_title, skill = self.steps[self.current_step]
+        prompt = skill.get_prompt_template()
+        
+        return f"""
+## 📝 {step_title}
+
+{prompt}
+"""
+    
+    def _parse_input(self, user_input: str, step_name: str) -> Dict[str, Any]:
+        """解析用户输入"""
+        result = {}
+        
+        lines = user_input.split('\n')
+        for line in lines:
+            if '：' in line or ':' in line:
+                if '：' in line:
+                    key, value = line.split('：', 1)
+                else:
+                    key, value = line.split(':', 1)
+                
+                key = key.strip()
+                value = value.strip()
+                
+                if step_name == "dispatch_info":
+                    if "劳务派遣单位" in key or "甲方" in key and "名称" in key:
+                        result["dispatch_company"] = value
+                    elif "派遣单位地址" in key or "甲方地址" in key:
+                        result["dispatch_address"] = value
+                    elif "用工单位" in key or "乙方" in key and "名称" in key:
+                        result["workplace_name"] = value
+                    elif "用工单位地址" in key or "乙方地址" in key:
+                        result["workplace_address"] = value
+                    elif "劳动者" in key or "丙方" in key and "姓名" in key:
+                        result["employee_name"] = value
+                    elif "身份证" in key:
+                        result["employee_id"] = value
+                elif step_name == "dispatch_term":
+                    if "开始日期" in key:
+                        result["start_date"] = value
+                    elif "结束日期" in key:
+                        result["end_date"] = value
+                    elif "工作地点" in key:
+                        result["work_location"] = value
+                    elif "派遣岗位" in key:
+                        result["dispatch_position"] = value
+                    elif "试用期" in key and "有" in value:
+                        result["has_trial"] = True
+                    elif "试用期" in value:
+                        import re
+                        match = re.search(r'(\d+)', value)
+                        if match:
+                            result["trial_period"] = match.group(1)
+                elif step_name == "dispatch_content":
+                    if "每周" in key and "天" in value:
+                        import re
+                        match = re.search(r'(\d+)', value)
+                        if match:
+                            result["work_days"] = match.group(1)
+                    elif "每天" in key and "小时" in value:
+                        import re
+                        match = re.search(r'(\d+)', value)
+                        if match:
+                            result["work_hours"] = match.group(1)
+                elif step_name == "dispatch_payment":
+                    if "派遣服务费" in key:
+                        result["dispatch_fee"] = value
+                    elif "劳动者工资" in key or "丙方工资" in key:
+                        result["employee_salary"] = value
+                    elif "承担社会保险" in value:
+                        result["employer_pays_insurance"] = True
+                elif step_name == "dispatch_responsibility":
+                    if "工伤" in key and "甲方" in value or "派遣" in value:
+                        result["dispatch_responsible"] = True
+                    elif "绩效" in key and "甲方" in value:
+                        result["dispatch_manages"] = True
+        
+        return result
+    
+    def _generate_contract(self) -> str:
+        """生成劳务派遣合同"""
+        contract_parts = []
+        
+        contract_parts.append("# 劳务派遣合同\n\n")
+        contract_parts.append(dispatch_info_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(dispatch_term_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(dispatch_content_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(dispatch_payment_skill.generate(self.collected_info))
+        contract_parts.append("\n\n")
+        contract_parts.append(dispatch_responsibility_skill.generate(self.collected_info))
+        
+        contract_parts.append("\n\n六、其他\n\n")
+        contract_parts.append("1. 本合同一式三份，甲乙丙三方各执一份。\n")
+        contract_parts.append("2. 本合同未尽事宜，三方可另行协商补充。\n")
+        contract_parts.append("3. 本合同自三方签字盖章之日起生效。\n\n")
+        contract_parts.append("甲方（盖章）：__________\n\n")
+        contract_parts.append("乙方（盖章）：__________\n\n")
+        contract_parts.append("丙方（签字）：__________\n\n")
         contract_parts.append(f"签订日期：__________年____月____日\n")
         
         # 重置状态

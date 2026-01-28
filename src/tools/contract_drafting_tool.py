@@ -68,6 +68,26 @@ def export_contract_to_word(contract_text: str, filename: str = "contract.docx")
 
 
 @tool
+def export_contract_to_pdf(contract_text: str, filename: str = "contract.pdf") -> str:
+    """
+    导出合同为 PDF 格式
+    
+    Args:
+        contract_text: 合同文本
+        filename: 文件名
+        
+    Returns:
+        导出文件路径
+    """
+    try:
+        from tools.contract_exporter import contract_exporter
+        filepath = contract_exporter.export_to_pdf(contract_text, filename)
+        return f"合同已导出为 PDF 格式：{filepath}"
+    except Exception as e:
+        return f"导出失败：{str(e)}"
+
+
+@tool
 def get_contract_templates(runtime: ToolRuntime) -> str:
     """
     获取可用的合同模板列表
@@ -118,5 +138,6 @@ def get_contract_templates(runtime: ToolRuntime) -> str:
 __all__ = [
     "contract_drafting_assistant",
     "export_contract_to_word",
+    "export_contract_to_pdf",
     "get_contract_templates",
 ]

@@ -16,6 +16,8 @@ from tools.contract_scenarios import (
     PartTimeContractAgent,
     InternAgreementAgent,
     RetiredReemploymentAgent,
+    ProjectContractAgent,
+    DispatchContractAgent,
 )
 
 
@@ -104,8 +106,8 @@ class ScenarioClassifier:
         scores["parttime"] = sum(1 for kw in keywords_parttime if kw in user_input) * 2  # 权重更高
         scores["intern"] = sum(1 for kw in keywords_intern if kw in user_input) * 2  # 权重提高
         scores["retired"] = sum(1 for kw in keywords_retired if kw in user_input) * 2  # 权重提高
-        scores["project"] = sum(1 for kw in keywords_project if kw in user_input)
-        scores["dispatch"] = sum(1 for kw in keywords_dispatch if kw in user_input)
+        scores["project"] = sum(1 for kw in keywords_project if kw in user_input) * 2  # 权重提高
+        scores["dispatch"] = sum(1 for kw in keywords_dispatch if kw in user_input) * 2  # 权重提高
         
         # 找到最高分
         max_score = max(scores.values())
@@ -144,6 +146,8 @@ class ContractDraftingMaster:
             "parttime": PartTimeContractAgent(),
             "intern": InternAgreementAgent(),
             "retired": RetiredReemploymentAgent(),
+            "project": ProjectContractAgent(),
+            "dispatch": DispatchContractAgent(),
         }
         
         # 技能库
@@ -192,6 +196,8 @@ class ContractDraftingMaster:
 2. **非全日制用工合同** - 每天不超过4小时，每周不超过24小时
 3. **实习协议** - 适用于在校学生实习，有实习补贴和意外保险
 4. **退休返聘协议** - 适用于退休人员返聘，劳务关系而非劳动关系
+5. **项目制合同** - 以完成项目为期限，灵活安排
+6. **劳务派遣合同** - 三方关系，派遣单位、用工单位、劳动者
 
 请告诉我你想创建哪种类型的合同？
 """
@@ -218,6 +224,8 @@ class ContractDraftingMaster:
 2. **非全日制用工合同** - 适用于兼职，每天不超过4小时
 3. **实习协议** - 适用于在校学生实习，有实习补贴和意外保险
 4. **退休返聘协议** - 适用于退休人员返聘，不缴纳社保
+5. **项目制合同** - 适用于项目制合作，以完成项目为期限
+6. **劳务派遣合同** - 适用于劳务派遣，三方关系
 
 请回复数字或描述你的需求。
 """

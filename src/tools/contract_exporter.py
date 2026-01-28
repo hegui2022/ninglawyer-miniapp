@@ -3,7 +3,7 @@
 Contract Export Tool - 导出合同为 Word/PDF 格式
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -19,6 +19,19 @@ try:
     from comtypes import client  # type: ignore
 except ImportError:
     client = None
+
+# PDF 生成库
+try:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import mm
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_JUSTIFY
+    HAS_REPORTLAB = True
+except ImportError:
+    HAS_REPORTLAB = False
 
 
 class ContractExporter:
@@ -108,35 +121,128 @@ class ContractExporter:
         Returns:
             导出文件的路径
         """
-        # 先导出为 Word
-        word_filepath = self.export_to_word(contract_text, filename)
-        
-        # 将 Word 转换为 PDF
         if not filename:
-            filename = os.path.basename(word_filepath).replace('.docx', '.pdf')
-        else:
+            filename = f"contract_{self._generate_timestamp()}.pdf"
+        elif not filename.endswith('.pdf'):
             filename = filename.replace('.docx', '.pdf')
         
         pdf_filepath = os.path.join(self.export_dir, filename)
         
-        # 使用 docx2pdf 转换
+        # 优先使用 reportlab 直接生成 PDF
+        if HAS_REPORTLAB:
+            try:
+                return self._generate_pdf_with_reportlab(contract_text, pdf_filepath)
+            except Exception as e:
+                print(f"PDF生成失败: {str(e)}")
+        
+        # 回退方案：尝试使用 docx2pdf 或 comtypes
+        word_filepath = self.export_to_word(contract_text, filename.replace('.pdf', '.docx'))
+        
         if convert is not None:
-            convert(word_filepath, pdf_filepath)
-            return pdf_filepath
-        elif client is not None:
-            # 如果没有 docx2pdf，使用其他方法
-            word = client.CreateObject('Word.Application')
-            word.Visible = False
+            try:
+                convert(word_filepath, pdf_filepath)
+                return pdf_filepath
+            except Exception as e:
+                print(f"docx2pdf转换失败: {str(e)}")
+        
+        if client is not None:
+            try:
+                word = client.CreateObject('Word.Application')
+                word.Visible = False
+                
+                doc = word.Documents.Open(os.path.abspath(word_filepath))
+                doc.SaveAs(os.path.abspath(pdf_filepath), FileFormat=17)  # 17 = PDF
+                doc.Close()
+                word.Quit()
+                
+                return pdf_filepath
+            except Exception as e:
+                print(f"Word自动化失败: {str(e)}")
+        
+        # 所有方法都失败，返回 Word 文件路径
+        return word_filepath
+    
+    def _generate_pdf_with_reportlab(self, contract_text: str, filepath: str) -> str:
+        """使用 reportlab 直接生成 PDF"""
+        # 创建 PDF 文档
+        doc = SimpleDocTemplate(
+            filepath,
+            pagesize=A4,
+            rightMargin=20*mm,
+            leftMargin=20*mm,
+            topMargin=20*mm,
+            bottomMargin=20*mm
+        )
+        
+        # 样式
+        styles = getSampleStyleSheet()
+        
+        # 创建自定义样式
+        title_style = ParagraphStyle(
+            'ChineseTitle',
+            parent=styles['Heading1'],
+            fontName='Helvetica-Bold',
+            fontSize=18,
+            alignment=TA_CENTER,
+            spaceAfter=12*mm
+        )
+        
+        heading_style = ParagraphStyle(
+            'ChineseHeading',
+            parent=styles['Heading2'],
+            fontName='Helvetica-Bold',
+            fontSize=14,
+            alignment=TA_LEFT,
+            spaceAfter=6*mm,
+            spaceBefore=6*mm
+        )
+        
+        normal_style = ParagraphStyle(
+            'ChineseNormal',
+            parent=styles['Normal'],
+            fontName='Helvetica',
+            fontSize=10,
+            alignment=TA_JUSTIFY,
+            leading=14,
+            spaceAfter=2*mm
+        )
+        
+        # 解析合同文本
+        story = []
+        lines = contract_text.split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                story.append(Spacer(1, 2*mm))
+                continue
             
-            doc = word.Documents.Open(os.path.abspath(word_filepath))
-            doc.SaveAs(os.path.abspath(pdf_filepath), FileFormat=17)  # 17 = PDF
-            doc.Close()
-            word.Quit()
-            
-            return pdf_filepath
-        else:
-            # 如果都失败，返回 Word 文件路径
-            return word_filepath
+            # 处理 Markdown 格式
+            if line.startswith('#'):
+                # 移除 # 号
+                title_text = line.lstrip('#').strip()
+                
+                if line.startswith('###'):
+                    # 三级标题
+                    story.append(Paragraph(title_text, heading_style))
+                elif line.startswith('##'):
+                    # 二级标题
+                    story.append(Paragraph(title_text, heading_style))
+                else:
+                    # 一级标题
+                    story.append(Paragraph(title_text, title_style))
+            elif line.startswith(('一、', '二、', '三、', '四、', '五、', 
+                                 '六、', '七、', '八、', '九、', '十、')):
+                # 大条款标题
+                story.append(Paragraph(f"<b>{line}</b>", heading_style))
+            else:
+                # 普通段落
+                story.append(Paragraph(line, normal_style))
+        
+        # 生成 PDF
+        doc.build(story)
+        
+        return filepath
     
     def _generate_timestamp(self) -> str:
         """生成时间戳"""

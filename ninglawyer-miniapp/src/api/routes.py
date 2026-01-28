@@ -9,18 +9,12 @@ from src.utils.logger import logger
 api_bp = Blueprint('api', __name__)
 
 # 导入各个模块的路由
-# from src.api.consultation import consultation_bp
-# from src.api.contract import contract_bp
-# from src.api.signing import signing_bp
-# from src.api.verification import verification_bp
-# from src.api.litigation import litigation_bp
+from src.api.consultation import consultation_bp
+from src.api.contract import contract_bp
 
 # 注册蓝图
-# api_bp.register_blueprint(consultation_bp, url_prefix='/consultation')
-# api_bp.register_blueprint(contract_bp, url_prefix='/contract')
-# api_bp.register_blueprint(signing_bp, url_prefix='/signing')
-# api_bp.register_blueprint(verification_bp, url_prefix='/verification')
-# api_bp.register_blueprint(litigation_bp, url_prefix='/litigation')
+api_bp.register_blueprint(consultation_bp, url_prefix='/consultation')
+api_bp.register_blueprint(contract_bp, url_prefix='/contract')
 
 # 临时路由，用于测试
 @api_bp.route('/test', methods=['GET'])

@@ -1,16 +1,61 @@
-/**
- * service-card 组件
- */
+// 服务卡片组件
 Component({
   properties: {
-    // 组件属性
+    title: {
+      type: String,
+      value: ''
+    },
+    description: {
+      type: String,
+      value: ''
+    },
+    icon: {
+      type: String,
+      value: ''
+    },
+    tag: {
+      type: String,
+      value: ''
+    },
+    tagType: {
+      type: String,
+      value: 'default'
+    },
+    count: {
+      type: Number,
+      value: 0
+    },
+    url: {
+      type: String,
+      value: ''
+    }
   },
-
-  data: {
-    // 组件内部数据
-  },
-
+  
   methods: {
-    // 组件方法
+    // 点击卡片
+    onCardTap() {
+      const url = this.properties.url;
+      if (url) {
+        wx.navigateTo({
+          url: url
+        });
+      }
+      
+      this.triggerEvent('tap', {
+        title: this.properties.title
+      });
+    },
+    
+    // 获取标签类型样式
+    getTagTypeClass() {
+      const typeMap = {
+        primary: 'tag-primary',
+        success: 'tag-success',
+        warning: 'tag-warning',
+        error: 'tag-error',
+        default: 'tag-default'
+      };
+      return typeMap[this.properties.tagType] || typeMap.default;
+    }
   }
 });

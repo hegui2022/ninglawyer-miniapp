@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # 后端服务
+  api:
+    build: .
+    container_name: ninglawyer-api
+    ports:
+      - "5000:5000"
+    environment:
+      - MODEL_NAME=doubao-seed
+      - MODEL_BASE_URL=https://your-model-api.com
+      - MODEL_API_KEY=your-api-key
+      - API_PORT=5000
+      - DEBUG=False
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs:/app/work/logs
+      - ./config:/app/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - ninglawyer-network
+
+  # PostgreSQL 数据库（可选）
+  postgres:
+    image: postgres:13-alpine
+    container_name: ninglawyer-postgres
+    environment:
+      - POSTGRES_DB=ninglawyer
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - ninglawyer-network
+
+  # Redis 缓存（可选）
+  redis:
+    image: redis:6-alpine
+    container_name: ninglawyer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - ninglawyer-network
+
+  # Nginx 反向代理（可选）
+  nginx:
+    image: nginx:alpine
+    container_name: ninglawyer-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - ninglawyer-network
+
+networks:
+  ninglawyer-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:

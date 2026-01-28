@@ -1,16 +1,33 @@
-/**
- * empty 组件
- */
+// 空状态组件
 Component({
   properties: {
-    // 组件属性
+    icon: {
+      type: String,
+      value: '/assets/images/empty.png'
+    },
+    text: {
+      type: String,
+      value: '暂无数据'
+    },
+    showButton: {
+      type: Boolean,
+      value: false
+    },
+    buttonText: {
+      type: String,
+      value: '去添加'
+    }
   },
-
-  data: {
-    // 组件内部数据
-  },
-
+  
   methods: {
-    // 组件方法
+    // 点击按钮
+    onButtonClick() {
+      this.triggerEvent('buttonClick');
+    },
+    
+    // 重新加载
+    onReload() {
+      this.triggerEvent('reload');
+    }
   }
 });

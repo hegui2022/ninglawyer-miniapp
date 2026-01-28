@@ -1,8 +1,0 @@
-{
-  "usingComponents": {
-    "nav-bar": "../../components/nav-bar/nav-bar",
-    "tab-bar": "../../components/tab-bar/tab-bar"
-  },
-  "navigationBarTitleText": "股东会",
-  "navigationStyle": "custom"
-}

@@ -6,8 +6,7 @@
     "pages/obligation/obligation",
     "pages/manage/manage",
     "pages/discover/discover",
-    "pages/profile/profile",
-    "pages/shareholders/shareholders"
+    "pages/profile/profile"
   ],
   "window": {
     "backgroundTextStyle": "light",

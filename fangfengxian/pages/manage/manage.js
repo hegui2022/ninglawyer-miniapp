@@ -1,41 +1,31 @@
 // pages/manage/manage.js
 Page({
-  data: {
-    countdown: '3 天 40:52:00',
-    timer: null
-  },
-
   onLoad(options) {
     console.log('Manage page loaded');
-    this.startCountdown();
   },
 
-  onUnload() {
-    // 页面卸载时清除定时器
-    if (this.data.timer) {
-      clearInterval(this.data.timer);
-    }
-  },
+  // 一键办公功能
+  goToQuickOffice(e) {
+    const type = e.currentTarget.dataset.type;
+    console.log('Go to quick office:', type);
 
-  // 开始倒计时
-  startCountdown() {
-    // 模拟倒计时（实际应该从后端获取会议时间）
-    const timer = setInterval(() => {
-      // 这里只是示例，实际应该根据会议时间计算
-      // const now = new Date();
-      // const meetingTime = new Date('2024-01-31 09:00:00');
-      // const diff = meetingTime - now;
-      // 根据差值计算天、时、分、秒
+    const typeNames = {
+      meeting: '会议通知',
+      agreement: '出资协议',
+      declaration: '入股声明',
+      upload: '上传文件'
+    };
 
-      // 暂时使用模拟数据
-      const randomSecond = Math.floor(Math.random() * 59);
-      const randomMinute = Math.floor(Math.random() * 59);
-      this.setData({
-        countdown: `3 天 40:${randomMinute.toString().padStart(2, '0')}:${randomSecond.toString().padStart(2, '0')}`
-      });
-    }, 1000);
+    wx.showToast({
+      title: `打开${typeNames[type]}`,
+      icon: 'none',
+      duration: 1500
+    });
 
-    this.setData({ timer });
+    // 实际应该跳转到对应功能页面
+    // wx.navigateTo({
+    //   url: `/pages/${type}/${type}`
+    // });
   },
 
   // 跳转到部门页面
@@ -44,11 +34,9 @@ Page({
     console.log('Go to department:', dept);
 
     const deptNames = {
-      shareholders: '股东会',
+      hr: '人力资源部',
       sales: '销售部',
-      finance: '财务部',
-      hr: '人事部',
-      tech: '技术部'
+      finance: '财务部'
     };
 
     wx.showToast({
@@ -57,31 +45,24 @@ Page({
       duration: 1500
     });
 
-    // 股东会跳转到专门的页面
-    if (dept === 'shareholders') {
-      wx.navigateTo({
-        url: '/pages/shareholders/shareholders'
-      });
-    } else {
-      // 其他部门暂时使用 toast 提示
-      // wx.navigateTo({
-      //   url: `/pages/department/department?dept=${dept}`
-      // });
-    }
+    // 实际应该跳转到对应部门页面
+    // wx.navigateTo({
+    //   url: `/pages/department/department?dept=${dept}`
+    // });
   },
 
-  // 跳转到通知详情
-  goToNoticeDetail() {
-    console.log('Go to notice detail');
+  // 跳转到违规举报
+  goToReport() {
+    console.log('Go to report');
     wx.showToast({
-      title: '查看会议详情',
+      title: '违规举报',
       icon: 'none',
       duration: 1500
     });
 
-    // 实际应该跳转到通知详情页
+    // 实际应该跳转到举报页面
     // wx.navigateTo({
-    //   url: '/pages/notice/notice'
+    //   url: '/pages/report/report'
     // });
   },
 
@@ -92,9 +73,7 @@ Page({
 
     const typeNames = {
       leave: '事假申请',
-      expense: '差旅费报销申请',
-      purchase: '办公设备采购申请',
-      reimburse: '日常报销申请'
+      expense: '差旅费报销申请'
     };
 
     wx.showToast({

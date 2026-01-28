@@ -25,14 +25,15 @@ def text_to_speech(text: str, runtime: ToolRuntime) -> str:
         tts_client = TTSClient(ctx=ctx)
         
         # 使用男性声音（天才同桌），适合律师人设
+        # 优化参数：语速稍慢，增加停顿感，更像真人对话
         audio_url, audio_size = tts_client.synthesize(
             uid="legal_agent_user",
             text=text,
             speaker="saturn_zh_male_tiancaitongzhuo_tob",  # 天才同桌：聪明理性的男声
             audio_format="mp3",
             sample_rate=24000,
-            speech_rate=0,  # 正常语速
-            loudness_rate=0  # 正常音量
+            speech_rate=-5,  # 稍慢语速，增加停顿感，更有阴阳顿挫
+            loudness_rate=5   # 稍微提高音量，让重点更突出
         )
         
         # 步骤 2: 下载音频到临时目录

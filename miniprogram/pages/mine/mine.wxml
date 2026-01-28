@@ -1,0 +1,99 @@
+<!--pages/mine/mine.wxml-->
+<view class="mine-container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="avatar-large">👨‍⚖️</view>
+    <view class="user-name">宁律师</view>
+    <view class="user-desc">智能法律咨询 · 大白话讲法律</view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-card">
+    <view class="stat-item">
+      <view class="stat-value">{{messageCount}}</view>
+      <view class="stat-label">对话次数</view>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <view class="stat-value">{{todayCount}}</view>
+      <view class="stat-label">今日咨询</view>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <view class="stat-value">∞</view>
+      <view class="stat-label">免费使用</view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="function-list">
+    <!-- 关于宁律师 -->
+    <view class="function-item" bindtap="showAbout">
+      <view class="item-left">
+        <text class="item-icon">ℹ️</text>
+        <text class="item-title">关于宁律师</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+
+    <!-- 使用帮助 -->
+    <view class="function-item" bindtap="showHelp">
+      <view class="item-left">
+        <text class="item-icon">❓</text>
+        <text class="item-title">使用帮助</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+
+    <!-- 常见问题 -->
+    <view class="function-item" bindtap="showFAQ">
+      <view class="item-left">
+        <text class="item-icon">📚</text>
+        <text class="item-title">常见问题</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+
+    <!-- 分享给好友 -->
+    <view class="function-item" bindtap="shareApp">
+      <view class="item-left">
+        <text class="item-icon">📤</text>
+        <text class="item-title">分享给好友</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+
+    <!-- 意见反馈 -->
+    <view class="function-item" bindtap="showFeedback">
+      <view class="item-left">
+        <text class="item-icon">💬</text>
+        <text class="item-title">意见反馈</text>
+      </view>
+      <text class="item-arrow">›</text>
+    </view>
+
+    <!-- 清除缓存 -->
+    <view class="function-item" bindtap="clearCache">
+      <view class="item-left">
+        <text class="item-icon">🧹</text>
+        <text class="item-title">清除缓存</text>
+      </view>
+      <view class="item-right">
+        <text class="cache-size">{{cacheSize}}MB</text>
+        <text class="item-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 免责声明 -->
+  <view class="disclaimer">
+    <text class="disclaimer-text">
+      免责声明：宁律师提供的法律建议仅供参考，不构成正式法律意见。如遇复杂法律问题，建议咨询专业律师。
+    </text>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text>宁律师 v1.0.0</text>
+  </view>
+</view>

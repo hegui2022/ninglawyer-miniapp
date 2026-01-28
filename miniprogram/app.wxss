@@ -1,0 +1,213 @@
+/**app.wxss**/
+page {
+  background-color: #F7F7F7;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 通用样式 */
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 豆包风格的颜色 */
+.theme-color {
+  color: #07C160;
+}
+
+.theme-bg {
+  background-color: #07C160;
+}
+
+/* 消息气泡样式 */
+.message-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.message-bubble.user {
+  background: linear-gradient(135deg, #07C160 0%, #06A653 100%);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message-bubble.lawyer {
+  background: white;
+  color: #333333;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 头像样式 */
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.avatar.lawyer {
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+}
+
+.avatar.user {
+  background: linear-gradient(135deg, #07C160 0%, #06A653 100%);
+}
+
+/* 快捷标签样式 */
+.quick-tag {
+  display: inline-block;
+  padding: 6px 14px;
+  margin: 4px;
+  background-color: white;
+  color: #666666;
+  font-size: 13px;
+  border-radius: 20px;
+  border: 1px solid #E5E5E5;
+  transition: all 0.2s;
+}
+
+.quick-tag:active {
+  background-color: #07C160;
+  color: white;
+  border-color: #07C160;
+}
+
+/* 语音播放器样式 */
+.audio-player {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+}
+
+.audio-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.audio-duration {
+  font-size: 12px;
+  color: #999999;
+  margin-left: auto;
+}
+
+/* 打字动画 */
+.typing-dots {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background-color: #CCCCCC;
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes typing {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 底部输入区域 */
+.input-area {
+  background: white;
+  padding: 10px 12px;
+  border-top: 1px solid #E5E5E5;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+
+.input-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #666666;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.input-btn:active {
+  background-color: #F5F5F5;
+}
+
+.input-btn.recording {
+  background-color: #FFE5E5;
+  color: #FF4D4F;
+}
+
+.text-input {
+  flex: 1;
+  margin: 0 8px;
+  min-height: 40px;
+  max-height: 120px;
+  padding: 8px 12px;
+  background: #F5F5F5;
+  border-radius: 20px;
+  font-size: 15px;
+}
+
+.send-btn {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #07C160 0%, #06A653 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.send-btn:active {
+  transform: scale(0.95);
+}
+
+/* 快捷标签横向滚动容器 */
+.quick-tags-scroll {
+  background: white;
+  padding: 12px 16px;
+  white-space: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.quick-tags-scroll::-webkit-scrollbar {
+  display: none;
+}

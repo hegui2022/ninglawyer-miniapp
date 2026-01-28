@@ -32,20 +32,13 @@ Page({
       return;
     }
 
-    const typeNames = {
-      position: '我的岗位'
-    };
-
-    wx.showToast({
-      title: `打开${typeNames[type]}`,
-      icon: 'none',
-      duration: 1500
-    });
-
-    // 实际应该跳转到对应功能页面
-    // wx.navigateTo({
-    //   url: `/pages/${type}/${type}`
-    // });
+    if (type === 'position') {
+      // 跳转到公司章程页面
+      wx.navigateTo({
+        url: '/pages/profile/company/articles/articles'
+      });
+      return;
+    }
   },
 
   onShareAppMessage() {

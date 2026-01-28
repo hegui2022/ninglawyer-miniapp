@@ -1,0 +1,63 @@
+<!--pages/profile/company/articles/articles.wxml-->
+<view class="container">
+  <!-- 顶部导航栏组件 -->
+  <nav-bar title="公司章程" showBack="{{true}}" bind:back="goBack"></nav-bar>
+
+  <!-- 公司基本信息区 -->
+  <view class="basic-info-section">
+    <!-- 公司名称 -->
+    <view class="info-item">
+      <view class="info-label">公司名称</view>
+      <view class="info-input-row">
+        <input class="info-input" placeholder="请输入公司名称" value="{{companyName}}" bindinput="onCompanyNameInput" />
+        <text class="info-link" bindtap="recognizeLicense">识别执照</text>
+      </view>
+    </view>
+
+    <!-- 注册资本 -->
+    <view class="info-item">
+      <view class="info-label">注册资本</view>
+      <input class="info-input" placeholder="请输入注册资本" value="{{registeredCapital}}" bindinput="onCapitalInput" />
+    </view>
+
+    <!-- 住所地 -->
+    <view class="info-item">
+      <view class="info-label">住所地</view>
+      <input class="info-input" placeholder="请输入住所地" value="{{address}}" bindinput="onAddressInput" />
+    </view>
+  </view>
+
+  <!-- 分割线 -->
+  <view class="divider"></view>
+
+  <!-- 组织架构区 -->
+  <view class="organization-section">
+    <view class="section-title">组织架构</view>
+    <view class="org-list">
+      <view class="org-item" bindtap="goToDetail" data-type="shareholders">
+        <text class="org-text">股东会</text>
+        <text class="org-arrow">›</text>
+      </view>
+      <view class="org-item" bindtap="goToDetail" data-type="board">
+        <text class="org-text">董事会</text>
+        <text class="org-arrow">›</text>
+      </view>
+      <view class="org-item" bindtap="goToDetail" data-type="supervisor">
+        <text class="org-text">监事会</text>
+        <text class="org-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分割线 -->
+  <view class="divider"></view>
+
+  <!-- 议事规则区 -->
+  <view class="rules-section" bindtap="goToRules">
+    <text class="rules-title">议事规则</text>
+    <text class="rules-arrow">›</text>
+  </view>
+
+  <!-- Home 指示条 -->
+  <home-indicator></home-indicator>
+</view>

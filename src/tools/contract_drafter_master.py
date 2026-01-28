@@ -10,6 +10,7 @@ from tools.contract_skills import (
     work_content_skill,
     salary_skill,
     termination_skill,
+    AdditionalClausesManager,
 )
 from tools.contract_scenarios import (
     StandardLaborContractAgent,
@@ -159,10 +160,14 @@ class ContractDraftingMaster:
             "termination": termination_skill,
         }
         
+        # 附加条款管理器
+        self.additional_clauses = AdditionalClausesManager()
+        
         # 当前状态
         self.current_scenario = None
         self.collected_info = {}
         self.current_step = 0
+        self.waiting_for_additional_clauses = False  # 是否等待附加条款输入
     
     def process(self, user_input: str) -> str:
         """
@@ -204,6 +209,11 @@ class ContractDraftingMaster:
     
     def _handle_create_contract(self, user_input: str) -> str:
         """处理创建合同请求"""
+        
+        # 处理附加条款输入
+        if self.waiting_for_additional_clauses:
+            return self._handle_additional_clauses(user_input)
+        
         # 如果还没有确定场景
         if self.current_scenario is None:
             # 场景分类
@@ -233,6 +243,67 @@ class ContractDraftingMaster:
             # 场景已确定，调用对应的代理
             agent = self.scenario_agents.get(self.current_scenario)
             if agent:
-                return agent.process(user_input, self.collected_info)
+                result = agent.process(user_input, self.collected_info)
+                
+                # 检查是否合同生成完成
+                if "合同已生成" in result or "协议已生成" in result:
+                    # 询问是否需要添加附加条款
+                    self.waiting_for_additional_clauses = True
+                    return result + "\n\n" + self._get_additional_clauses_prompt()
+                
+                return result
             else:
                 return "抱歉，该合同类型暂不支持。"
+    
+    def _get_additional_clauses_prompt(self) -> str:
+        """获取附加条款选择提示"""
+        return """
+## 📋 添加附加条款
+
+是否需要在合同中添加附加条款？
+
+1. **保密协议** - 约定双方对商业秘密的保密义务
+2. **竞业限制** - 限制离职后在竞争对手处工作（需支付补偿金）
+3. **知识产权** - 明确职务成果的知识产权归属
+4. **自定义条款** - 根据双方特殊需求添加条款
+5. **跳过附加条款** - 不添加，直接完成合同
+
+请回复数字选择，或输入"完成"跳过。
+"""
+    
+    def _handle_additional_clauses(self, user_input: str) -> str:
+        """处理附加条款选择"""
+        user_input = user_input.strip()
+        
+        # 检查是否完成或跳过
+        if user_input in ["完成", "跳过", "5", "no"]:
+            self.waiting_for_additional_clauses = False
+            
+            # 生成最终的合同（包含附加条款）
+            return "合同已完成！你可以选择导出为 Word 或 PDF 格式。"
+        
+        # 处理附加条款选择
+        clause_mapping = {
+            "1": "confidentiality",
+            "2": "non_compete",
+            "3": "intellectual_property",
+            "4": "custom",
+        }
+        
+        if user_input in clause_mapping:
+            clause_type = clause_mapping[user_input]
+            clause = self.additional_clauses.select_clause(clause_type)
+            
+            if clause:
+                return f"""
+## {clause.clause_name}
+
+{clause.get_prompt_template()}
+
+请填写相关信息，或回复"返回"回到附加条款选择。
+"""
+        
+        # 尝试解析附加条款信息（简化处理）
+        # 在实际应用中，这里应该使用智能解析器解析用户输入
+        
+        return "请选择附加条款类型，或输入'完成'跳过。"

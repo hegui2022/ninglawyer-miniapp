@@ -1,0 +1,71 @@
+# 微信小程序
+*.wxml.bak
+*.wxss.bak
+*.js.bak
+*.json.bak
+
+# 依赖
+node_modules/
+.pnp
+.pnp.js
+
+# 测试
+coverage/
+
+# 生产
+dist/
+build/
+*.min.js
+*.min.css
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.temp
+.cache/
+temp/
+tmp/
+
+# 环境
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# 配置文件（包含敏感信息）
+*.key
+*.pem
+secrets.json
+
+# 用户数据（如果本地有测试数据）
+userdata/
+*.db
+
+# 监控工具日志（可选提交）
+# monitor.log

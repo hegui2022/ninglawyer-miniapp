@@ -180,6 +180,60 @@ ninglawyer-miniapp/
 - 前后端分离架构
 - RESTful API 设计
 
+## 快速开始
+
+### 1. 克隆项目
+
+```bash
+git clone https://github.com/hegui2022/ninglawyer-miniapp.git
+cd ninglawyer-miniapp
+```
+
+### 2. 配置自动同步工具
+
+**🎉 重要提示**：为了实现高效的协作开发，本项目已配置自动同步工具，您可以实时获取最新代码！
+
+#### 一键启动（推荐）
+
+双击运行 `start.bat`，选择您需要的功能：
+
+```
+[1] 启动实时监控（每 30 秒检查一次）
+[2] 立即同步最新代码
+[3] 查看最近提交记录
+[4] 启动微信开发者工具
+[0] 退出
+```
+
+#### 详细说明
+
+- **sync.bat** - 手动同步工具：拉取最新代码
+- **monitor.bat** - 实时监控工具：每 30 秒自动检查更新
+- **monitor.py** - Python 高级监控：支持更多配置
+- **auto-sync.bat** - 智能同步：自动同步并刷新微信开发者工具
+
+**📖 详细文档**：请查看 [AUTO_SYNC_GUIDE.md](./AUTO_SYNC_GUIDE.md)
+
+### 3. 打开微信开发者工具
+
+1. 下载并安装微信开发者工具：https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html
+2. 选择"导入项目"
+3. 导入各小程序项目：
+   - `legal-instructor`（法律教官）
+   - `code-signing`（码上签约）
+   - `lyue`（理约）
+   - `zenme-pan`（怎么判）
+
+### 4. 配置后端 API
+
+在小程序的 `utils/config.js` 中配置后端 API 地址：
+
+```javascript
+const config = {
+  baseURL: 'https://your-backend-api.com/api'
+}
+```
+
 ## 部署指南
 
 ### 前端部署

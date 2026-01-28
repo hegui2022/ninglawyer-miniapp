@@ -1,143 +1,86 @@
 <!--pages/guide/guide.wxml-->
 <view class="container">
-  <!-- 顶部导航栏 -->
-  <view class="nav-bar">
-    <!-- 自定义状态栏 -->
-    <view class="status-bar">
-      <view class="status-left">
-        <text class="status-icon">📶</text>
-        <text class="status-icon">📶</text>
-      </view>
-      <view class="status-center">12:00</view>
-      <view class="status-right">
-        <text class="status-icon">🔋</text>
-      </view>
-    </view>
-    <!-- 标题栏 -->
-    <view class="title-bar">
-      <view class="title">指引</view>
-    </view>
-  </view>
+  <!-- 顶部导航栏组件 -->
+  <nav-bar title="指引" showBack="{{false}}"></nav-bar>
 
   <!-- 内容列表区 -->
   <view class="content-list">
-    <!-- 第一组卡片：个人信息 -->
-    <view class="card-group">
-      <!-- 头部信息 -->
-      <view class="card-header">
-        <view class="avatar">👤</view>
-        <view class="card-title">个人信息</view>
-        <view class="card-time">40 分钟前</view>
-      </view>
-
-      <!-- 横幅图片 -->
-      <view class="banner-section">
-        <view class="banner-placeholder">
-          <text class="banner-icon">🌊</text>
+    <!-- 展开的内容卡片 -->
+    <content-card wx:if="{{item1Expanded}}" title="网络安全等级保护义务" subtitle="网络安" iconName="✏️">
+      <view class="card-content">
+        <view class="content-item">
+          <text class="item-number">1、</text>
+          <text class="item-text">公司采取了防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施，如公司部界了专业防火墙、办公桌面安装了杀毒软件；</text>
         </view>
-        <view class="banner-text">网络及数据安全技术措施</view>
-      </view>
 
-      <!-- 图文条目 -->
-      <view class="item-row">
-        <view class="item-title">敏感信息的处理</view>
-        <view class="item-image">
-          <text class="item-icon">🚗</text>
+        <view class="content-item">
+          <text class="item-number">2、</text>
+          <text class="item-text">公司采取了监测、记录网络运行状态、网络安全事件的技术措施，如公司部署的防火墙具备网络异常监测和运行日志功能；</text>
+        </view>
+
+        <view class="content-item">
+          <text class="item-number">3、</text>
+          <text class="item-text">公司采取了备份、加密、访问控制等必要措施，保障数据免遭泄密、窃取、篡改、毁损、丢失。</text>
+        </view>
+
+        <view class="read-more" bindtap="goToArticle">
+          <text class="read-more-text">阅读全文 ></text>
         </view>
       </view>
+    </content-card>
 
-      <!-- 展开按钮 -->
-      <view class="expand-section" bindtap="toggleExpand" data-index="0">
-        <view class="expand-text">余下 2 篇</view>
-        <view class="expand-icon {{expandState[0] ? 'rotate' : ''}}">▼</view>
-      </view>
-
-      <!-- 展开内容（默认隐藏） -->
-      <view class="expand-content {{expandState[0] ? 'show' : 'hide'}}">
-        <view class="item-row">
-          <view class="item-title">数据加密技术要点</view>
-          <view class="item-image">
-            <text class="item-icon">🔐</text>
-          </view>
-        </view>
-        <view class="item-row">
-          <view class="item-title">个人信息保护合规</view>
-          <view class="item-image">
-            <text class="item-icon">🛡️</text>
-          </view>
-        </view>
-      </view>
+    <!-- 收起时的简略卡片 -->
+    <view wx:else class="collapsed-card" bindtap="toggleItem1">
+      <view class="collapsed-title">网络安全等级保护义务</view>
+      <view class="collapsed-subtitle">网络安</view>
     </view>
 
-    <!-- 分割线 -->
-    <view class="divider"></view>
-
-    <!-- 第二组卡片：税务规划 -->
-    <view class="card-group">
-      <!-- 头部信息 -->
-      <view class="card-header">
-        <view class="avatar">👤</view>
-        <view class="card-title">税务规划</view>
-        <view class="card-time">1 月 9 日</view>
-      </view>
-
-      <!-- 横幅图片 -->
-      <view class="banner-section">
-        <view class="banner-placeholder">
-          <text class="banner-icon">🏙️</text>
+    <!-- 第二个卡片 -->
+    <content-card wx:if="{{item2Expanded}}" title="数据安全管理义务" subtitle="数据安" iconName="🔒">
+      <view class="card-content">
+        <view class="content-item">
+          <text class="item-number">1、</text>
+          <text class="item-text">公司采取了防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施，如公司部界了专业防火墙、办公桌面安装了杀毒软件；</text>
         </view>
-        <view class="banner-text">企业税务减免政策</view>
-      </view>
 
-      <!-- 图文条目 -->
-      <view class="item-row">
-        <view class="item-title">股权转让中的个人问题</view>
-        <view class="item-image">
-          <text class="item-icon">🚗</text>
+        <view class="content-item">
+          <text class="item-number">2、</text>
+          <text class="item-text">公司采取了监测、记录网络运行状态、网络安全事件的技术措施，如公司部署的防火墙具备网络异常监测和运行日志功能；</text>
+        </view>
+
+        <view class="content-item">
+          <text class="item-number">3、</text>
+          <text class="item-text">公司采取了备份、加密、访问控制等必要措施，保障数据免遭泄密、窃取、篡改、毁损、丢失。</text>
         </view>
       </view>
+    </content-card>
 
-      <!-- 展开按钮 -->
-      <view class="expand-section" bindtap="toggleExpand" data-index="1">
-        <view class="expand-text">余下 2 篇</view>
-        <view class="expand-icon {{expandState[1] ? 'rotate' : ''}}">▼</view>
-      </view>
+    <view wx:else class="collapsed-card" bindtap="toggleItem2">
+      <view class="collapsed-title">数据安全管理义务</view>
+      <view class="collapsed-subtitle">数据安</view>
+    </view>
 
-      <!-- 展开内容（默认隐藏） -->
-      <view class="expand-content {{expandState[1] ? 'show' : 'hide'}}">
-        <view class="item-row">
-          <view class="item-title">企业所得税优惠政策</view>
-          <view class="item-image">
-            <text class="item-icon">💰</text>
-          </view>
+    <!-- 第三个卡片 -->
+    <content-card wx:if="{{item3Expanded}}" title="个人信息保护义务" subtitle="个人信" iconName="🛡️">
+      <view class="card-content">
+        <view class="content-item">
+          <text class="item-number">1、</text>
+          <text class="item-text">公司采取了防范计算机病毒和网络攻击、网络侵入等危害网络安全行为的技术措施，如公司部界了专业防火墙、办公桌面安装了杀毒软件；</text>
         </view>
-        <view class="item-row">
-          <view class="item-title">增值税减免申请流程</view>
-          <view class="item-image">
-            <text class="item-icon">📋</text>
-          </view>
+
+        <view class="content-item">
+          <text class="item-number">2、</text>
+          <text class="item-text">公司采取了监测、记录网络运行状态、网络安全事件的技术措施，如公司部署的防火墙具备网络异常监测和运行日志功能；</text>
         </view>
       </view>
+    </content-card>
+
+    <view wx:else class="collapsed-card" bindtap="toggleItem3">
+      <view class="collapsed-title">个人信息保护义务</view>
+      <view class="collapsed-subtitle">个人信</view>
     </view>
   </view>
 
-  <!-- 底部 TabBar 导航 -->
-  <view class="tab-bar">
-    <view class="tab-item tab-active">
-      <view class="tab-icon">📖</view>
-      <view class="tab-text">指引</view>
-    </view>
-    <view class="tab-item">
-      <view class="tab-icon">⚙️</view>
-      <view class="tab-text">管理</view>
-    </view>
-    <view class="tab-item">
-      <view class="tab-icon">🔍</view>
-      <view class="tab-text">发现</view>
-    </view>
-    <view class="tab-item">
-      <view class="tab-icon">👤</view>
-      <view class="tab-text">我的</view>
-    </view>
-  </view>
+  <!-- Home 指示条组件 -->
+  <home-indicator></home-indicator>
 </view>

@@ -1,0 +1,9 @@
+/* components/content-card/content-card.wxss */
+
+.content-card {
+  border: 2rpx solid #4A90E2;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  background-color: #FFFFFF;
+  margin-bottom: 24rpx;
+}

@@ -1,0 +1,28 @@
+<!--components/nav-bar/nav-bar.wxml-->
+<view class="nav-bar">
+  <!-- 状态栏 -->
+  <view class="status-bar">
+    <view class="status-left">
+      <text class="status-icon">📶</text>
+      <text class="status-icon">📶</text>
+    </view>
+    <view class="status-center">12:00</view>
+    <view class="status-right">
+      <text class="status-icon">🔋</text>
+    </view>
+  </view>
+
+  <!-- 导航栏 -->
+  <view class="nav-content">
+    <!-- 返回按钮（可选） -->
+    <view wx:if="{{showBack}}" class="back-button" bindtap="onBack">
+      <text class="back-icon">←</text>
+    </view>
+
+    <!-- 标题 -->
+    <view class="nav-title">{{title}}</view>
+
+    <!-- 右侧插槽（可选） -->
+    <slot name="right"></slot>
+  </view>
+</view>

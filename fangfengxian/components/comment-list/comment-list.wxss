@@ -1,0 +1,81 @@
+/* components/comment-list/comment-list.wxss */
+
+.comment-section {
+  padding: 32rpx;
+  margin-top: 32rpx;
+  border-top: 1rpx solid #E5E5E5;
+}
+
+/* 留言头部 */
+.comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.comment-title {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+.comment-button {
+  font-size: 28rpx;
+  color: #4A90E2;
+}
+
+/* 留言列表 */
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+
+/* 留言条目 */
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+/* 留言头像 */
+.comment-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  flex-shrink: 0;
+}
+
+.comment-avatar.female {
+  background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
+}
+
+.comment-avatar.male {
+  background: linear-gradient(135deg, #87CEEB 0%, #4169E1 100%);
+}
+
+/* 留言内容包装器 */
+.comment-content-wrapper {
+  flex: 1;
+  padding-top: 8rpx;
+}
+
+/* 留言人姓名 */
+.comment-name {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+
+/* 留言内容 */
+.comment-text {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.6;
+}

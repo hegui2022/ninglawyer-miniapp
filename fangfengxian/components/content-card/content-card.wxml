@@ -1,0 +1,5 @@
+<!--components/content-card/content-card.wxml-->
+<view class="content-card">
+  <!-- 内容插槽 -->
+  <slot></slot>
+</view>

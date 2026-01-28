@@ -1,63 +1,49 @@
 // pages/guide/guide.js
 Page({
   data: {
-    statusBarHeight: 44,
-    // 展开状态数组，索引0对应第一组卡片，索引1对应第二组卡片
-    expandState: [false, false]
+    selectedTab: 0,
+    tabs: ['全部', '网络安', '数据安', '个人信'],
+    item1Expanded: false,
+    item2Expanded: false,
+    item3Expanded: false
   },
 
   onLoad() {
-    // 获取状态栏高度
-    const systemInfo = wx.getSystemInfoSync();
+    console.log('Guide page loaded');
+  },
+
+  toggleItem1() {
     this.setData({
-      statusBarHeight: systemInfo.statusBarHeight
-    });
-
-    // 设置 CSS 变量
-    wx.setPageStyle({
-      style: {
-        '--status-bar-height': systemInfo.statusBarHeight + 'px'
-      }
+      item1Expanded: !this.data.item1Expanded,
+      item2Expanded: false,
+      item3Expanded: false
     });
   },
 
-  // 切换展开/收起状态
-  toggleExpand(e) {
-    const index = parseInt(e.currentTarget.dataset.index);
-    const expandState = this.data.expandState;
-    
-    // 切换对应卡片的展开状态
-    expandState[index] = !expandState[index];
-    
+  toggleItem2() {
     this.setData({
-      expandState: expandState
-    });
-
-    // 添加触觉反馈
-    wx.vibrateShort({
-      type: 'light'
+      item1Expanded: false,
+      item2Expanded: !this.data.item2Expanded,
+      item3Expanded: false
     });
   },
 
-  // 点击卡片（预留功能，可跳转到详情页）
-  onCardTap(e) {
-    const type = e.currentTarget.dataset.type;
-    console.log('点击了卡片：', type);
-
-    // 预留：跳转到详情页
-    // wx.navigateTo({
-    //   url: `/pages/detail/detail?type=${type}`
-    // });
+  toggleItem3() {
+    this.setData({
+      item1Expanded: false,
+      item2Expanded: false,
+      item3Expanded: !this.data.item3Expanded
+    });
   },
 
-  // 点击条目（预留功能，可跳转到文章详情）
-  onItemTap(e) {
-    const itemId = e.currentTarget.dataset.id;
-    console.log('点击了条目：', itemId);
+  selectTab(e) {
+    const index = e.currentTarget.dataset.index;
+    this.setData({ selectedTab: index });
+  },
 
-    // 预留：跳转到文章详情
-    // wx.navigateTo({
-    //   url: `/pages/article/article?id=${itemId}`
-    // });
+  goToArticle() {
+    wx.navigateTo({
+      url: '/pages/guide/article/article'
+    });
   }
 });

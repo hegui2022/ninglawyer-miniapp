@@ -2,8 +2,8 @@
   "usingComponents": {
     "nav-bar": "../../components/nav-bar/nav-bar",
     "content-card": "../../components/content-card/content-card",
+    "comment-list": "../../components/comment-list/comment-list",
     "home-indicator": "../../components/home-indicator/home-indicator"
   },
-  "navigationBarTitleText": "指引",
-  "navigationStyle": "custom"
+  "navigationBarTitleText": "文章详情"
 }

@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/login/login",
     "pages/guide/guide",
-    "pages/article/article",
-    "pages/login/login"
+    "pages/guide/article/article"
   ],
   "window": {
     "backgroundTextStyle": "light",

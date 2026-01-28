@@ -1,4 +1,4 @@
-// 怎么判小程序 - 智能分析页面
+// 怎么判 - 智能分析页面（完整版）
 Page({
   data: {
     caseType: '',
@@ -13,35 +13,30 @@ Page({
     
   },
   
-  // 输入案件类型
   onCaseTypeChange(e) {
     this.setData({
       caseType: e.detail.value
     });
   },
   
-  // 输入案件描述
   onDescriptionInput(e) {
     this.setData({
       caseDescription: e.detail.value
     });
   },
   
-  // 输入金额
   onAmountInput(e) {
     this.setData({
       amount: e.detail.value
     });
   },
   
-  // 输入证据
   onEvidenceInput(e) {
     this.setData({
       evidence: e.detail.value
     });
   },
   
-  // 开始分析
   onAnalyze() {
     if (!this.data.caseType || !this.data.caseDescription) {
       wx.showToast({
@@ -83,23 +78,12 @@ Page({
     });
   },
   
-  // 保存分析结果
   onSave() {
-    if (!this.data.analysisResult) {
-      return;
-    }
+    if (!this.data.analysisResult) return;
     
     wx.showToast({
       title: '已保存',
       icon: 'success'
-    });
-  },
-  
-  // 分享分析结果
-  onShare() {
-    wx.showToast({
-      title: '分享功能开发中',
-      icon: 'none'
     });
   }
 });

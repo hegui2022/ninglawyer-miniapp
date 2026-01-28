@@ -1,0 +1,1 @@
+Page({ data: { recordList: [] }, onLoad() { this.loadRecords(); } });

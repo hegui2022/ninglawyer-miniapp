@@ -1,0 +1,1 @@
+Page({ data: { reminders: [] }, onLoad() { this.loadReminders(); } });

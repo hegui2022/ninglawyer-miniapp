@@ -1,4 +1,4 @@
-// 码上签约小程序 - 首页
+// 码上签约 - 首页（补充完整）
 Page({
   data: {
     banners: [
@@ -11,11 +11,6 @@ Page({
         id: 2,
         image: '/assets/images/banner2.png',
         title: '法律保障，安全可靠'
-      },
-      {
-        id: 3,
-        image: '/assets/images/banner3.png',
-        title: '电子签名，即时生效'
       }
     ],
     quickActions: [
@@ -49,8 +44,7 @@ Page({
       total: 0,
       pending: 0,
       completed: 0
-    },
-    currentBanner: 0
+    }
   },
   
   onLoad() {
@@ -63,21 +57,12 @@ Page({
     this.loadRecentContracts();
   },
   
-  onShareAppMessage() {
-    return {
-      title: '码上签约 - 智能电子签约',
-      path: '/pages/index/index'
-    };
-  },
-  
-  // 轮播图切换
   onBannerChange(e) {
     this.setData({
       currentBanner: e.detail.current
     });
   },
   
-  // 加载统计数据
   loadStats() {
     wx.request({
       url: getApp().globalData.config.apiUrl + '/contract/stats',
@@ -95,7 +80,6 @@ Page({
     });
   },
   
-  // 加载最近合同
   loadRecentContracts() {
     wx.request({
       url: getApp().globalData.config.apiUrl + '/contract/recent',
@@ -113,7 +97,6 @@ Page({
     });
   },
   
-  // 快捷操作点击
   onQuickAction(e) {
     const action = e.currentTarget.dataset.action;
     wx.navigateTo({
@@ -121,7 +104,6 @@ Page({
     });
   },
   
-  // 查看合同详情
   onContractDetail(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({
@@ -129,17 +111,9 @@ Page({
     });
   },
   
-  // 创建合同
   onCreateContract() {
     wx.navigateTo({
       url: '/pages/create/create'
-    });
-  },
-  
-  // 查看全部
-  onViewAll() {
-    wx.switchTab({
-      url: '/pages/record/record'
     });
   }
 });

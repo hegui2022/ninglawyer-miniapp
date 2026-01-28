@@ -1,59 +1,84 @@
 #!/bin/bash
+#
+# 宁律师法律咨询小程序矩阵 - 部署脚本
+#
 
-# 宁律师小程序矩阵 - 部署脚本
+set -e
 
-echo "=================================================="
-echo "宁律师小程序矩阵 - 开始部署"
-echo "=================================================="
+# 颜色定义
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# 1. 检查 Python 环境
-echo "1. 检查 Python 环境..."
-python3 --version
-if [ $? -ne 0 ]; then
-    echo "错误：Python3 未安装"
+# 配置
+ENV=${1:-dev}
+COMPOSE_FILE="docker-compose.yml"
+
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN} 宁律师法律咨询小程序矩阵 - 部署 ${NC}"
+echo -e "${GREEN}========================================${NC}"
+echo ""
+
+# 检查 Docker
+if ! command -v docker &> /dev/null; then
+    echo -e "${RED}错误: Docker 未安装${NC}"
     exit 1
 fi
 
-# 2. 安装依赖
-echo "2. 安装依赖..."
-pip3 install -r requirements.txt
-if [ $? -ne 0 ]; then
-    echo "错误：依赖安装失败"
+# 检查 Docker Compose
+if ! command -v docker-compose &> /dev/null; then
+    echo -e "${RED}错误: Docker Compose 未安装${NC}"
     exit 1
 fi
 
-# 3. 运行测试
-echo "3. 运行测试..."
-python3 tests/test_all_lawyers.py
-if [ $? -ne 0 ]; then
-    echo "错误：测试失败"
-    exit 1
+# 创建必要的目录
+echo -e "${YELLOW}创建必要的目录...${NC}"
+mkdir -p logs
+
+# 复制环境配置文件
+if [ ! -f .env ]; then
+    echo -e "${YELLOW}创建环境配置文件...${NC}"
+    cp .env.example .env
+    echo -e "${YELLOW}请编辑 .env 文件，填写实际配置${NC}"
 fi
 
-# 4. 创建日志目录
-echo "4. 创建日志目录..."
-mkdir -p /app/work/logs/bypass
+# 停止旧容器
+echo -e "${YELLOW}停止旧容器...${NC}"
+docker-compose down
 
-# 5. 启动服务
-echo "5. 启动服务..."
-echo "启动后端服务..."
-nohup python3 src/main.py > /app/work/logs/bypass/app.log 2>&1 &
+# 拉取最新镜像
+echo -e "${YELLOW}拉取最新镜像...${NC}"
+docker-compose pull
 
-sleep 3
+# 构建镜像
+echo -e "${YELLOW}构建镜像...${NC}"
+docker-compose build
 
-# 6. 检查服务状态
-echo "6. 检查服务状态..."
-ps aux | grep "python3 src/main.py" | grep -v grep
-if [ $? -eq 0 ]; then
-    echo "✓ 后端服务启动成功"
-else
-    echo "✗ 后端服务启动失败"
-    exit 1
-fi
+# 启动服务
+echo -e "${YELLOW}启动服务...${NC}"
+docker-compose up -d
 
-echo "=================================================="
-echo "部署完成！"
-echo "=================================================="
-echo "后端服务已启动"
-echo "小程序请使用微信开发者工具打开对应目录"
-echo "=================================================="
+# 等待服务启动
+echo -e "${YELLOW}等待服务启动...${NC}"
+sleep 10
+
+# 检查服务状态
+echo -e "${GREEN}检查服务状态...${NC}"
+docker-compose ps
+
+echo ""
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN} 部署完成！${NC}"
+echo -e "${GREEN}========================================${NC}"
+echo ""
+echo -e "服务地址:"
+echo -e "  - API: http://localhost:5000"
+echo -e "  - PostgreSQL: localhost:5432"
+echo -e "  - Redis: localhost:6379"
+echo -e "  - Milvus: localhost:19530"
+echo -e "  - Neo4j: http://localhost:7474"
+echo ""
+echo -e "查看日志: docker-compose logs -f"
+echo -e "停止服务: ./scripts/stop.sh"
+echo ""

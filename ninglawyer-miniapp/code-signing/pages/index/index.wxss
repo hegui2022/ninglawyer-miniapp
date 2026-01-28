@@ -1,4 +1,4 @@
-/* 码上签约小程序 - 首页样式 */
+/* 码上签约 - 首页样式 */
 .index-page {
   min-height: 100vh;
   padding-bottom: 120rpx;
@@ -48,27 +48,27 @@
 .stat-value {
   font-size: 48rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #333333;
   margin-bottom: 8rpx;
 }
 
 .stat-value.primary {
-  color: var(--primary-color);
+  color: #07C160;
 }
 
 .stat-value.success {
-  color: var(--success-color);
+  color: #07C160;
 }
 
 .stat-label {
   font-size: 24rpx;
-  color: var(--text-secondary);
+  color: #666666;
 }
 
 .stat-divider {
   width: 1rpx;
   height: 60rpx;
-  background: var(--border-color);
+  background: #EBEDF0;
 }
 
 /* 快捷操作 */
@@ -86,12 +86,7 @@
 .card-title {
   font-size: 32rpx;
   font-weight: 600;
-  color: var(--text-primary);
-}
-
-.view-more {
-  font-size: 24rpx;
-  color: var(--primary-color);
+  color: #333333;
 }
 
 .actions-grid {
@@ -110,14 +105,14 @@
   width: 88rpx;
   height: 88rpx;
   margin-bottom: 16rpx;
-  background: var(--primary-light);
-  border-radius: var(--radius-lg);
+  background: #E8F8F0;
+  border-radius: 16rpx;
   padding: 16rpx;
 }
 
 .action-label {
   font-size: 24rpx;
-  color: var(--text-secondary);
+  color: #666666;
 }
 
 /* 最近合同 */
@@ -135,7 +130,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 24rpx 0;
-  border-bottom: 1rpx solid var(--border-color);
+  border-bottom: 1rpx solid #EBEDF0;
 }
 
 .contract-item:last-child {
@@ -150,14 +145,14 @@
 
 .contract-title {
   font-size: 28rpx;
-  color: var(--text-primary);
+  color: #333333;
   margin-bottom: 8rpx;
   font-weight: 500;
 }
 
 .contract-time {
   font-size: 24rpx;
-  color: var(--text-secondary);
+  color: #999999;
 }
 
 .contract-status {
@@ -173,15 +168,15 @@
   padding: 80rpx 0;
 }
 
-.empty-contract .empty-icon {
+.empty-icon {
   width: 200rpx;
   height: 200rpx;
   margin-bottom: 24rpx;
 }
 
-.empty-contract .empty-text {
+.empty-text {
   font-size: 28rpx;
-  color: var(--text-secondary);
+  color: #999999;
 }
 
 /* 创建按钮 */
@@ -191,7 +186,7 @@
   left: 0;
   right: 0;
   padding: 24rpx;
-  background: var(--white);
+  background: #ffffff;
   box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 

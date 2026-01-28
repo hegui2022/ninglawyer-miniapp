@@ -1,7 +1,7 @@
-<!-- 码上签约小程序 - 首页 WXML -->
+<!-- 码上签约 - 首页 -->
 <view class="index-page">
   <!-- 轮播图 -->
-  <swiper class="banner-swiper" indicator-dots indicator-color="rgba(0,0,0,0.3)" indicator-active-color="#07C160" autoplay interval="3000" bindchange="onBannerChange">
+  <swiper class="banner-swiper" indicator-dots indicator-color="rgba(255,255,255,0.3)" indicator-active-color="#07C160" autoplay interval="3000" bindchange="onBannerChange">
     <swiper-item wx:for="{{banners}}" wx:key="id">
       <image class="banner-image" src="{{item.image}}" mode="aspectFill"></image>
       <view class="banner-title">{{item.title}}</view>

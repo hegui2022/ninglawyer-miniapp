@@ -1,64 +1,42 @@
-<!-- 宁律师家族页面 -->
-<view class="page">
-  <!-- 搜索栏 -->
-  <view class="search-bar">
-    <view class="search-icon">🔍</view>
-    <input 
-      class="search-input" 
-      placeholder="搜索宁律师或法律问题" 
-      bindconfirm="onSearch"
-      confirm-type="search"
-    />
-  </view>
-
+<!-- 法律教官 - 宁律师家族 -->
+<view class="lawyer-family-page">
   <!-- 欢迎卡片 -->
   <view class="welcome-card">
-    <view class="welcome-avatar">⚖️</view>
-    <view class="welcome-content">
-      <text class="welcome-title">👋 你好，我是宁律师</text>
-      <text class="welcome-subtitle">有什么法律问题，我来帮你解答</text>
-    </view>
+    <text class="welcome-title">宁律师家族</text>
+    <text class="welcome-desc">7大专业领域，为您提供全方位法律服务</text>
   </view>
-
-  <!-- 宁律师列表 -->
-  <view class="section">
-    <view class="section-title">宁律师家族</view>
-    <view class="lawyer-grid">
-      <view 
-        class="lawyer-card"
-        wx:for="{{lawyers}}"
-        wx:key="id"
-        bindtap="selectLawyer"
-        data-domain="{{item.id}}"
-      >
-        <view class="lawyer-icon">{{item.icon}}</view>
-        <text class="lawyer-name">{{item.name}}</text>
-        <text class="lawyer-desc">{{item.description}}</text>
-      </view>
-    </view>
+  
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <input class="search-input" placeholder="搜索律师领域" value="{{searchKeyword}}" bindinput="onSearchInput" />
+    <image class="search-icon" src="/assets/icons/search.png" mode="aspectFit"></image>
   </view>
-
-  <!-- 热门咨询 -->
-  <view class="section">
-    <view class="section-title">🔥 热门咨询</view>
-    <view class="hot-consultations">
-      <view 
-        class="consultation-item"
-        wx:for="{{hotConsultations}}"
-        wx:key="*this"
-        bindtap="onHotConsultation"
-        data-domain="{{item.domain}}"
-      >
-        <view class="consultation-icon">{{item.icon}}</view>
-        <view class="consultation-content">
-          <text class="consultation-question">{{item.question}}</text>
-          <view class="consultation-meta">
-            <text class="consultation-count">{{item.count}}</text>
-            <text class="consultation-lawyer">{{item.lawyer}}</text>
+  
+  <!-- 律师列表 -->
+  <view class="lawyer-list">
+    <view class="lawyer-card" wx:for="{{filteredLawyers}}" wx:key="id" bindtap="onLawyerTap" data-lawyer="{{item}}">
+      <image class="lawyer-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+      <view class="lawyer-content">
+        <view class="lawyer-header">
+          <text class="lawyer-name">{{item.name}}</text>
+          <view class="lawyer-rating">
+            <image class="star-icon" src="/assets/icons/star.png" mode="aspectFit"></image>
+            <text class="rating-text">{{item.rating}}</text>
           </view>
         </view>
-        <view class="consultation-arrow">›</view>
+        <text class="lawyer-domain">{{item.domain}}</text>
+        <text class="lawyer-desc">{{item.description}}</text>
+        <view class="lawyer-footer">
+          <text class="lawyer-count">已帮助 {{item.helpCount}} 人</text>
+          <button class="btn-consult" bindtap="onConsultNow" data-lawyer="{{item}}">立即咨询</button>
+        </view>
       </view>
     </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{filteredLawyers.length === 0}}">
+    <image class="empty-icon" src="/assets/images/empty.png" mode="aspectFit"></image>
+    <text class="empty-text">未找到匹配的律师</text>
   </view>
 </view>

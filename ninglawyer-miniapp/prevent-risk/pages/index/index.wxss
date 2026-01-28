@@ -1,0 +1,209 @@
+/* 防风险首页样式 */
+.page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding: 24rpx;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
+  border-radius: 24rpx;
+  padding: 48rpx;
+  margin-bottom: 24rpx;
+  color: #ffffff;
+}
+
+.score-section {
+  text-align: center;
+}
+
+.score-label {
+  font-size: 28rpx;
+  opacity: 0.9;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.score-value {
+  font-size: 88rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 24rpx;
+}
+
+.risk-badge {
+  display: inline-block;
+  padding: 8rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.risk-low {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.risk-medium {
+  background: rgba(255, 200, 0, 0.3);
+}
+
+.risk-high {
+  background: rgba(255, 80, 80, 0.4);
+}
+
+.section {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 32rpx;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  transition: all 0.3s;
+}
+
+.category-item.checked {
+  background: #E8F5E9;
+  border: 2rpx solid #07C160;
+}
+
+.category-icon {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-right: 24rpx;
+}
+
+.category-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.category-name {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+.category-check {
+  width: 40rpx;
+  height: 40rpx;
+  background: #07C160;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check-icon {
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.btn-submit {
+  width: 100%;
+  height: 88rpx;
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 24rpx;
+}
+
+.btn-submit[disabled] {
+  opacity: 0.6;
+}
+
+.result-section {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+}
+
+.result-header {
+  margin-bottom: 24rpx;
+}
+
+.result-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.risk-item {
+  padding: 24rpx;
+  background: #FFF3E0;
+  border-radius: 16rpx;
+  border-left: 8rpx solid #FF9800;
+}
+
+.risk-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.risk-desc {
+  font-size: 24rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.risk-level {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.risk-high {
+  background: #FFEBEE;
+  color: #F44336;
+}
+
+.risk-medium {
+  background: #FFF3E0;
+  color: #FF9800;
+}
+
+.risk-low {
+  background: #E8F5E9;
+  color: #4CAF50;
+}

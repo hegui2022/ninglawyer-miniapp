@@ -1,0 +1,1 @@
+Page({ data: { lawyers: [] }, onLoad() { this.loadLawyers(); } });

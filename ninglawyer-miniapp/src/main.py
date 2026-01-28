@@ -1,17 +1,24 @@
+#!/usr/bin/env python3
 """
-宁律师后端主程序
+宁律师法律咨询小程序矩阵 - 主入口
 """
-
 import os
+import sys
+from pathlib import Path
+
+# 添加项目根目录到 Python 路径
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 from flask import Flask, jsonify
 from flask_cors import CORS
-from loguru import logger
+from dotenv import load_dotenv
 
-from src.api.routes import api_bp
-from src.utils.config import load_config
+# 加载环境变量
+load_dotenv()
 
-# 加载配置
-config = load_config()
+from src.api.routes import register_routes
+from src.storage.db import init_db
 
 # 创建 Flask 应用
 app = Flask(__name__)
@@ -20,64 +27,77 @@ app = Flask(__name__)
 CORS(app, resources={
     r"/api/*": {
         "origins": "*",
-        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"]
     }
 })
 
-# 配置日志
-logger.add(
-    config.get('LOG_FILE', '/app/work/logs/bypass/app.log'),
-    rotation="500 MB",
-    retention="10 days",
-    level=config.get('LOG_LEVEL', 'INFO')
-)
+# 配置应用
+app.config['JSON_AS_ASCII'] = False
+app.config['JSONIFY_MIMETYPE'] = 'application/json;charset=utf-8'
 
-# 注册蓝图
-app.register_blueprint(api_bp, url_prefix='/api')
+# 注册路由
+register_routes(app)
 
-# 健康检查
+# 初始化数据库
+@app.before_request
+def before_first_request():
+    init_db()
+
+# 健康检查接口
 @app.route('/health')
 def health():
-    """健康检查接口"""
+    """健康检查"""
     return jsonify({
-        'status': 'healthy',
-        'service': 'ninglawyer-api',
-        'version': '1.0.0'
+        'status': 'ok',
+        'service': 'ninglawyer-miniapp',
+        'version': '1.0.0-alpha'
     })
 
-# 根路径
+# API 根路径
 @app.route('/')
 def index():
-    """根路径"""
+    """API 根路径"""
     return jsonify({
-        'message': '宁律师法律咨询 API',
-        'version': '1.0.0',
-        'docs': '/docs'
+        'service': '宁律师法律咨询小程序矩阵',
+        'version': '1.0.0-alpha',
+        'endpoints': {
+            'consultation': '/api/consultation',
+            'contract': '/api/contract',
+            'risk': '/api/risk'
+        }
     })
 
 # 错误处理
 @app.errorhandler(404)
 def not_found(error):
-    """404 错误处理"""
+    """404 错误"""
     return jsonify({
-        'error': 'Not Found',
-        'message': '请求的资源不存在'
+        'code': 404,
+        'message': 'Not Found'
     }), 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    """500 错误处理"""
-    logger.error(f"Internal error: {error}")
+    """500 错误"""
     return jsonify({
-        'error': 'Internal Server Error',
-        'message': '服务器内部错误'
+        'code': 500,
+        'message': 'Internal Server Error'
     }), 500
 
-# 启动应用
 if __name__ == '__main__':
-    port = config.get('API_PORT', 8080)
-    debug = config.get('API_DEBUG', False)
+    host = os.getenv('API_HOST', '0.0.0.0')
+    port = int(os.getenv('API_PORT', 5000))
+    debug = os.getenv('DEBUG', 'False').lower() == 'true'
     
-    logger.info(f"Starting NingLawyer API on port {port}")
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    print(f"""
+    ========================================
+    宁律师法律咨询小程序矩阵
+    ========================================
+    服务地址: http://{host}:{port}
+    健康检查: http://{host}:{port}/health
+    API 文档: http://{host}:{port}/api
+    ========================================
+    """)
+    
+    app.run(host=host, port=port, debug=debug)

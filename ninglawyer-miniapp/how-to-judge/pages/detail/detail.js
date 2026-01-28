@@ -1,0 +1,1 @@
+Page({ data: { caseDetail: null }, onLoad(e) { this.loadDetail(e.detail.id); } });

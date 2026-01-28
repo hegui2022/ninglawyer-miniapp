@@ -1,0 +1,31 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+  <!-- 自定义状态栏 -->
+  <view class="status-bar">
+    <view class="status-left">
+      <text class="status-icon">📶</text>
+      <text class="status-icon">📶</text>
+    </view>
+    <view class="status-center">12:00</view>
+    <view class="status-right">
+      <text class="status-icon">🔋</text>
+    </view>
+  </view>
+
+  <!-- 核心品牌区 -->
+  <view class="brand-section">
+    <view class="brand-icon">🐾</view>
+    <view class="brand-title">防风险</view>
+    <view class="brand-desc">一个企业合规风险管理平台</view>
+  </view>
+
+  <!-- 登录按钮区 -->
+  <view class="login-section">
+    <view class="btn btn-primary" bindtap="wechatLogin">
+      微信登陆
+    </view>
+    <view class="link-text" bindtap="phoneLogin">
+      手机号登陆
+    </view>
+  </view>
+</view>

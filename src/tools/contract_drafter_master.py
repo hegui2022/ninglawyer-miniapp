@@ -14,6 +14,8 @@ from tools.contract_skills import (
 from tools.contract_scenarios import (
     StandardLaborContractAgent,
     PartTimeContractAgent,
+    InternAgreementAgent,
+    RetiredReemploymentAgent,
 )
 
 
@@ -100,8 +102,8 @@ class ScenarioClassifier:
         scores = {}
         scores["standard"] = sum(1 for kw in keywords_standard if kw in user_input)
         scores["parttime"] = sum(1 for kw in keywords_parttime if kw in user_input) * 2  # 权重更高
-        scores["intern"] = sum(1 for kw in keywords_intern if kw in user_input)
-        scores["retired"] = sum(1 for kw in keywords_retired if kw in user_input)
+        scores["intern"] = sum(1 for kw in keywords_intern if kw in user_input) * 2  # 权重提高
+        scores["retired"] = sum(1 for kw in keywords_retired if kw in user_input) * 2  # 权重提高
         scores["project"] = sum(1 for kw in keywords_project if kw in user_input)
         scores["dispatch"] = sum(1 for kw in keywords_dispatch if kw in user_input)
         
@@ -115,7 +117,9 @@ class ScenarioClassifier:
         # 找到对应的场景
         for scenario, score in scores.items():
             if score == max_score:
-                return scenario, min(score * 0.3, 1.0)  # 计算确信度
+                # 提高确信度计算
+                confidence = min(score * 0.5, 1.0)
+                return scenario, confidence
         
         return None, 0.0
 
@@ -138,6 +142,8 @@ class ContractDraftingMaster:
         self.scenario_agents = {
             "standard": StandardLaborContractAgent(),
             "parttime": PartTimeContractAgent(),
+            "intern": InternAgreementAgent(),
+            "retired": RetiredReemploymentAgent(),
         }
         
         # 技能库
@@ -184,6 +190,8 @@ class ContractDraftingMaster:
 
 1. **标准全职劳动合同** - 全日制用工，固定期限或无固定期限
 2. **非全日制用工合同** - 每天不超过4小时，每周不超过24小时
+3. **实习协议** - 适用于在校学生实习，有实习补贴和意外保险
+4. **退休返聘协议** - 适用于退休人员返聘，劳务关系而非劳动关系
 
 请告诉我你想创建哪种类型的合同？
 """
@@ -208,6 +216,8 @@ class ContractDraftingMaster:
 
 1. **标准全职劳动合同** - 适用于正式员工，有试用期，缴纳社保
 2. **非全日制用工合同** - 适用于兼职，每天不超过4小时
+3. **实习协议** - 适用于在校学生实习，有实习补贴和意外保险
+4. **退休返聘协议** - 适用于退休人员返聘，不缴纳社保
 
 请回复数字或描述你的需求。
 """

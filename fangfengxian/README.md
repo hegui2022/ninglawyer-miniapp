@@ -22,15 +22,23 @@ fangfengxian/
 │   │   ├── comment-list.wxss
 │   │   ├── comment-list.js
 │   │   └── comment-list.json
-│   └── home-indicator/        # Home 指示条组件
-│       ├── home-indicator.wxml
-│       ├── home-indicator.wxss
-│       ├── home-indicator.js
-│       └── home-indicator.json
+│   ├── home-indicator/        # Home 指示条组件
+│   │   ├── home-indicator.wxml
+│   │   ├── home-indicator.wxss
+│   │   ├── home-indicator.js
+│   │   └── home-indicator.json
+│   └── tab-bar/               # TabBar 导航组件
+│       ├── tab-bar.wxml
+│       ├── tab-bar.wxss
+│       ├── tab-bar.js
+│       └── tab-bar.json
 ├── pages/                     # 页面目录
 │   ├── login/                 # 登录页
-│   └── guide/                 # 指引页（首页）
-│       └── article/           # 文章详情页（子页面）
+│   ├── guide/                 # 指引页（首页）
+│   │   └── article/           # 文章详情页（子页面）
+│   └── manage/                # 管理页
+├── images/                    # 图片资源
+│   └── tabbar/                # TabBar 图标
 └── app.json                   # 应用配置
 ```
 
@@ -98,6 +106,17 @@ fangfengxian/
 <home-indicator></home-indicator>
 ```
 
+### 5. tab-bar TabBar 导航组件
+**功能**: 底部 TabBar 导航，支持页面切换。
+
+**属性**:
+- `currentPath` (String): 当前页面路径
+
+**使用示例**:
+```xml
+<tab-bar currentPath="/pages/manage/manage"></tab-bar>
+```
+
 ## 页面说明
 
 ### 1. 登录页 (pages/login)
@@ -137,6 +156,19 @@ fangfengxian/
 - comment-list: 留言列表
 - home-indicator: 底部指示条
 
+### 4. 管理页 (pages/manage)
+**功能**: 企业管理控制台，提供部门入口、通知和审批功能。
+
+**主要功能**:
+- 部门快捷入口（横向滑动）
+- 重要通知展示（带倒计时）
+- 审批项目列表（带状态标识）
+- TabBar 导航
+
+**组件使用**:
+- nav-bar: 顶部导航
+- tab-bar: 底部导航栏
+
 ## 组件化开发优势
 
 ### 1. 代码复用
@@ -167,7 +199,8 @@ fangfengxian/
     "nav-bar": "../../components/nav-bar/nav-bar",
     "content-card": "../../components/content-card/content-card",
     "comment-list": "../../components/comment-list/comment-list",
-    "home-indicator": "../../components/home-indicator/home-indicator"
+    "home-indicator": "../../components/home-indicator/home-indicator",
+    "tab-bar": "../../components/tab-bar/tab-bar"
   }
 }
 ```
@@ -179,8 +212,36 @@ fangfengxian/
   <content-card title="卡片标题">
     <!-- 内容 -->
   </content-card>
-  <home-indicator></home-indicator>
+  <tab-bar currentPath="/pages/current/current"></tab-bar>
 </view>
+```
+
+### TabBar 配置
+
+在 `app.json` 中配置 TabBar:
+```json
+{
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/guide/guide",
+        "text": "指引",
+        "iconPath": "images/tabbar/guide.png",
+        "selectedIconPath": "images/tabbar/guide-active.png"
+      },
+      {
+        "pagePath": "pages/manage/manage",
+        "text": "管理",
+        "iconPath": "images/tabbar/manage.png",
+        "selectedIconPath": "images/tabbar/manage-active.png"
+      }
+    ]
+  }
+}
 ```
 
 ## 下一步计划

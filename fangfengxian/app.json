@@ -2,7 +2,8 @@
   "pages": [
     "pages/login/login",
     "pages/guide/guide",
-    "pages/guide/article/article"
+    "pages/guide/article/article",
+    "pages/manage/manage"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -11,6 +12,26 @@
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FFFFFF",
     "navigationStyle": "default"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/guide/guide",
+        "text": "指引",
+        "iconPath": "images/tabbar/guide.png",
+        "selectedIconPath": "images/tabbar/guide-active.png"
+      },
+      {
+        "pagePath": "pages/manage/manage",
+        "text": "管理",
+        "iconPath": "images/tabbar/manage.png",
+        "selectedIconPath": "images/tabbar/manage-active.png"
+      }
+    ]
   },
   "networkTimeout": {
     "request": 30000,

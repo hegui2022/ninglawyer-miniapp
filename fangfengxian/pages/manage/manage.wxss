@@ -1,0 +1,230 @@
+/* pages/manage/manage.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  padding-bottom: 120rpx;
+}
+
+/* ==================== 部门快捷入口区 ==================== */
+.department-section {
+  padding: 32rpx 0;
+  background-color: #FFFFFF;
+}
+
+.department-scroll {
+  width: 100%;
+}
+
+.department-list {
+  display: flex;
+  flex-direction: row;
+  padding: 0 32rpx;
+  gap: 24rpx;
+}
+
+.department-card {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160rpx;
+  padding: 24rpx 16rpx;
+  background-color: #F8F8F8;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.department-card:active {
+  background-color: #E8E8E8;
+  transform: scale(0.98);
+}
+
+.department-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.icon-text {
+  font-size: 48rpx;
+}
+
+/* 不同部门的颜色 */
+.department-icon.shareholders {
+  background-color: #E8F5E9;
+}
+
+.department-icon.sales {
+  background-color: #FFEBEE;
+}
+
+.department-icon.finance {
+  background-color: #E3F2FD;
+}
+
+.department-icon.hr {
+  background-color: #FFF3E0;
+}
+
+.department-icon.tech {
+  background-color: #F3E5F5;
+}
+
+.department-name {
+  font-size: 24rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+/* ==================== 重要通知区 ==================== */
+.notice-section {
+  margin: 24rpx 32rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.notice-section:active {
+  transform: scale(0.98);
+}
+
+.notice-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.notice-icon {
+  width: 64rpx;
+  height: 64rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16rpx;
+  font-size: 32rpx;
+}
+
+.notice-title {
+  font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.notice-countdown {
+  display: flex;
+  align-items: center;
+}
+
+.countdown-text {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* ==================== 审批项目列表区 ==================== */
+.approval-section {
+  margin-top: 32rpx;
+  padding: 0 32rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #999999;
+  margin-bottom: 24rpx;
+  padding-left: 8rpx;
+}
+
+.approval-list {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.approval-item {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 24rpx;
+  background-color: #FFFFFF;
+  border-bottom: 1rpx solid #F5F5F5;
+  transition: all 0.3s ease;
+}
+
+.approval-item:last-child {
+  border-bottom: none;
+}
+
+.approval-item:active {
+  background-color: #F8F8F8;
+}
+
+.approval-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.approval-icon.leave {
+  background-color: #E8F5E9;
+}
+
+.approval-icon.expense {
+  background-color: #E3F2FD;
+}
+
+.approval-icon.purchase {
+  background-color: #FFF3E0;
+}
+
+.approval-icon.reimburse {
+  background-color: #F3E5F5;
+}
+
+.approval-info {
+  flex: 1;
+}
+
+.approval-name {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+.approval-status {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.approval-status.pending {
+  background-color: #FFEBEE;
+  color: #FF5252;
+}
+
+.approval-status.approved {
+  background-color: #E8F5E9;
+  color: #4CAF50;
+}
+
+.approval-status.rejected {
+  background-color: #FFEBEE;
+  color: #FF5252;
+}

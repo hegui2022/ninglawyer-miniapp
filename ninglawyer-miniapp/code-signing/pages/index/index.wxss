@@ -1,0 +1,210 @@
+/* 码上签约小程序 - 首页样式 */
+.index-page {
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* 轮播图 */
+.banner-swiper {
+  width: 100%;
+  height: 360rpx;
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+}
+
+.banner-title {
+  position: absolute;
+  bottom: 40rpx;
+  left: 32rpx;
+  right: 32rpx;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+/* 统计卡片 */
+.stats-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 40rpx 32rpx;
+  margin: -40rpx 24rpx 24rpx;
+  position: relative;
+  z-index: 10;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.stat-value.primary {
+  color: var(--primary-color);
+}
+
+.stat-value.success {
+  color: var(--success-color);
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.stat-divider {
+  width: 1rpx;
+  height: 60rpx;
+  background: var(--border-color);
+}
+
+/* 快捷操作 */
+.quick-actions {
+  padding: 32rpx;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.view-more {
+  font-size: 24rpx;
+  color: var(--primary-color);
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-icon {
+  width: 88rpx;
+  height: 88rpx;
+  margin-bottom: 16rpx;
+  background: var(--primary-light);
+  border-radius: var(--radius-lg);
+  padding: 16rpx;
+}
+
+.action-label {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 最近合同 */
+.recent-contracts {
+  padding: 32rpx;
+}
+
+.contract-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.contract-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.contract-item:last-child {
+  border-bottom: none;
+}
+
+.contract-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.contract-title {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.contract-time {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.contract-status {
+  margin-left: 16rpx;
+}
+
+/* 空状态 */
+.empty-contract {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-contract .empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-contract .empty-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+/* 创建按钮 */
+.create-btn-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx;
+  background: var(--white);
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.create-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  font-size: 32rpx;
+}
+
+.btn-icon {
+  font-size: 48rpx;
+  margin-right: 8rpx;
+  line-height: 1;
+}

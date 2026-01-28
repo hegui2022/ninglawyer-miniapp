@@ -1,0 +1,223 @@
+/* 码上签约小程序 - app.wxss */
+page {
+  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+/* 微信/企业微信风格变量 */
+:root {
+  --primary-color: #07C160;
+  --primary-light: #E8F8F0;
+  --primary-dark: #06A852;
+  --success-color: #07C160;
+  --warning-color: #FF9500;
+  --error-color: #FA5151;
+  --info-color: #10AEFF;
+  --text-primary: #1A1A1A;
+  --text-secondary: #646566;
+  --text-placeholder: #C8C9CC;
+  --border-color: #EBEDF0;
+  --bg-color: #F5F5F5;
+  --white: #FFFFFF;
+  --gray-1: #F7F8FA;
+  --gray-2: #F2F3F5;
+  --gray-3: #EBEDF0;
+  --gray-4: #DCDFE6;
+  --gray-5: #C8C9CC;
+  --gray-6: #969799;
+  --gray-7: #646566;
+  --gray-8: #323233;
+  --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+  --radius-sm: 8rpx;
+  --radius-md: 12rpx;
+  --radius-lg: 16rpx;
+  --radius-xl: 24rpx;
+}
+
+/* 通用样式 */
+.container {
+  min-height: 100vh;
+  padding: 24rpx;
+}
+
+/* 卡片样式 */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 按钮样式 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 32rpx;
+  border-radius: var(--radius-md);
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+.btn-primary:active {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--text-primary);
+  border: 1rpx solid var(--border-color);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1rpx solid var(--primary-color);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* 标题样式 */
+.title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+}
+
+.subtitle {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+}
+
+.text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+.text-small {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 状态标签 */
+.status-tag {
+  display: inline-block;
+  padding: 8rpx 16rpx;
+  border-radius: var(--radius-sm);
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.status-tag-primary {
+  background: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.status-tag-success {
+  background: #E8F8F0;
+  color: #07C160;
+}
+
+.status-tag-warning {
+  background: #FFF4E5;
+  color: #FF9500;
+}
+
+.status-tag-error {
+  background: #FEE8E8;
+  color: #FA5151;
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+/* 输入框 */
+.input {
+  width: 100%;
+  padding: 20rpx 24rpx;
+  background: var(--gray-1);
+  border-radius: var(--radius-md);
+  font-size: 28rpx;
+  color: var(--text-primary);
+  border: 1rpx solid transparent;
+}
+
+.input:focus {
+  border-color: var(--primary-color);
+  background: var(--white);
+}
+
+/* 徽章 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  background: var(--error-color);
+  color: var(--white);
+  font-size: 20rpx;
+  border-radius: 16rpx;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}
+
+/* 加载中 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.loading-text {
+  margin-left: 16rpx;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}

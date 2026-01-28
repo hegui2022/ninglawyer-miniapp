@@ -1,0 +1,93 @@
+<!-- 理约小程序 - 首页 WXML -->
+<view class="index-page">
+  <!-- 头部统计 -->
+  <view class="header-card">
+    <view class="header-title">合同总览</view>
+    <view class="stats-grid">
+      <view class="stat-box" bindtap="onGoList">
+        <text class="stat-value">{{stats.total}}</text>
+        <text class="stat-label">总合同</text>
+      </view>
+      <view class="stat-box" bindtap="onGoList">
+        <text class="stat-value primary">{{stats.active}}</text>
+        <text class="stat-label">生效中</text>
+      </view>
+      <view class="stat-box" bindtap="onGoReminder">
+        <text class="stat-value warning">{{stats.expiring}}</text>
+        <text class="stat-label">即将到期</text>
+      </view>
+      <view class="stat-box" bindtap="onGoList">
+        <text class="stat-value success">{{stats.completed}}</text>
+        <text class="stat-label">已完成</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 即将到期 -->
+  <view class="section card">
+    <view class="section-header">
+      <text class="section-title">即将到期</text>
+      <text class="view-more" bindtap="onGoReminder">查看全部 ></text>
+    </view>
+    
+    <view wx:if="{{upcomingDeadlines.length > 0}}" class="deadline-list">
+      <view class="deadline-item" wx:for="{{upcomingDeadlines}}" wx:key="id" bindtap="onContractDetail" data-id="{{item.id}}">
+        <view class="deadline-info">
+          <text class="deadline-title">{{item.title}}</text>
+          <text class="deadline-date">到期日：{{item.expiryDate}}</text>
+        </view>
+        <view class="deadline-days">
+          <text class="days-value">{{item.daysLeft}}</text>
+          <text class="days-label">天</text>
+        </view>
+      </view>
+    </view>
+    
+    <view wx:else class="empty">
+      <image class="empty-icon" src="/assets/images/empty.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无即将到期的合同</text>
+    </view>
+  </view>
+  
+  <!-- 最近活动 -->
+  <view class="section card">
+    <view class="section-header">
+      <text class="section-title">最近活动</text>
+    </view>
+    
+    <view wx:if="{{recentActivities.length > 0}}" class="activity-list">
+      <view class="activity-item" wx:for="{{recentActivities}}" wx:key="id">
+        <view class="activity-icon">
+          <image src="/assets/icons/{{item.type}}.png" mode="aspectFit"></image>
+        </view>
+        <view class="activity-info">
+          <text class="activity-title">{{item.title}}</text>
+          <text class="activity-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view wx:else class="empty">
+      <image class="empty-icon" src="/assets/images/empty.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无最近活动</text>
+    </view>
+  </view>
+  
+  <!-- 快捷入口 -->
+  <view class="quick-entry card">
+    <view class="entry-grid">
+      <view class="entry-item" bindtap="onGoList">
+        <image class="entry-icon" src="/assets/icons/contract.png" mode="aspectFit"></image>
+        <text class="entry-label">合同管理</text>
+      </view>
+      <view class="entry-item" bindtap="onGoReminder">
+        <image class="entry-icon" src="/assets/icons/reminder.png" mode="aspectFit"></image>
+        <text class="entry-label">到期提醒</text>
+      </view>
+      <view class="entry-item" bindtap="onGoPerformance">
+        <image class="entry-icon" src="/assets/icons/performance.png" mode="aspectFit"></image>
+        <text class="entry-label">履约跟踪</text>
+      </view>
+    </view>
+  </view>
+</view>

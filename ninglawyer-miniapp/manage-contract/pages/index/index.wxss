@@ -1,0 +1,236 @@
+/* 理约小程序 - 首页样式 */
+.index-page {
+  min-height: 100vh;
+  padding: 24rpx;
+}
+
+/* 头部统计卡片 */
+.header-card {
+  background: linear-gradient(135deg, #07C160 0%, #06A852 100%);
+  border-radius: var(--radius-xl);
+  padding: 40rpx 32rpx;
+  color: #ffffff;
+  margin-bottom: 24rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 32rpx;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24rpx;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 40rpx;
+  font-weight: 700;
+  margin-bottom: 8rpx;
+}
+
+.stat-value.primary {
+  color: #FFFFFF;
+}
+
+.stat-value.warning {
+  color: #FFB800;
+}
+
+.stat-value.success {
+  color: #E8F8F0;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+/* 区块 */
+.section {
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.view-more {
+  font-size: 24rpx;
+  color: var(--primary-color);
+}
+
+/* 即将到期列表 */
+.deadline-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.deadline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background: var(--gray-1);
+  border-radius: var(--radius-md);
+  margin-bottom: 16rpx;
+}
+
+.deadline-item:last-child {
+  margin-bottom: 0;
+}
+
+.deadline-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.deadline-title {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.deadline-date {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.deadline-days {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80rpx;
+}
+
+.days-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--warning-color);
+}
+
+.days-label {
+  font-size: 20rpx;
+  color: var(--text-secondary);
+}
+
+/* 活动列表 */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-right: 24rpx;
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-icon image {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.activity-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-title {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.activity-time {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 快捷入口 */
+.quick-entry {
+  padding: 32rpx;
+}
+
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32rpx;
+}
+
+.entry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.entry-icon {
+  width: 96rpx;
+  height: 96rpx;
+  margin-bottom: 16rpx;
+  background: var(--primary-light);
+  border-radius: var(--radius-lg);
+  padding: 20rpx;
+}
+
+.entry-label {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+}

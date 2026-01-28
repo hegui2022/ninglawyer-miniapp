@@ -1,0 +1,84 @@
+<!-- 怎么判小程序 - 首页 WXML -->
+<view class="index-page">
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="onQuickSearch">
+      <image class="search-icon" src="/assets/icons/search.png" mode="aspectFit"></image>
+      <text class="search-placeholder">搜索案例、法律条文、判决结果</text>
+    </view>
+  </view>
+  
+  <!-- 快捷功能 -->
+  <view class="quick-actions card">
+    <view class="action-item" bindtap="onQuickSearch">
+      <image class="action-icon" src="/assets/icons/case-search.png" mode="aspectFit"></image>
+      <text class="action-label">案例查询</text>
+    </view>
+    <view class="action-item" bindtap="onAnalyze">
+      <image class="action-icon" src="/assets/icons/analyze.png" mode="aspectFit"></image>
+      <text class="action-label">智能分析</text>
+    </view>
+    <view class="action-item" bindtap="onQuickSearch">
+      <image class="action-icon" src="/assets/icons/law.png" mode="aspectFit"></image>
+      <text class="action-label">法律条文</text>
+    </view>
+    <view class="action-item" bindtap="onQuickSearch">
+      <image class="action-icon" src="/assets/icons/consult.png" mode="aspectFit"></image>
+      <text class="action-label">律师咨询</text>
+    </view>
+  </view>
+  
+  <!-- 案件分类 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">案件分类</text>
+    </view>
+    <view class="category-grid">
+      <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="onCategoryClick" data-category="{{item}}">
+        <image class="category-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        <text class="category-name">{{item.name}}</text>
+        <text class="category-count">{{item.count}}+</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 热门案例 -->
+  <view class="section card">
+    <view class="section-header">
+      <text class="section-title">热门案例</text>
+    </view>
+    <view class="case-list">
+      <view class="case-item" wx:for="{{hotCases}}" wx:key="id" bindtap="onCaseDetail" data-id="{{item.id}}">
+        <view class="case-info">
+          <text class="case-title">{{item.title}}</text>
+          <view class="case-meta">
+            <text class="case-tag">{{item.category}}</text>
+            <text class="case-date">{{item.date}}</text>
+          </view>
+        </view>
+        <view class="case-result">
+          <text class="result-label">判决结果</text>
+          <text class="result-text">{{item.result}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 最近案例 -->
+  <view class="section card">
+    <view class="section-header">
+      <text class="section-title">最近案例</text>
+    </view>
+    <view class="recent-list">
+      <view class="recent-item" wx:for="{{recentCases}}" wx:key="id" bindtap="onCaseDetail" data-id="{{item.id}}">
+        <view class="recent-content">
+          <text class="recent-title">{{item.title}}</text>
+          <text class="recent-summary">{{item.summary}}</text>
+        </view>
+        <view class="recent-icon">
+          <image src="/assets/icons/arrow-right.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

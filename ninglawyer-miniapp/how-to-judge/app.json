@@ -1,0 +1,49 @@
+// 怎么判小程序 - app.json
+{
+  "pages": [
+    "pages/index/index",
+    "pages/search/search",
+    "pages/detail/detail",
+    "pages/analyze/analyze",
+    "pages/lawyer/lawyer"
+  ],
+  "window": {
+    "navigationBarTitleText": "怎么判",
+    "navigationBarBackgroundColor": "#07C160",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#07C160",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/assets/icons/home.png",
+        "selectedIconPath": "/assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/search/search",
+        "text": "查询",
+        "iconPath": "/assets/icons/search.png",
+        "selectedIconPath": "/assets/icons/search-active.png"
+      },
+      {
+        "pagePath": "pages/analyze/analyze",
+        "text": "分析",
+        "iconPath": "/assets/icons/analyze.png",
+        "selectedIconPath": "/assets/icons/analyze-active.png"
+      },
+      {
+        "pagePath": "pages/lawyer/lawyer",
+        "text": "律师",
+        "iconPath": "/assets/icons/lawyer.png",
+        "selectedIconPath": "/assets/icons/lawyer-active.png"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "style": "v2"
+}

@@ -1,4 +1,20 @@
-<!-- nav-bar 组件 -->
-<view class="component-nav-bar">
-  <!-- 组件内容 -->
+<!-- 导航栏组件 -->
+<view class="nav-bar {{fixed ? 'fixed' : ''}}" style="background-color: {{background}}; color: {{textColor}};">
+  <view class="nav-bar-content" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 返回按钮 -->
+    <view wx:if="{{showBack}}" class="nav-bar-back" bindtap="onBack">
+      <view class="nav-bar-icon-back">{{textColor === '#ffffff' ? '‹' : '‹'}}</view>
+    </view>
+
+    <!-- 首页按钮 -->
+    <view wx:if="{{showHome}}" class="nav-bar-home" bindtap="onHome">
+      <view class="nav-bar-icon-home">⌂</view>
+    </view>
+
+    <!-- 标题 -->
+    <view class="nav-bar-title">{{title}}</view>
+
+    <!-- 占位 -->
+    <view class="nav-bar-placeholder" wx:if="{{showBack || showHome}}"></view>
+  </view>
 </view>

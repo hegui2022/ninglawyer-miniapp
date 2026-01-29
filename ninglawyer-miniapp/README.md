@@ -300,4 +300,85 @@ python src/main.py
 
 ---
 
+## 扣子平台部署指南
+
+### 快速部署
+
+您可以在扣子平台一键部署小程序，快速体验核心功能。
+
+#### 部署步骤
+
+1. 访问扣子平台
+2. 选择本项目
+3. 点击"一键部署"
+4. 等待部署完成
+
+#### 注意事项
+
+**⚠️ 重要：扣子平台一键部署后，您可能会遇到组件缺失错误**
+
+扣子平台生成的小程序中可能缺少必要的组件，导致编译错误。
+
+### 常见问题修复
+
+#### 问题：nav-bar 组件缺失
+
+错误信息：
+```
+[summer-compiler] Couldn't found the '../../components/nav-bar/nav-bar.json' file relative to 'pages/guide/article/article'
+```
+
+**解决方案：**
+
+1. **方式一：使用脚本自动复制（推荐）**
+
+   Windows：
+   ```bash
+   scripts\copy-nav-bar.bat "C:\path\to\coze-miniapp"
+   ```
+
+   Linux/Mac：
+   ```bash
+   scripts/copy-nav-bar.sh /path/to/coze-miniapp
+   ```
+
+2. **方式二：手动复制**
+
+   - 打开本项目中的 `components/nav-bar` 目录
+   - 复制整个 `nav-bar` 文件夹
+   - 粘贴到扣子平台小程序的根目录下
+
+3. **方式三：手动创建**
+
+   详见 `COZE_NAV_BAR_FIX.md` 文档。
+
+#### 问题：其他组件缺失
+
+如果还有其他组件缺失错误，使用同样的方法复制组件：
+
+```bash
+# 复制所有组件到扣子平台小程序
+cp -r components/* /path/to/coze-miniapp/components/
+```
+
+### 扣子平台 vs 独立部署
+
+| 特性 | 扣子平台部署 | 独立部署 |
+|------|-------------|---------|
+| 部署时间 | 1-2天 | 3-5天 |
+| 服务器成本 | 免费 | 需要购买服务器 |
+| 自定义能力 | 受限 | 完全自定义 |
+| 数据控制 | 在扣子平台 | 完全控制 |
+| 扩展性 | 受限 | 高度可扩展 |
+| 适用场景 | MVP、快速验证 | 生产环境、大规模应用 |
+
+### 相关文档
+
+- [扣子平台部署详细指南](COZE_DEPLOYMENT_GUIDE.md)
+- [nav-bar 组件修复指南](COZE_NAV_BAR_FIX.md)
+- [独立部署指南](DEPLOYMENT_GUIDE.md)
+- [前后端对接指南](FRONTEND_BACKEND_INTEGRATION.md)
+
+---
+
 **宁律师·让法律服务触手可及**

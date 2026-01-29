@@ -19,33 +19,23 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "static/icons/home.png",
-        "selectedIconPath": "static/icons/home-active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/consultation/consultation",
-        "text": "咨询",
-        "iconPath": "static/icons/consult.png",
-        "selectedIconPath": "static/icons/consult-active.png"
+        "text": "咨询"
       },
       {
         "pagePath": "pages/contract/contract",
-        "text": "合同",
-        "iconPath": "static/icons/contract.png",
-        "selectedIconPath": "static/icons/contract-active.png"
+        "text": "合同"
       },
       {
         "pagePath": "pages/history/history",
-        "text": "记录",
-        "iconPath": "static/icons/history.png",
-        "selectedIconPath": "static/icons/history-active.png"
+        "text": "记录"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "static/icons/profile.png",
-        "selectedIconPath": "static/icons/profile-active.png"
+        "text": "我的"
       }
     ]
   },

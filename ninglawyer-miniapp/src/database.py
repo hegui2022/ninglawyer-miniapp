@@ -3,6 +3,7 @@
 """
 
 import os
+from pathlib import Path
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from contextlib import contextmanager
@@ -11,10 +12,14 @@ from loguru import logger
 from src.models.models import Base
 
 
+# 数据库文件路径（项目根目录）
+DB_DIR = Path(__file__).parent.parent
+DB_FILE = DB_DIR / "ninglawyer.db"
+
 # 数据库URL - 优先使用环境变量，测试环境使用 SQLite
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/ninglawyer"
+    f"sqlite:///{DB_FILE}"
 )
 
 # 如果 DATABASE_URL 以 sqlite:// 开头，使用 SQLite 特定配置

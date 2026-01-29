@@ -100,7 +100,7 @@ Page({
       }
 
       const res = await wx.request({
-        url: `${getApp().globalData.apiBaseUrl}/api/user/subscription`,
+        url: `${getApp().globalData.apiBase}/api/subscription/user`,
         method: 'GET',
         data: { user_id: userId }
       })
@@ -138,7 +138,7 @@ Page({
   async loadAvailablePlans() {
     try {
       const res = await wx.request({
-        url: `${getApp().globalData.apiBaseUrl}/api/subscription/plans`,
+        url: `${getApp().globalData.apiBase}/api/subscription/plans`,
         method: 'GET'
       })
 
@@ -227,7 +227,7 @@ Page({
     try {
       const userId = wx.getStorageSync('user_id')
       const res = await wx.request({
-        url: `${getApp().globalData.apiBaseUrl}/api/subscription/upgrade`,
+        url: `${getApp().globalData.apiBase}/api/subscription/upgrade`,
         method: 'POST',
         data: {
           user_id: userId,
@@ -275,7 +275,7 @@ Page({
     try {
       const userId = wx.getStorageSync('user_id')
       const res = await wx.request({
-        url: `${getApp().globalData.apiBaseUrl}/api/subscription/downgrade`,
+        url: `${getApp().globalData.apiBase}/api/subscription/downgrade`,
         method: 'POST',
         data: {
           user_id: userId,

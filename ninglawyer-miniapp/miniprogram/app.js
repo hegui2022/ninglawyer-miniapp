@@ -4,6 +4,7 @@ const apiBase = 'http://localhost:5000' // 修改为实际的服务器地址
 App({
   globalData: {
     apiBase: apiBase,
+    apiBaseUrl: apiBase, // 向后兼容
     userInfo: null,
     token: null
   },

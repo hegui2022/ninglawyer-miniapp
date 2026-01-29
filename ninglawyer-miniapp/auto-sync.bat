@@ -1,15 +1,24 @@
 @echo off
+chcp 65001 >nul
 REM 智能同步脚本 - 自动刷新微信开发者工具
-
-set PROJECT_DIR=C:\Users\Administrator\ninglawyer-miniapp
-set WECHAT_TOOLS_EXE="C:\Program Files (x86)\Tencent\微信web开发者工具\cli.bat"
 
 echo ========================================
 echo 智能同步工具
 echo ========================================
 echo.
 
-cd %PROJECT_DIR%
+REM 读取配置文件
+for /f "tokens=1,2 delims==" %%a in ('type sync-config.ini ^| find "="') do set %%a=%%b
+
+REM 检查项目路径
+if not exist "%PROJECT_PATH%" (
+    echo [错误] 项目路径不存在: %PROJECT_PATH%
+    echo [提示] 请运行 config-wizard.bat 配置正确的路径
+    pause
+    exit /b 1
+)
+
+cd /d "%PROJECT_PATH%"
 
 REM 拉取最新代码
 echo [1/4] 检查更新...
@@ -32,15 +41,19 @@ git reset --hard origin/main
 
 echo [4/4] 刷新微信开发者工具...
 
-REM 尝试刷新微信开发者工具（如果支持命令行）
-if exist %WECHAT_TOOLS_EXE% (
-    %WECHAT_TOOLS_EXE% open --project %PROJECT_DIR%\legal-instructor
-    %WECHAT_TOOLS_EXE% open --project %PROJECT_DIR%\code-signing
-    %WECHAT_TOOLS_EXE% open --project %PROJECT_DIR%\lyue
-    %WECHAT_TOOLS_EXE% open --project %PROJECT_DIR%\zenme-pan
+REM 检查微信开发者工具路径
+if exist "%WIN_PATH%" (
+    REM 刷新所有小程序项目
+    for %%p in (%PROJECTS%) do (
+        echo   刷新: %%p
+        "%WIN_PATH%" open --project "%PROJECT_PATH%\%%p" >nul 2>&1
+    )
+    echo [✓] 已刷新所有小程序项目
 ) else (
+    echo [提示] 微信开发者工具路径未配置
     echo [提示] 请在微信开发者工具中手动刷新项目
-    echo 或按 Ctrl+S 触发重新编译
+    echo [提示] 或按 Ctrl+S 触发重新编译
+    echo [提示] 运行 config-wizard.bat 配置路径
 )
 
 echo.

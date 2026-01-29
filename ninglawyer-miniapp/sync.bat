@@ -1,49 +1,48 @@
 @echo off
-REM 自动同步脚本 - Windows 版本
-REM 功能：自动拉取 GitHub 最新代码并通知
+chcp 65001 >nul
+REM 同步脚本 - 简化版同步工具
 
 echo ========================================
-echo 宁律师小程序自动同步工具
+echo 同步工具
 echo ========================================
 echo.
 
-REM 检查是否在正确的目录
-if not exist "ninglawyer-miniapp\.git" (
-    echo [错误] 请先克隆项目到当前目录
-    echo 执行命令：git clone https://github.com/hegui2022/ninglawyer-miniapp.git
+REM 读取配置文件
+for /f "tokens=1,2 delims==" %%a in ('type sync-config.ini ^| find "="') do set %%a=%%b
+
+REM 检查项目路径
+if not exist "%PROJECT_PATH%" (
+    echo [错误] 项目路径不存在: %PROJECT_PATH%
+    echo [提示] 请运行 config-wizard.bat 配置正确的路径
     pause
     exit /b 1
 )
 
-cd ninglawyer-miniapp
+cd /d "%PROJECT_PATH%"
 
-REM 拉取最新代码
 echo [1/3] 拉取最新代码...
-git fetch origin
-git reset --hard origin/main
+git pull origin main
 
-REM 检查是否有更新
-for /f %%i in ('git rev-list HEAD^..origin/main --count') do set commits=%%i
+echo [2/3] 显示更改文件...
+git diff --stat HEAD~1 HEAD
 
-if %commits% gtr 0 (
-    echo.
-    echo ========================================
-    echo [✓] 发现 %commits% 个新提交，已同步到本地！
-    echo ========================================
-    echo.
-    echo 最新提交：
-    git log -1 --pretty=format:"%h - %s (%cr)"
-    echo.
-    echo [提示] 请在微信开发者工具中刷新项目
-    echo.
-    choice /C YN /M "是否立即打开微信开发者工具"
-    if errorlevel 2 goto end
-    if errorlevel 1 open_wechat_tools
+echo [3/3] 刷新微信开发者工具...
+
+REM 检查微信开发者工具路径
+if exist "%WIN_PATH%" (
+    REM 刷新所有小程序项目
+    for %%p in (%PROJECTS%) do (
+        echo   刷新: %%p
+        "%WIN_PATH%" open --project "%PROJECT_PATH%\%%p" >nul 2>&1
+    )
+    echo [✓] 已刷新所有小程序项目
 ) else (
-    echo.
-    echo [✓] 已是最新版本，无需更新
-    echo.
+    echo [提示] 微信开发者工具路径未配置
+    echo [提示] 请在微信开发者工具中手动刷新项目
 )
 
-:end
-pause
+echo.
+echo [✓] 同步完成！
+echo.
+
+timeout /t 3 >nul

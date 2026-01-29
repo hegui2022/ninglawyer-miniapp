@@ -1,27 +1,51 @@
 """
 Master Agent - 主脑 AGENT
 负责任务路由和协调
+支持调用扣子Bot
 """
 
+import os
 from typing import Dict, Any, Optional
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
-from langgraph.graph import StateGraph, MessagesState, END
 from langchain_core.prompts import ChatPromptTemplate
 from loguru import logger
 
-from src.utils.config import get_config
-from src.utils.logger import log_function_call, log_business_event
+# 获取项目根目录
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
-# 获取配置
-config = get_config()
+
+class ConfigLoader:
+    """配置加载器"""
+    
+    @staticmethod
+    def get_config() -> Dict[str, Any]:
+        """获取配置"""
+        # 这里可以添加更多配置加载逻辑
+        return {
+            'MODEL_NAME': 'doubao-seed-1-6-251015',
+            'MODEL_BASE_URL': os.getenv('MODEL_BASE_URL', 'https://ark.cn-beijing.volces.com/api/v3'),
+            'MODEL_API_KEY': os.getenv('COZE_WORKLOAD_IDENTITY_API_KEY', '')
+        }
+
+
+def get_config():
+    """获取配置（兼容旧代码）"""
+    return ConfigLoader.get_config()
 
 
 class MasterAgent:
-    """主脑 AGENT - 负责任务路由"""
+    """主脑 AGENT - 负责任务路由和Bot调用"""
     
-    def __init__(self):
-        """初始化 Master Agent"""
+    def __init__(self, use_coze_bots: bool = True):
+        """
+        初始化 Master Agent
+        
+        Args:
+            use_coze_bots: 是否使用扣子Bot（默认True）
+        """
+        config = get_config()
+        
         self.llm = ChatOpenAI(
             model=config['MODEL_NAME'],
             base_url=config['MODEL_BASE_URL'],
@@ -29,6 +53,8 @@ class MasterAgent:
             temperature=0.3,
             streaming=True
         )
+        
+        self.use_coze_bots = use_coze_bots
         
         # 意图识别提示词
         self.intent_prompt = ChatPromptTemplate.from_messages([
@@ -38,18 +64,28 @@ class MasterAgent:
 
 请识别以下信息：
 1. domain: 法律领域（civil民事/criminal刑事/contract合同/labor劳动/company公司/ip知识产权/marriage婚姻）
-2. intent: 具体意图（consult咨询/draft起草/review审查/signing签署/fulfillment履约/dispute纠纷/litigation诉讼）
-3. urgency: 紧急程度（high高/medium中/low低）
-4. skill_id: 需要调用的技能ID
+2. intent: 具体意图（consult咨询/draft起草/review审查/desensitize脱敏）
+3. bot_type: 需要调用的Bot类型（civil_consult/desensitize/contract_draft/contract_review等）
+4. urgency: 紧急程度（high高/medium中/low低）
 
 返回JSON格式，不要包含其他内容。"""),
             HumanMessage(content="用户输入：{user_input}")
         ])
+        
+        # 延迟加载Bot注册表（避免循环导入）
+        self._bot_registry = None
     
-    @log_function_call
+    @property
+    def bot_registry(self):
+        """获取Bot注册表"""
+        if self._bot_registry is None:
+            from src.utils.bot_registry import get_bot_registry
+            self._bot_registry = get_bot_registry()
+        return self._bot_registry
+    
     def route(self, user_input: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        路由到对应的宁律师
+        路由到对应的Bot或律师
         
         Args:
             user_input: 用户输入
@@ -66,23 +102,25 @@ class MasterAgent:
         # 1. 意图识别
         intent_result = self._identify_intent(user_input)
         
-        # 2. 记录业务事件
-        log_business_event('user_intent_identified', {
-            'user_input': user_input,
-            'intent': intent_result
-        })
+        logger.info(f"意图识别结果：{intent_result}")
         
-        # 3. 返回路由结果
-        return {
-            'success': True,
-            'domain': intent_result.get('domain'),
-            'intent': intent_result.get('intent'),
-            'skill_id': intent_result.get('skill_id'),
-            'urgency': intent_result.get('urgency'),
-            'context': context
-        }
+        # 2. 根据意图选择处理方式
+        if self.use_coze_bots and intent_result.get('bot_type'):
+            # 调用扣子Bot
+            return self._call_coze_bot(
+                bot_type=intent_result.get('bot_type'),
+                query=user_input,
+                context=context
+            )
+        else:
+            # 调用本地律师Agent
+            return self._call_local_agent(
+                domain=intent_result.get('domain'),
+                intent=intent_result.get('intent'),
+                query=user_input,
+                context=context
+            )
     
-    @log_function_call
     def _identify_intent(self, user_input: str) -> Dict[str, Any]:
         """
         识别用户意图
@@ -91,20 +129,47 @@ class MasterAgent:
             user_input: 用户输入
         
         Returns:
-            意识识别结果
+            意图识别结果
         """
         try:
-            # 使用 LLM 识别意图
-            response = self.llm.invoke(
-                self.intent_prompt.format_messages(user_input=user_input)
-            )
+            # 使用简单的规则匹配（比LLM更快）
+            user_input_lower = user_input.lower()
             
-            # 解析响应
-            import json
-            result = json.loads(response.content)
+            # 脱敏意图
+            if any(keyword in user_input_lower for keyword in ['脱敏', '隐私', '隐藏信息', '匿名']):
+                return {
+                    'domain': 'civil',
+                    'intent': 'desensitize',
+                    'bot_type': 'desensitize',
+                    'urgency': 'medium'
+                }
             
-            logger.info(f"意图识别结果：{result}")
-            return result
+            # 合同起草意图
+            elif any(keyword in user_input_lower for keyword in ['起草合同', '写合同', '生成合同']):
+                return {
+                    'domain': 'contract',
+                    'intent': 'draft',
+                    'bot_type': 'contract_draft',
+                    'urgency': 'medium'
+                }
+            
+            # 合同审查意图
+            elif any(keyword in user_input_lower for keyword in ['审查合同', '检查合同', '审核合同', '合同风险']):
+                return {
+                    'domain': 'contract',
+                    'intent': 'review',
+                    'bot_type': 'contract_review',
+                    'urgency': 'medium'
+                }
+            
+            # 默认为民事咨询
+            else:
+                return {
+                    'domain': 'civil',
+                    'intent': 'consult',
+                    'bot_type': 'civil_consult',
+                    'urgency': 'medium'
+                }
             
         except Exception as e:
             logger.error(f"意图识别失败：{str(e)}")
@@ -112,11 +177,61 @@ class MasterAgent:
             return {
                 'domain': 'civil',
                 'intent': 'consult',
-                'urgency': 'medium',
-                'skill_id': 'legal_consult'
+                'bot_type': 'civil_consult',
+                'urgency': 'medium'
             }
     
-    @log_function_call
+    def _call_coze_bot(self, bot_type: str, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        调用扣子Bot
+        
+        Args:
+            bot_type: Bot类型
+            query: 用户输入
+            context: 上下文信息
+        
+        Returns:
+            Bot的回复结果
+        """
+        if context is None:
+            context = {}
+        
+        logger.info(f"调用扣子Bot：{bot_type}")
+        
+        # 调用Bot注册表
+        result = self.bot_registry.call_bot(
+            bot_type=bot_type,
+            query=query,
+            user_id=context.get('user_id', 'default')
+        )
+        
+        return result
+    
+    def _call_local_agent(self, domain: str, intent: str, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        调用本地律师Agent
+        
+        Args:
+            domain: 法律领域
+            intent: 意图
+            query: 用户输入
+            context: 上下文信息
+        
+        Returns:
+            律师Agent的回复结果
+        """
+        if context is None:
+            context = {}
+        
+        logger.info(f"调用本地Agent：{domain} - {intent}")
+        
+        # 这里可以添加本地Agent的调用逻辑
+        # 为了简化，暂时返回一个占位符
+        return {
+            'success': False,
+            'error': '本地Agent暂未实现，请使用扣子Bot'
+        }
+    
     def get_lawyer_recommendation(self, domain: str) -> Dict[str, Any]:
         """
         获取推荐的宁律师

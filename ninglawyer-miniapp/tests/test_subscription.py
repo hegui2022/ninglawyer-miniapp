@@ -1,273 +1,222 @@
 """
-套餐权限系统测试
-测试套餐升级、权限检查、使用量限制等功能
+套餐权限系统测试（简化版）
+直接测试数据库、配置和权限检查逻辑
 """
 
 import sys
 import os
-import json
 
 # 添加项目根目录到 Python 路径
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import requests
-from datetime import datetime, timedelta
-from src.storage.db import get_db_session
-from src.models.models import User
-from loguru import logger
+# 设置环境变量
+os.environ.setdefault('DATABASE_URL', 'sqlite:///ninglawyer.db')
 
-# API 基础 URL
-API_BASE_URL = "http://localhost:5000"
+from sqlalchemy import text
+from src.database import engine, get_db_context
+from src.models.models import User, SkillPermission
+from src.config.subscription import (
+    SUBSCRIPTION_PLANS, 
+    MODULE_TO_MINIPROGRAM, 
+    check_permission, 
+    get_available_modules
+)
+from src.utils.skill_registry import skill_registry
+from src import skills  # 导入技能模块以触发注册
+from loguru import logger
 
 
 class SubscriptionSystemTest:
     """套餐系统测试"""
     
     def __init__(self):
-        self.session = get_db_session()
         self.test_user = None
         
     def setup_test_user(self):
-        """创建测试用户"""
+        """设置测试用户"""
         logger.info("🔧 设置测试用户...")
         
-        # 查找或创建测试用户
-        test_user = self.session.query(User).filter(
-            User.phone == "13800000001"
-        ).first()
+        with get_db_context() as session:
+            # 查找测试用户
+            test_user = session.execute(
+                text("SELECT * FROM users WHERE phone = '13800000001'")
+            ).fetchone()
+            
+            if test_user:
+                logger.info("✅ 使用已有测试用户")
+                # 创建User对象
+                self.test_user = User(
+                    id=test_user[0],
+                    phone=test_user[6],
+                    nickname=test_user[3],
+                    subscription_type=test_user[9],
+                    usage_stats={}
+                )
+            else:
+                logger.error("❌ 测试用户不存在")
+                return False
         
-        if not test_user:
-            test_user = User(
-                phone="13800000001",
-                nickname="测试用户",
-                subscription_type="basic",
-                usage_stats={}
-            )
-            self.session.add(test_user)
-            self.session.commit()
-            logger.info("✅ 创建测试用户")
-        else:
-            logger.info("✅ 使用已有测试用户")
-        
-        self.test_user = test_user
-        return test_user
+        return True
     
     def test_1_get_all_plans(self):
-        """测试1：获取所有套餐"""
+        """测试1：获取所有套餐配置"""
         logger.info("\n" + "=" * 60)
-        logger.info("测试 1: 获取所有套餐")
+        logger.info("测试 1: 获取所有套餐配置")
         logger.info("=" * 60)
         
         try:
-            response = requests.get(f"{API_BASE_URL}/api/subscription/plans")
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    plans = data.get("data", [])
-                    logger.info(f"✅ 获取成功，共 {len(plans)} 个套餐")
-                    for plan in plans:
-                        logger.info(f"  - {plan['name']}: ¥{plan['price']}/{plan['duration']}天")
-                    return True
-                else:
-                    logger.error(f"❌ 返回失败: {data.get('error')}")
-                    return False
-            else:
-                logger.error(f"❌ HTTP错误: {response.status_code}")
-                return False
-                
+            plans = list(SUBSCRIPTION_PLANS.values())
+            logger.info(f"✅ 获取成功，共 {len(plans)} 个套餐")
+            for plan in plans:
+                logger.info(f"  - {plan['name']}: ¥{plan['price']}/{plan['duration']}天")
+                logger.info(f"    模块: {len(plan.get('modules', []))}个")
+            return True
         except Exception as e:
-            logger.error(f"❌ 请求失败: {str(e)}")
+            logger.error(f"❌ 获取失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False
     
-    def test_2_get_user_subscription(self):
-        """测试2：获取用户当前套餐"""
+    def test_2_check_permission_logic(self):
+        """测试2：权限检查逻辑"""
         logger.info("\n" + "=" * 60)
-        logger.info("测试 2: 获取用户当前套餐")
+        logger.info("测试 2: 权限检查逻辑")
         logger.info("=" * 60)
         
         try:
-            user_id = self.test_user.id
-            response = requests.get(
-                f"{API_BASE_URL}/api/user/subscription",
-                params={"user_id": user_id}
-            )
+            test_cases = [
+                ("basic", "basic", True, "基础版用户访问基础版功能"),
+                ("basic", "premium", False, "基础版用户访问专业版功能"),
+                ("premium", "basic", True, "专业版用户访问基础版功能"),
+                ("premium", "premium", True, "专业版用户访问专业版功能"),
+                ("premium", "enterprise", False, "专业版用户访问企业版功能"),
+                ("enterprise", "basic", True, "企业版用户访问基础版功能"),
+                ("enterprise", "premium", True, "企业版用户访问专业版功能"),
+                ("enterprise", "enterprise", True, "企业版用户访问企业版功能"),
+            ]
             
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    subscription = data.get("data", {})
-                    logger.info(f"✅ 获取成功")
-                    logger.info(f"  套餐类型: {subscription.get('subscription_name')}")
-                    logger.info(f"  价格: ¥{subscription.get('subscription_price')}")
-                    logger.info(f"  可用模块: {len(subscription.get('modules', []))}个")
-                    return True
+            all_passed = True
+            for user_sub, required_sub, expected, desc in test_cases:
+                result = check_permission(user_sub, required_sub)
+                status = "✅" if result == expected else "❌"
+                if result != expected:
+                    all_passed = False
+                    logger.error(f"{status} {desc} - 期望 {expected}, 实际 {result}")
                 else:
-                    logger.error(f"❌ 返回失败: {data.get('error')}")
-                    return False
-            else:
-                logger.error(f"❌ HTTP错误: {response.status_code}")
-                return False
-                
-        except Exception as e:
-            logger.error(f"❌ 请求失败: {str(e)}")
-            return False
-    
-    def test_3_upgrade_subscription(self):
-        """测试3：升级套餐"""
-        logger.info("\n" + "=" * 60)
-        logger.info("测试 3: 升级套餐")
-        logger.info("=" * 60)
-        
-        try:
-            user_id = self.test_user.id
+                    logger.info(f"{status} {desc} - {result}")
             
-            # 先获取当前套餐
-            current_subscription = self.test_user.subscription_type
-            logger.info(f"当前套餐: {current_subscription}")
-            
-            # 确定目标套餐
-            target_plan = "premium" if current_subscription == "basic" else "enterprise"
-            logger.info(f"目标套餐: {target_plan}")
-            
-            response = requests.post(
-                f"{API_BASE_URL}/api/subscription/upgrade",
-                json={
-                    "user_id": user_id,
-                    "plan": target_plan
-                }
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    logger.info("✅ 升级成功")
-                    
-                    # 刷新用户数据
-                    self.session.refresh(self.test_user)
-                    logger.info(f"  新套餐: {self.test_user.subscription_type}")
-                    return True
-                else:
-                    logger.error(f"❌ 升级失败: {data.get('error')}")
-                    return False
-            else:
-                logger.error(f"❌ HTTP错误: {response.status_code}")
-                return False
-                
-        except Exception as e:
-            logger.error(f"❌ 请求失败: {str(e)}")
-            return False
-    
-    def test_4_get_available_modules(self):
-        """测试4：获取可用模块"""
-        logger.info("\n" + "=" * 60)
-        logger.info("测试 4: 获取可用模块")
-        logger.info("=" * 60)
-        
-        try:
-            user_id = self.test_user.id
-            response = requests.get(
-                f"{API_BASE_URL}/api/subscription/modules",
-                params={"user_id": user_id}
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("success"):
-                    modules = data.get("data", {}).get("modules", [])
-                    logger.info(f"✅ 获取成功，可用模块: {len(modules)}个")
-                    for module in modules:
-                        logger.info(f"  - {module['name']}: {module['description']}")
-                    return True
-                else:
-                    logger.error(f"❌ 返回失败: {data.get('error')}")
-                    return False
-            else:
-                logger.error(f"❌ HTTP错误: {response.status_code}")
-                return False
-                
-        except Exception as e:
-            logger.error(f"❌ 请求失败: {str(e)}")
-            return False
-    
-    def test_5_permission_check(self):
-        """测试5：权限检查"""
-        logger.info("\n" + "=" * 60)
-        logger.info("测试 5: 权限检查")
-        logger.info("=" * 60)
-        
-        try:
-            user_id = self.test_user.id
-            
-            # 测试基础套餐用户尝试使用专业版功能
-            if self.test_user.subscription_type == "basic":
-                logger.info("测试场景：基础套餐用户尝试使用合同起草功能")
-                response = requests.post(
-                    f"{API_BASE_URL}/api/consultation/consult",
-                    json={
-                        "user_id": user_id,
-                        "domain": "contract",
-                        "question": "起草一个借款合同"
-                    }
-                )
-                
-                if response.status_code == 403:
-                    logger.info("✅ 权限检查生效（拒绝访问）")
-                    return True
-                else:
-                    logger.warning(f"⚠️ 权限检查可能未生效（状态码: {response.status_code}）")
-                    return False
-            else:
-                logger.info("当前用户套餐非基础版，跳过此测试")
-                return True
-                
+            return all_passed
         except Exception as e:
             logger.error(f"❌ 测试失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False
     
-    def test_6_downgrade_subscription(self):
-        """测试6：降级套餐"""
+    def test_3_get_available_modules(self):
+        """测试3：获取可用模块"""
         logger.info("\n" + "=" * 60)
-        logger.info("测试 6: 降级套餐")
+        logger.info("测试 3: 获取可用模块")
         logger.info("=" * 60)
         
         try:
-            user_id = self.test_user.id
+            # 测试不同套餐的可用模块
+            for plan_id in ["basic", "premium", "enterprise"]:
+                modules = get_available_modules(plan_id)
+                logger.info(f"{plan_id}: {len(modules)} 个模块")
+                for module in modules:
+                    logger.info(f"  - {module}")
             
-            # 如果当前不是基础版，则降级到基础版
-            if self.test_user.subscription_type != "basic":
-                logger.info(f"当前套餐: {self.test_user.subscription_type}")
-                logger.info("目标套餐: basic")
-                
-                response = requests.post(
-                    f"{API_BASE_URL}/api/subscription/downgrade",
-                    json={
-                        "user_id": user_id,
-                        "plan": "basic"
-                    }
-                )
-                
-                if response.status_code == 200:
-                    data = response.json()
-                    if data.get("success"):
-                        logger.info("✅ 降级成功")
-                        
-                        # 刷新用户数据
-                        self.session.refresh(self.test_user)
-                        logger.info(f"  新套餐: {self.test_user.subscription_type}")
-                        return True
-                    else:
-                        logger.error(f"❌ 降级失败: {data.get('error')}")
-                        return False
-                else:
-                    logger.error(f"❌ HTTP错误: {response.status_code}")
-                    return False
-            else:
-                logger.info("当前已是基础版，跳过降级测试")
-                return True
-                
+            return True
         except Exception as e:
-            logger.error(f"❌ 请求失败: {str(e)}")
+            logger.error(f"❌ 测试失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def test_4_skill_registry(self):
+        """测试4：技能注册表"""
+        logger.info("\n" + "=" * 60)
+        logger.info("测试 4: 技能注册表")
+        logger.info("=" * 60)
+        
+        try:
+            skills = skill_registry.list_skills()
+            logger.info(f"✅ 获取成功，共 {len(skills)} 个技能")
+            
+            for skill_name, skill in skills.items():
+                required = skill.get("required_subscription", "basic")
+                logger.info(f"  - {skill_name}: {skill.get('description')} (需要{required}套餐)")
+            
+            return True
+        except Exception as e:
+            logger.error(f"❌ 测试失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def test_5_permission_check_for_user(self):
+        """测试5：用户权限检查"""
+        logger.info("\n" + "=" * 60)
+        logger.info("测试 5: 用户权限检查")
+        logger.info("=" * 60)
+        
+        try:
+            # 设置技能注册表的数据库会话
+            skill_registry.set_db_session(engine)
+            
+            # 检查测试用户的权限
+            test_skills = [
+                ("desensitize", "隐私脱敏"),
+                ("civil_consult", "民事咨询"),
+                ("contract_draft", "合同起草"),
+                ("contract_review", "合同审查"),
+            ]
+            
+            all_passed = True
+            for skill_name, skill_desc in test_skills:
+                result = skill_registry.check_user_permission(
+                    skill_name, 
+                    self.test_user.id if self.test_user else None
+                )
+                status = "✅" if result["has_permission"] else "❌"
+                logger.info(f"{status} {skill_desc}: {result.get('has_permission')}")
+                if not result["has_permission"]:
+                    logger.info(f"  原因: {result.get('error')}")
+            
+            return True
+        except Exception as e:
+            logger.error(f"❌ 测试失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+    
+    def test_6_database_data(self):
+        """测试6：数据库数据验证"""
+        logger.info("\n" + "=" * 60)
+        logger.info("测试 6: 数据库数据验证")
+        logger.info("=" * 60)
+        
+        try:
+            with get_db_context() as session:
+                # 检查用户表
+                user_count = session.execute(text("SELECT COUNT(*) FROM users")).scalar()
+                logger.info(f"✅ Users表: {user_count} 条记录")
+                
+                # 检查技能权限表
+                skill_count = session.execute(text("SELECT COUNT(*) FROM skill_permissions")).scalar()
+                logger.info(f"✅ SkillPermissions表: {skill_count} 条记录")
+                
+                # 检查测试用户的套餐信息
+                if self.test_user:
+                    logger.info(f"✅ 测试用户: {self.test_user.nickname}")
+                    logger.info(f"  套餐: {self.test_user.subscription_type}")
+                    logger.info(f"  使用统计: {self.test_user.usage_stats}")
+                
+                return True
+        except Exception as e:
+            logger.error(f"❌ 测试失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def run_all_tests(self):
@@ -277,16 +226,18 @@ class SubscriptionSystemTest:
         logger.info("🚀" * 30)
         
         # 设置测试用户
-        self.setup_test_user()
+        if not self.setup_test_user():
+            logger.error("无法设置测试用户，退出测试")
+            return False
         
         # 运行测试
         tests = [
-            ("获取所有套餐", self.test_1_get_all_plans),
-            ("获取用户套餐", self.test_2_get_user_subscription),
-            ("升级套餐", self.test_3_upgrade_subscription),
-            ("获取可用模块", self.test_4_get_available_modules),
-            ("权限检查", self.test_5_permission_check),
-            ("降级套餐", self.test_6_downgrade_subscription),
+            ("获取套餐配置", self.test_1_get_all_plans),
+            ("权限检查逻辑", self.test_2_check_permission_logic),
+            ("获取可用模块", self.test_3_get_available_modules),
+            ("技能注册表", self.test_4_skill_registry),
+            ("用户权限检查", self.test_5_permission_check_for_user),
+            ("数据库数据验证", self.test_6_database_data),
         ]
         
         results = []

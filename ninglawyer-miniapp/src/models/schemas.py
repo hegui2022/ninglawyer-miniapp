@@ -146,9 +146,20 @@ class FileRecordBase(BaseModel):
     filename: str
     file_path: str
     file_size: int
-    file_type: str  # image, document, other
-    related_type: Optional[str] = None  # 关联类型：consultation, contract, desensitize
-    related_id: Optional[int] = None  # 关联ID
+    content_type: str
+    category: str = 'evidence'
+    session_id: Optional[int] = None
+
+
+class FileCreate(FileRecordBase):
+    """创建文件"""
+    pass
+
+
+class FileUpdate(BaseModel):
+    """更新文件"""
+    category: Optional[str] = None
+    session_id: Optional[int] = None
 
 
 class FileRecord(FileRecordBase):

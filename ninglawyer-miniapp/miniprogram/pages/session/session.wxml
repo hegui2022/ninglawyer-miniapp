@@ -1,0 +1,43 @@
+<view class="session-container">
+  <!-- 聊天区域 -->
+  <scroll-view class="chat-container" scroll-y scroll-into-view="{{scrollIntoView}}">
+    <view class="message-list">
+      <view 
+        class="message-item {{item.role}}" 
+        id="msg-{{index}}"
+        wx:for="{{messages}}" 
+        wx:key="id"
+      >
+        <image class="message-avatar {{item.role}}" src="{{item.role === 'user' ? (userInfo.avatar || '/static/default-avatar.png') : '/static/logo.png'}}"></image>
+        <view class="message-content {{item.role}}">
+          <text class="message-text">{{item.content}}</text>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+      </view>
+      
+      <view class="message-item assistant" wx:if="{{loading}}">
+        <image class="message-avatar assistant" src="/static/logo.png"></image>
+        <view class="message-content assistant">
+          <view class="typing-indicator">
+            <text class="dot"></text><text class="dot"></text><text class="dot"></text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-container">
+      <textarea 
+        class="input-field"
+        placeholder="请输入消息..."
+        value="{{inputText}}"
+        bindinput="onInput"
+        auto-height
+        maxlength="500"
+      ></textarea>
+      <button class="send-btn" bindtap="sendMessage" disabled="{{!inputText || loading}}">发送</button>
+    </view>
+  </view>
+</view>

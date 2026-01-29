@@ -32,6 +32,8 @@ def require_admin(f):
         # 暂时跳过，实际项目中应该实现
         return f(*args, **kwargs)
     
+    # 保留原始函数名称以避免端点冲突
+    decorated_function.__name__ = f.__name__
     return decorated_function
 
 

@@ -11,20 +11,30 @@ from loguru import logger
 from src.models.models import Base
 
 
-# 数据库URL
+# 数据库URL - 优先使用环境变量，测试环境使用 SQLite
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "postgresql://postgres:postgres@localhost:5432/ninglawyer"
 )
 
-# 创建引擎
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20,
-    echo=False
-)
+# 如果 DATABASE_URL 以 sqlite:// 开头，使用 SQLite 特定配置
+if DATABASE_URL.startswith('sqlite://'):
+    # SQLite 配置
+    engine = create_engine(
+        DATABASE_URL,
+        pool_pre_ping=True,
+        echo=False,
+        connect_args={"check_same_thread": False}  # SQLite 线程安全
+    )
+else:
+    # PostgreSQL 配置
+    engine = create_engine(
+        DATABASE_URL,
+        pool_pre_ping=True,
+        pool_size=10,
+        max_overflow=20,
+        echo=False
+    )
 
 # 创建Session工厂
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

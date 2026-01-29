@@ -1,0 +1,38 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="logo">⚖️</view>
+    <view class="title">{{motto}}</view>
+    <view class="subtitle">智能法律服务平台</view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="features">
+    <view
+      class="feature-item"
+      wx:for="{{features}}"
+      wx:key="title"
+      bindtap="navigateToFeature"
+      data-path="{{item.path}}"
+    >
+      <view class="feature-icon">{{item.icon}}</view>
+      <view class="feature-content">
+        <view class="feature-title">{{item.title}}</view>
+        <view class="feature-desc">{{item.desc}}</view>
+      </view>
+      <view class="feature-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 用户信息 -->
+  <view class="user-section" wx:if="{{hasUserInfo}}">
+    <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+    <view class="user-name">{{userInfo.nickName}}</view>
+  </view>
+
+  <!-- 底部信息 -->
+  <view class="footer">
+    <text class="footer-text">宁律师 © 2026</text>
+  </view>
+</view>

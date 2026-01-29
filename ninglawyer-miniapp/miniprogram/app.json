@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/desensitize/desensitize",
+    "pages/consult/consult",
+    "pages/contract/contract"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "宁律师",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "images/icon_home.png",
+        "selectedIconPath": "images/icon_home_active.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/desensitize/desensitize",
+        "iconPath": "images/icon_desensitize.png",
+        "selectedIconPath": "images/icon_desensitize_active.png",
+        "text": "脱敏"
+      },
+      {
+        "pagePath": "pages/consult/consult",
+        "iconPath": "images/icon_consult.png",
+        "selectedIconPath": "images/icon_consult_active.png",
+        "text": "咨询"
+      },
+      {
+        "pagePath": "pages/contract/contract",
+        "iconPath": "images/icon_contract.png",
+        "selectedIconPath": "images/icon_contract_active.png",
+        "text": "合同"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

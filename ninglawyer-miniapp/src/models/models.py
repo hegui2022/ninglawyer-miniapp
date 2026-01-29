@@ -22,6 +22,14 @@ class User(Base):
     phone = Column(String(20), nullable=True, index=True, comment="手机号")
     email = Column(String(100), nullable=True, comment="邮箱")
     is_active = Column(Boolean, default=True, comment="是否激活")
+    
+    # 套餐相关字段
+    subscription_type = Column(String(20), default="basic", comment="套餐类型：basic/premium/enterprise")
+    subscription_start_at = Column(DateTime, nullable=True, comment="套餐开始时间")
+    subscription_end_at = Column(DateTime, nullable=True, comment="套餐结束时间")
+    enabled_modules = Column(JSON, default=list, comment="启用的模块列表")
+    usage_stats = Column(JSON, default=dict, comment="使用统计")
+    
     created_at = Column(DateTime, default=datetime.utcnow, comment="创建时间")
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, comment="更新时间")
     
@@ -184,5 +192,22 @@ class SystemConfig(Base):
     key = Column(String(100), unique=True, nullable=False, comment="配置键")
     value = Column(Text, nullable=True, comment="配置值")
     description = Column(String(500), nullable=True, comment="描述")
+    created_at = Column(DateTime, default=datetime.utcnow, comment="创建时间")
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, comment="更新时间")
+
+
+class SkillPermission(Base):
+    """技能权限表"""
+    __tablename__ = "skill_permissions"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    skill_name = Column(String(50), unique=True, nullable=False, comment="技能名称")
+    skill_display_name = Column(String(100), nullable=False, comment="技能显示名称")
+    skill_category = Column(String(50), nullable=False, comment="技能分类：legal/privacy/business")
+    required_subscription = Column(String(20), nullable=False, comment="需要的套餐：basic/premium/enterprise")
+    enabled = Column(Boolean, default=True, comment="是否启用")
+    description = Column(Text, nullable=True, comment="技能描述")
+    daily_limit = Column(Integer, default=0, comment="每日使用限制（0表示无限制）")
+    monthly_limit = Column(Integer, default=0, comment="每月使用限制（0表示无限制）")
     created_at = Column(DateTime, default=datetime.utcnow, comment="创建时间")
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, comment="更新时间")

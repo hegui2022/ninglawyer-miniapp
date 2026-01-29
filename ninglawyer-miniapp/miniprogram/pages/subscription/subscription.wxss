@@ -1,0 +1,271 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+/* 当前套餐卡片 */
+.current-plan-card {
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.plan-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+}
+
+.card-body {
+  padding: 30rpx;
+}
+
+.plan-info {
+  margin-bottom: 30rpx;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.info-item .label {
+  color: #666;
+  font-size: 28rpx;
+}
+
+.info-item .value {
+  color: #333;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.info-item .value.price {
+  color: #e74c3c;
+  font-size: 36rpx;
+}
+
+.info-item .value.days-left {
+  color: #27ae60;
+  font-size: 24rpx;
+  margin-left: 10rpx;
+}
+
+.info-item .value.expired {
+  color: #e74c3c;
+  font-size: 24rpx;
+  margin-left: 10rpx;
+}
+
+.plan-features {
+  background: #f8f9fa;
+  padding: 20rpx;
+  border-radius: 10rpx;
+}
+
+.features-title {
+  color: #666;
+  font-size: 28rpx;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.features-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  color: #27ae60;
+  font-size: 26rpx;
+  margin-right: 15rpx;
+  margin-bottom: 10rpx;
+}
+
+.card-footer {
+  padding: 20rpx 30rpx;
+  display: flex;
+  gap: 20rpx;
+  border-top: 1rpx solid #eee;
+}
+
+/* 套餐列表 */
+.plans-section {
+  margin-top: 30rpx;
+}
+
+.section-title {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.plans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.plan-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  position: relative;
+  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  border: 3rpx solid transparent;
+}
+
+.plan-card.selected {
+  border-color: #667eea;
+  transform: scale(1.02);
+}
+
+.plan-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.plan-name {
+  color: #333;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.plan-price {
+  color: #e74c3c;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.plan-description {
+  color: #666;
+  font-size: 26rpx;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.plan-mini-features {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.mini-feature {
+  color: #999;
+  font-size: 24rpx;
+  margin-right: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.plan-select-indicator {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  background: #667eea;
+  color: #fff;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.indicator-text {
+  font-size: 20rpx;
+}
+
+/* 底部操作栏 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 20rpx;
+  box-shadow: 0 -5rpx 15rpx rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 20rpx;
+}
+
+/* 按钮样式 */
+.btn {
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  padding: 20rpx 40rpx;
+  border: none;
+  outline: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  flex: 1;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+}
+
+.btn-secondary {
+  background: #f8f9fa;
+  color: #333;
+  border: 2rpx solid #ddd;
+}
+
+.btn-secondary:active {
+  background: #e9ecef;
+}
+
+.btn-large {
+  height: 90rpx;
+  line-height: 90rpx;
+  padding: 0;
+}
+
+/* 加载提示 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-content {
+  background: #fff;
+  padding: 40rpx 60rpx;
+  border-radius: 20rpx;
+}
+
+.loading-text {
+  color: #333;
+  font-size: 28rpx;
+}

@@ -10,6 +10,7 @@ from src.agents.master_agent import MasterAgent
 from src.agents.lawyer_factory import LawyerAgentFactory
 from src.utils.response import success_response, error_response
 from src.utils.logger import log_api_request
+from src.middleware.permission import check_skill_permission, check_usage_limit
 
 # 创建蓝图
 consultation_bp = Blueprint('consultation', __name__)
@@ -28,13 +29,14 @@ def route_consultation():
     try:
         data = request.get_json()
         user_input = data.get('input', '')
+        user_id = data.get('user_id')  # 添加用户ID
         context = data.get('context', {})
         
         if not user_input:
             return error_response("请输入咨询内容", 400)
         
         # 路由到对应的宁律师
-        route_result = master_agent.route(user_input, context)
+        route_result = master_agent.route(user_input, user_id=user_id, context=context)
         
         return success_response(route_result)
         
@@ -45,9 +47,11 @@ def route_consultation():
 
 @consultation_bp.route('/consult', methods=['POST'])
 @log_api_request
+@check_skill_permission("civil_consult")
+@check_usage_limit("consultations_this_month", 100)
 def text_consult():
     """
-    文字咨询
+    文字咨询（带权限检查和使用量限制）
     """
     try:
         data = request.get_json()

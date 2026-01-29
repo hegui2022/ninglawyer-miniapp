@@ -19,6 +19,7 @@ from src.api.session import session_bp
 from src.api.files import files_bp
 from src.api.records import records_bp
 from src.api.admin import admin_bp
+from src.api.subscription import subscription_bp
 
 # 注册蓝图
 api_bp.register_blueprint(user_bp, url_prefix='/user')
@@ -31,6 +32,7 @@ api_bp.register_blueprint(contract_bp, url_prefix='/contract')
 api_bp.register_blueprint(shared_data_bp, url_prefix='/shared-data')
 api_bp.register_blueprint(mcp_bp, url_prefix='/mcp')
 api_bp.register_blueprint(master_bp, url_prefix='/master')
+api_bp.register_blueprint(subscription_bp, url_prefix='/subscription')
 
 # 临时路由，用于测试
 @api_bp.route('/test', methods=['GET'])

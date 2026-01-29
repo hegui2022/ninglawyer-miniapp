@@ -72,18 +72,19 @@ class MasterBrain:
         
         logger.info("🧠 主脑智能体初始化完成")
     
-    def route(self, user_input: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+    def route(self, user_input: str, user_id: int = None, context: Dict[str, Any] = None) -> Dict[str, Any]:
         """
-        路由请求到对应技能
+        路由请求到对应技能（带权限检查）
         
         Args:
             user_input: 用户输入
+            user_id: 用户ID（用于权限检查）
             context: 上下文信息
             
         Returns:
             路由结果
         """
-        logger.info(f"🔍 路由请求：{user_input[:50]}...")
+        logger.info(f"🔍 路由请求：{user_input[:50]}... (用户ID: {user_id})")
         
         # 1. 意图识别
         routing_decision = self._identify_intent(user_input, context)
@@ -105,8 +106,25 @@ class MasterBrain:
                 "clarification_needed": True
             }
         
-        # 3. 执行对应技能
-        result = skill_registry.execute_skill(skill_name, user_input=user_input, context=context or {})
+        # 3. 权限检查
+        if user_id:
+            permission_check = skill_registry.check_user_permission(skill_name, user_id)
+            if not permission_check["has_permission"]:
+                logger.warning(f"⚠️ 用户 {user_id} 无权限使用技能：{skill_name}")
+                return {
+                    "success": False,
+                    "error": permission_check["error"],
+                    "upgrade_required": True,
+                    "required_subscription": permission_check.get("required_subscription")
+                }
+        
+        # 4. 执行对应技能
+        result = skill_registry.execute_skill(
+            skill_name, 
+            user_id=user_id,
+            user_input=user_input, 
+            context=context or {}
+        )
         
         return result
     

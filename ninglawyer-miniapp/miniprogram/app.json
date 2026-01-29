@@ -8,7 +8,8 @@
     "pages/profile/profile",
     "pages/login/login",
     "pages/session/session",
-    "pages/upload/upload"
+    "pages/upload/upload",
+    "pages/subscription/subscription"
   ],
   "tabBar": {
     "color": "#666666",

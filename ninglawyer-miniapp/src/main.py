@@ -19,6 +19,7 @@ load_dotenv()
 
 from src.api.routes import register_routes
 from src.storage.db import init_db
+from src.middleware import setup_logging, init_error_handlers
 
 # 导入技能模块以自动注册
 import src.skills  # 这会触发技能注册
@@ -38,6 +39,12 @@ CORS(app, resources={
 # 配置应用
 app.config['JSON_AS_ASCII'] = False
 app.config['JSONIFY_MIMETYPE'] = 'application/json;charset=utf-8'
+
+# 设置日志系统
+setup_logging(app)
+
+# 注册错误处理器
+init_error_handlers(app)
 
 # 注册路由
 register_routes(app)
@@ -70,23 +77,6 @@ def index():
             'risk': '/api/risk'
         }
     })
-
-# 错误处理
-@app.errorhandler(404)
-def not_found(error):
-    """404 错误"""
-    return jsonify({
-        'code': 404,
-        'message': 'Not Found'
-    }), 404
-
-@app.errorhandler(500)
-def internal_error(error):
-    """500 错误"""
-    return jsonify({
-        'code': 500,
-        'message': 'Internal Server Error'
-    }), 500
 
 if __name__ == '__main__':
     host = os.getenv('API_HOST', '0.0.0.0')

@@ -1,25 +1,57 @@
 // app.js
+const apiBase = 'http://localhost:5000' // 修改为实际的服务器地址
+
 App({
   globalData: {
+    apiBase: apiBase,
     userInfo: null,
-    // API配置
-    apiConfig: {
-      baseUrl: 'http://localhost:5000',  // 本地开发地址
-      timeout: 30000
-    }
+    token: null
   },
 
   onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    // 初始化
+    this.checkLogin()
+  },
 
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+  checkLogin() {
+    const token = wx.getStorageSync('token')
+    const userInfo = wx.getStorageSync('userInfo')
+
+    if (token && userInfo) {
+      this.globalData.token = token
+      this.globalData.userInfo = userInfo
+    }
+  },
+
+  // 带认证的请求
+  request(options) {
+    const token = this.globalData.token
+
+    return wx.request({
+      ...options,
+      header: {
+        'Authorization': `Bearer ${token}`,
+        ...options.header
+      },
+      success: (res) => {
+        // Token过期处理
+        if (res.statusCode === 401) {
+          this.handleTokenExpired()
+        }
       }
+    })
+  },
+
+  handleTokenExpired() {
+    // 清除本地存储
+    wx.removeStorageSync('token')
+    wx.removeStorageSync('userInfo')
+    this.globalData.token = null
+    this.globalData.userInfo = null
+
+    // 跳转到登录页
+    wx.reLaunch({
+      url: '/pages/login/login'
     })
   }
 })

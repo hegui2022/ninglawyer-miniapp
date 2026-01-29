@@ -1,33 +1,30 @@
-# 微信小程序
-*.wxml.bak
-*.wxss.bak
-*.js.bak
-*.json.bak
-
-# 依赖
-node_modules/
-.pnp
-.pnp.js
-
-# 测试
-coverage/
-
-# 生产
-dist/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 build/
-*.min.js
-*.min.css
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# 日志
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# 操作系统
-.DS_Store
-Thumbs.db
+# 虚拟环境
+venv/
+ENV/
+env/
+.venv
 
 # IDE
 .vscode/
@@ -36,36 +33,49 @@ Thumbs.db
 *.swo
 *~
 
-# 临时文件
-*.tmp
-*.temp
-.cache/
-temp/
-tmp/
-
-# 环境
+# 环境变量
 .env
 .env.local
 .env.*.local
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-env/
-ENV/
+# 日志
+logs/
+*.log
 
-# 配置文件（包含敏感信息）
-*.key
-*.pem
-secrets.json
+# 上传文件
+uploads/
 
-# 用户数据（如果本地有测试数据）
-userdata/
+# 数据库
 *.db
+*.sqlite
+*.sqlite3
 
-# 监控工具日志（可选提交）
-# monitor.log
+# SSL 证书
+ssl/*.pem
+ssl/*.key
+ssl/*.crt
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# 备份
+*.bak
+*.backup
+
+# 缓存
+.cache/

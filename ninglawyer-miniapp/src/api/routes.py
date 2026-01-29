@@ -14,8 +14,18 @@ from src.api.contract import contract_bp
 from src.api.shared_data import shared_data_bp
 from src.api.mcp import mcp_bp
 from src.api.master import master_bp
+from src.api.user import user_bp
+from src.api.session import session_bp
+from src.api.files import files_bp
+from src.api.records import records_bp
+from src.api.admin import admin_bp
 
 # 注册蓝图
+api_bp.register_blueprint(user_bp, url_prefix='/user')
+api_bp.register_blueprint(session_bp, url_prefix='/session')
+api_bp.register_blueprint(records_bp, url_prefix='/records')
+api_bp.register_blueprint(files_bp, url_prefix='/files')
+api_bp.register_blueprint(admin_bp, url_prefix='/admin')
 api_bp.register_blueprint(consultation_bp, url_prefix='/consultation')
 api_bp.register_blueprint(contract_bp, url_prefix='/contract')
 api_bp.register_blueprint(shared_data_bp, url_prefix='/shared-data')

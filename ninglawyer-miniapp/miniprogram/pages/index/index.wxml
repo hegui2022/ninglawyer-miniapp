@@ -1,38 +1,81 @@
-<!--pages/index/index.wxml-->
-<view class="container">
-  <!-- 头部 -->
+<view class="index-container">
+  <!-- 顶部导航 -->
   <view class="header">
-    <view class="logo">⚖️</view>
-    <view class="title">{{motto}}</view>
-    <view class="subtitle">智能法律服务平台</view>
-  </view>
-
-  <!-- 功能列表 -->
-  <view class="features">
-    <view
-      class="feature-item"
-      wx:for="{{features}}"
-      wx:key="title"
-      bindtap="navigateToFeature"
-      data-path="{{item.path}}"
-    >
-      <view class="feature-icon">{{item.icon}}</view>
-      <view class="feature-content">
-        <view class="feature-title">{{item.title}}</view>
-        <view class="feature-desc">{{item.desc}}</view>
-      </view>
-      <view class="feature-arrow">›</view>
+    <view class="welcome">
+      <text class="greeting">您好，{{userInfo.nickname || '用户'}}</text>
+      <text class="time">{{currentTime}}</text>
+    </view>
+    <view class="avatar" bindtap="goToProfile">
+      <image src="{{userInfo.avatar || '/static/default-avatar.png'}}" mode="aspectFill"></image>
     </view>
   </view>
 
-  <!-- 用户信息 -->
-  <view class="user-section" wx:if="{{hasUserInfo}}">
-    <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-    <view class="user-name">{{userInfo.nickName}}</view>
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <image class="search-icon" src="/static/icons/search.png"></image>
+      <input placeholder="搜索法律问题..." bindconfirm="onSearch" confirm-type="search" />
+    </view>
   </view>
 
-  <!-- 底部信息 -->
-  <view class="footer">
-    <text class="footer-text">宁律师 © 2026</text>
+  <!-- 快捷功能 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="goToConsultation">
+      <image class="action-icon" src="/static/icons/consult.png"></image>
+      <text class="action-text">法律咨询</text>
+    </view>
+    <view class="action-item" bindtap="goToContract">
+      <image class="action-icon" src="/static/icons/contract.png"></image>
+      <text class="action-text">合同审核</text>
+    </view>
+    <view class="action-item" bindtap="goToDesensitize">
+      <image class="action-icon" src="/static/icons/desensitize.png"></image>
+      <text class="action-text">隐私脱敏</text>
+    </view>
+    <view class="action-item" bindtap="goToHistory">
+      <image class="action-icon" src="/static/icons/history.png"></image>
+      <text class="action-text">历史记录</text>
+    </view>
+  </view>
+
+  <!-- 法律领域 -->
+  <view class="domain-section">
+    <view class="section-header">
+      <text class="section-title">法律领域</text>
+      <text class="section-more" bindtap="goToDomains">更多</text>
+    </view>
+    <view class="domain-grid">
+      <view class="domain-item" wx:for="{{domains}}" wx:key="name" bindtap="selectDomain" data-domain="{{item.name}}">
+        <image class="domain-icon" src="{{item.icon}}"></image>
+        <text class="domain-name">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门问题 -->
+  <view class="hot-section">
+    <view class="section-header">
+      <text class="section-title">热门问题</text>
+    </view>
+    <view class="hot-list">
+      <view class="hot-item" wx:for="{{hotQuestions}}" wx:key="id" bindtap="askQuestion" data-question="{{item.question}}">
+        <view class="hot-rank">{{index + 1}}</view>
+        <text class="hot-text">{{item.question}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近会话 -->
+  <view class="session-section" wx:if="{{recentSessions.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">最近会话</text>
+      <text class="section-more" bindtap="goToSessions">全部</text>
+    </view>
+    <scroll-view class="session-list" scroll-x>
+      <view class="session-card" wx:for="{{recentSessions}}" wx:key="id" bindtap="goToSession" data-id="{{item.id}}">
+        <text class="session-title">{{item.title}}</text>
+        <text class="session-time">{{item.lastMessageTime}}</text>
+      </view>
+    </scroll-view>
   </view>
 </view>

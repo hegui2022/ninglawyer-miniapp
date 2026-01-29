@@ -3,35 +3,34 @@ version: '3.8'
 services:
   # PostgreSQL 数据库
   postgres:
-    image: postgres:13-alpine
+    image: postgres:14-alpine
     container_name: ninglawyer-postgres
     environment:
-      POSTGRES_DB: ninglawyer
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER:-ninglawyer}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ninglawyer_password}
+      POSTGRES_DB: ${POSTGRES_DB:-ninglawyer_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ninglawyer}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - ninglawyer-network
+    restart: unless-stopped
 
   # Redis 缓存
   redis:
-    image: redis:6-alpine
+    image: redis:7-alpine
     container_name: ninglawyer-redis
-    command: redis-server --appendonly yes --requirepass ""
-    ports:
-      - "6379:6379"
+    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
+    ports:
+      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -39,70 +38,152 @@ services:
       retries: 5
     networks:
       - ninglawyer-network
+    restart: unless-stopped
 
-  # Milvus 向量数据库（可选）
-  milvus:
-    image: milvusdb/milvus:latest
-    container_name: ninglawyer-milvus
-    command: ["milvus", "run", "standalone"]
+  # 应用服务
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ninglawyer-app
     environment:
-      ETCD_ENDPOINTS: etcd:2379
-      MINIO_ADDRESS: minio:9000
+      # 数据库配置
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ninglawyer}:${POSTGRES_PASSWORD:-ninglawyer_password}@postgres:5432/${POSTGRES_DB:-ninglawyer_db}
+      
+      # Redis 配置
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      
+      # Celery 配置
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      
+      # API 配置
+      API_HOST: 0.0.0.0
+      API_PORT: 5000
+      DEBUG: ${DEBUG:-False}
+      
+      # 安全配置
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change-this-jwt-secret-in-production}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION_HOURS: 24
+      
+      # 微信小程序配置
+      WECHAT_APP_ID: ${WECHAT_APP_ID}
+      WECHAT_APP_SECRET: ${WECHAT_APP_SECRET}
+      
+      # 日志配置
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
     ports:
-      - "19530:19530"
-      - "9091:9091"
-    volumes:
-      - milvus_data:/var/lib/milvus
+      - "5000:5000"
     depends_on:
-      - etcd
-      - minio
-    networks:
-      - ninglawyer-network
-
-  # etcd（Milvus 依赖）
-  etcd:
-    image: quay.io/coreos/etcd:latest
-    container_name: ninglawyer-etcd
-    environment:
-      - ETCD_AUTO_COMPACTION_MODE=revision
-      - ETCD_AUTO_COMPACTION_RETENTION=1000
-      - ETCD_QUOTA_BACKEND_BYTES=4294967296
-      - ETCD_SNAPSHOT_COUNT=50000
-    volumes:
-      - etcd_data:/etcd
-    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
-    networks:
-      - ninglawyer-network
-
-  # MinIO（Milvus 依赖）
-  minio:
-    image: minio/minio:latest
-    container_name: ninglawyer-minio
-    environment:
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
-    volumes:
-      - minio_data:/minio_data
-    command: minio server /minio_data
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
-      timeout: 20s
+      timeout: 10s
       retries: 3
+      start_period: 40s
     networks:
       - ninglawyer-network
+    restart: unless-stopped
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ninglawyer-celery-worker
+    command: celery -A src.tasks.async_tasks worker --loglevel=info
+    environment:
+      # 数据库配置
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ninglawyer}:${POSTGRES_PASSWORD:-ninglawyer_password}@postgres:5432/${POSTGRES_DB:-ninglawyer_db}
+      
+      # Redis 配置
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      
+      # Celery 配置
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      
+      # 安全配置
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production}
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ninglawyer-network
+    restart: unless-stopped
+
+  # Celery Beat（定时任务调度）
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ninglawyer-celery-beat
+    command: celery -A src.tasks.async_tasks beat --loglevel=info
+    environment:
+      # 数据库配置
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ninglawyer}:${POSTGRES_PASSWORD:-ninglawyer_password}@postgres:5432/${POSTGRES_DB:-ninglawyer_db}
+      
+      # Redis 配置
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      
+      # Celery 配置
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      
+      # 安全配置
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production}
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ninglawyer-network
+    restart: unless-stopped
+
+  # Nginx（可选，用于反向代理）
+  nginx:
+    image: nginx:alpine
+    container_name: ninglawyer-nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    networks:
+      - ninglawyer-network
+    restart: unless-stopped
+    profiles:
+      - production
 
 volumes:
   postgres_data:
-    driver: local
   redis_data:
-    driver: local
-  milvus_data:
-    driver: local
-  etcd_data:
-    driver: local
-  minio_data:
-    driver: local
 
 networks:
   ninglawyer-network:

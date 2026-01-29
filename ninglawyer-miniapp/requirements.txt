@@ -35,6 +35,12 @@ cos-python-sdk-v5>=1.9.0
 # 日志
 loguru>=0.7.0
 
+# 异步任务
+celery>=5.3.0
+
+# 加密
+cryptography>=41.0.0
+
 # 测试
 pytest>=7.4.0
 pytest-asyncio>=0.21.0

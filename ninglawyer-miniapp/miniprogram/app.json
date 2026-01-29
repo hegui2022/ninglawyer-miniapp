@@ -1,48 +1,67 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/consultation/consultation",
+    "pages/contract/contract",
     "pages/desensitize/desensitize",
-    "pages/consult/consult",
-    "pages/contract/contract"
+    "pages/history/history",
+    "pages/profile/profile",
+    "pages/login/login",
+    "pages/session/session",
+    "pages/upload/upload"
   ],
-  "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "宁律师",
-    "navigationBarTextStyle": "black"
-  },
   "tabBar": {
-    "color": "#7A7E83",
-    "selectedColor": "#3cc51f",
-    "borderStyle": "black",
+    "color": "#666666",
+    "selectedColor": "#1890ff",
     "backgroundColor": "#ffffff",
+    "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "images/icon_home.png",
-        "selectedIconPath": "images/icon_home_active.png",
-        "text": "首页"
+        "text": "首页",
+        "iconPath": "static/icons/home.png",
+        "selectedIconPath": "static/icons/home-active.png"
       },
       {
-        "pagePath": "pages/desensitize/desensitize",
-        "iconPath": "images/icon_desensitize.png",
-        "selectedIconPath": "images/icon_desensitize_active.png",
-        "text": "脱敏"
-      },
-      {
-        "pagePath": "pages/consult/consult",
-        "iconPath": "images/icon_consult.png",
-        "selectedIconPath": "images/icon_consult_active.png",
-        "text": "咨询"
+        "pagePath": "pages/consultation/consultation",
+        "text": "咨询",
+        "iconPath": "static/icons/consult.png",
+        "selectedIconPath": "static/icons/consult-active.png"
       },
       {
         "pagePath": "pages/contract/contract",
-        "iconPath": "images/icon_contract.png",
-        "selectedIconPath": "images/icon_contract_active.png",
-        "text": "合同"
+        "text": "合同",
+        "iconPath": "static/icons/contract.png",
+        "selectedIconPath": "static/icons/contract-active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "记录",
+        "iconPath": "static/icons/history.png",
+        "selectedIconPath": "static/icons/history-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "static/icons/profile.png",
+        "selectedIconPath": "static/icons/profile-active.png"
       }
     ]
   },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1890ff",
+    "navigationBarTitleText": "宁律师",
+    "navigationBarTextStyle": "white"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于提供本地法律服务"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
   "style": "v2",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"

@@ -20,6 +20,9 @@ load_dotenv()
 from src.api.routes import register_routes
 from src.storage.db import init_db
 
+# 导入技能模块以自动注册
+import src.skills  # 这会触发技能注册
+
 # 创建 Flask 应用
 app = Flask(__name__)
 

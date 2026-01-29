@@ -251,13 +251,20 @@ cd ninglawyer-miniapp
 
 #### 📚 详细文档
 
+**自动化工具：**
 - **快速开始**：[AUTOMATION_TOOLS_QUICK_START.md](./AUTOMATION_TOOLS_QUICK_START.md)（推荐新手先看这个）
 - **完整指南**：[AUTOMATION_TOOLS_GUIDE.md](./AUTOMATION_TOOLS_GUIDE.md)（详细的功能说明）
+
+**集成开发：**
+- **集成指南**：[INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)（小程序矩阵集成开发完整指南）
+- **完成总结**：[INTEGRATION_COMPLETE_SUMMARY.md](./INTEGRATION_COMPLETE_SUMMARY.md)（集成开发完成总结）
 
 **常见问题**：
 - 💡 如何配置路径？运行 `config-wizard.bat`
 - 💡 如何启动监控？运行 `start.bat` → 选择 [1]
 - 💡 如何提交代码？运行 `start.bat` → 选择 [5]
+- 💡 如何实现小程序跳转？查看 [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
+- 💡 如何对接大模型？查看 [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
 - 💡 更多问题请查看 [AUTOMATION_TOOLS_GUIDE.md](./AUTOMATION_TOOLS_GUIDE.md)
 
 ### 3. 打开微信开发者工具

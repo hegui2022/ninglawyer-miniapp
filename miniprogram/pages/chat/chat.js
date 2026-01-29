@@ -169,7 +169,7 @@ Page({
     console.log('发送语音消息', filePath, duration)
     
     // 添加用户消息（显示语音占位符）
-    this.addMessage('user', `[语音 ${Math.floor(duration / 1000)}"]`)
+    this.addMessage('user', `[语音 ${Math.floor(duration / 1000)}秒]`)
     
     // 将语音上传到服务器
     try {

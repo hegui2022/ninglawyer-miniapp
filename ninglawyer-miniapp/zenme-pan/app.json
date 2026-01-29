@@ -1,4 +1,3 @@
-// 怎么判小程序 - app.json
 {
   "pages": [
     "pages/index/index",

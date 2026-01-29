@@ -1,4 +1,36 @@
-<!-- loading 组件 -->
-<view class="component-loading">
-  <!-- 组件内容 -->
+<!-- 加载组件 -->
+<view class="loading-container {{type}} {{size}}">
+  <!-- 圆形加载 -->
+  <view wx:if="{{type === 'circular'}}" class="loading-circular">
+    <view class="circular-path"></view>
+    <view class="circular-path"></view>
+    <view class="circular-path"></view>
+    <view class="circular-path"></view>
+  </view>
+
+  <!-- 点状加载 -->
+  <view wx:elif="{{type === 'dots'}}" class="loading-dots">
+    <view class="dot"></view>
+    <view class="dot"></view>
+    <view class="dot"></view>
+  </view>
+
+  <!-- 条状加载 -->
+  <view wx:elif="{{type === 'bar'}}" class="loading-bar">
+    <view class="bar-progress"></view>
+  </view>
+
+  <!-- 文本加载 -->
+  <view wx:elif="{{type === 'text'}}" class="loading-text">
+    <text>{{text || '加载中...'}}</text>
+  </view>
+
+  <!-- 自定义内容 -->
+  <slot wx:else></slot>
+
+  <!-- 加载文本 -->
+  <text wx:if="{{text && type !== 'text'}}" class="loading-message">{{text}}</text>
 </view>
+
+<!-- 遮罩层 -->
+<view wx:if="{{mask}}" class="loading-mask"></view>

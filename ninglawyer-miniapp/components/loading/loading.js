@@ -1,39 +1,29 @@
-// 加载中组件
+// 加载组件
 Component({
   properties: {
-    loading: {
-      type: Boolean,
-      value: false
-    },
-    text: {
+    // 加载类型：circular（圆形）、dots（点状）、bar（条状）、text（文本）
+    type: {
       type: String,
-      value: '加载中...'
+      value: 'circular'
     },
+    // 尺寸：small（小）、medium（中）、large（大）
     size: {
       type: String,
-      value: 'default'
+      value: 'medium'
+    },
+    // 加载文本
+    text: {
+      type: String,
+      value: ''
+    },
+    // 是否显示遮罩层
+    mask: {
+      type: Boolean,
+      value: false
     }
   },
-  
-  methods: {
-    // 获取加载图标大小
-    getIconSize() {
-      const sizeMap = {
-        small: '32rpx',
-        default: '48rpx',
-        large: '64rpx'
-      };
-      return sizeMap[this.properties.size] || sizeMap.default;
-    },
-    
-    // 获取文本大小
-    getTextSize() {
-      const sizeMap = {
-        small: '24rpx',
-        default: '28rpx',
-        large: '32rpx'
-      };
-      return sizeMap[this.properties.size] || sizeMap.default;
-    }
-  }
+
+  data: {},
+
+  methods: {}
 });

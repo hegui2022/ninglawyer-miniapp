@@ -1,0 +1,65 @@
+<!-- 合同编辑器组件 -->
+<view class="contract-editor">
+  <!-- 工具栏 -->
+  <view class="editor-toolbar">
+    <view class="toolbar-group">
+      <button 
+        class="toolbar-btn" 
+        wx:for="{{toolbarButtons}}" 
+        wx:key="icon"
+        bindtap="onToolbarClick"
+        data-action="{{item.action}}">
+        <text class="btn-icon">{{item.icon}}</text>
+        <text class="btn-label">{{item.label}}</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 编辑区域 -->
+  <view class="editor-content">
+    <textarea
+      class="contract-textarea"
+      value="{{contractText}}"
+      placeholder="在此输入或粘贴合同内容..."
+      bindinput="onInput"
+      bindblur="onBlur"
+      bindfocus="onFocus"
+      maxlength="-1"
+      auto-height="{{true}}"
+      adjust-position="{{true}}"
+      show-confirm-bar="{{false}}"
+      cursor-spacing="{{10}}">
+    </textarea>
+  </view>
+
+  <!-- 字数统计 -->
+  <view class="editor-footer">
+    <view class="word-count">
+      <text>字数：{{wordCount}}</text>
+    </view>
+    <view class="last-saved" wx:if="{{lastSavedTime}}">
+      <text>上次保存：{{lastSavedTime}}</text>
+    </view>
+  </view>
+
+  <!-- 快捷插入模板 -->
+  <view class="quick-templates" wx:if="{{showTemplates}}">
+    <view class="template-title">常用模板</view>
+    <view class="template-list">
+      <view 
+        class="template-item" 
+        wx:for="{{templates}}" 
+        wx:key="id"
+        bindtap="onInsertTemplate"
+        data-template="{{item}}">
+        <text class="template-name">{{item.name}}</text>
+        <text class="template-desc">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载遮罩 -->
+  <view class="loading-mask" wx:if="{{loading}}">
+    <loading type="circular" size="large" text="正在保存..."></loading>
+  </view>
+</view>

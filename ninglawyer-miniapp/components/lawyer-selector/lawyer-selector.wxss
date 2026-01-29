@@ -1,0 +1,222 @@
+/* 律师选择组件样式 */
+.lawyer-selector {
+  width: 100%;
+  background-color: #ffffff;
+}
+
+/* 标题 */
+.selector-title {
+  padding: 32rpx 24rpx 24rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  border-bottom: 1rpx solid #E5E5E5;
+}
+
+/* 律师列表模式 */
+.lawyer-list {
+  max-height: 600rpx;
+}
+
+.lawyer-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #F0F0F0;
+  transition: all 0.3s;
+}
+
+.lawyer-item:active {
+  background-color: #F5F5F5;
+}
+
+.lawyer-item.selected {
+  background-color: rgba(7, 193, 96, 0.05);
+}
+
+.lawyer-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #E0E0E0;
+  margin-right: 24rpx;
+}
+
+.lawyer-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.lawyer-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lawyer-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.lawyer-description {
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 1.5;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lawyer-stats {
+  display: flex;
+  gap: 24rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #07C160;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.selected-mark {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #07C160, #00B050);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* 律师卡片网格模式 */
+.lawyer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+  padding: 24rpx;
+}
+
+.lawyer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 24rpx;
+  border-radius: 16rpx;
+  background-color: #F9F9F9;
+  border: 2rpx solid transparent;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.lawyer-card:active {
+  transform: scale(0.95);
+}
+
+.lawyer-card.selected {
+  background-color: rgba(7, 193, 96, 0.05);
+  border-color: #07C160;
+}
+
+.card-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #E0E0E0;
+  margin-bottom: 20rpx;
+}
+
+.card-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.card-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12rpx;
+  text-align: center;
+}
+
+.card-rating {
+  font-size: 24rpx;
+  color: #FF9800;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.card-selected {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #07C160, #00B050);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+/* 律师选项卡模式 */
+.lawyer-tabs {
+  padding: 24rpx;
+  background-color: #ffffff;
+}
+
+.tabs-scroll {
+  white-space: nowrap;
+}
+
+.tab-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 32rpx;
+  margin-right: 16rpx;
+  border-radius: 16rpx;
+  background-color: #F5F5F5;
+  border: 2rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-item.active {
+  background: linear-gradient(135deg, #07C160, #00B050);
+  color: #ffffff;
+}
+
+.tab-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background-color: #E0E0E0;
+  margin-bottom: 12rpx;
+}
+
+.tab-name {
+  font-size: 26rpx;
+  font-weight: 500;
+}

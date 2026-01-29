@@ -1,0 +1,92 @@
+<!-- 律师选择组件 -->
+<view class="lawyer-selector">
+  <!-- 标题 -->
+  <view class="selector-title" wx:if="{{title}}">
+    <text>{{title}}</text>
+  </view>
+
+  <!-- 律师列表 -->
+  <scroll-view class="lawyer-list" scroll-y wx:if="{{mode === 'list'}}">
+    <view 
+      class="lawyer-item {{selectedDomain === item.domain ? 'selected' : ''}}" 
+      wx:for="{{lawyers}}" 
+      wx:key="domain"
+      bindtap="onSelectLawyer"
+      data-domain="{{item.domain}}">
+      
+      <!-- 律师头像 -->
+      <view class="lawyer-avatar">
+        <image src="{{item.icon}}" mode="aspectFill"></image>
+      </view>
+      
+      <!-- 律师信息 -->
+      <view class="lawyer-info">
+        <view class="lawyer-name">{{item.name}}</view>
+        <view class="lawyer-description">{{item.description}}</view>
+        
+        <!-- 统计信息 -->
+        <view class="lawyer-stats">
+          <view class="stat-item">
+            <text class="stat-value">{{item.helpCount || 0}}</text>
+            <text class="stat-label">帮助次数</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value">{{item.rating || 5.0}}</text>
+            <text class="stat-label">评分</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 选中标记 -->
+      <view class="selected-mark" wx:if="{{selectedDomain === item.domain}}">
+        <text>✓</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 律师卡片网格 -->
+  <view class="lawyer-grid" wx:elif="{{mode === 'grid'}}">
+    <view 
+      class="lawyer-card {{selectedDomain === item.domain ? 'selected' : ''}}" 
+      wx:for="{{lawyers}}" 
+      wx:key="domain"
+      bindtap="onSelectLawyer"
+      data-domain="{{item.domain}}">
+      
+      <!-- 律师头像 -->
+      <view class="card-avatar">
+        <image src="{{item.icon}}" mode="aspectFill"></image>
+      </view>
+      
+      <!-- 律师名称 -->
+      <view class="card-name">{{item.name}}</view>
+      
+      <!-- 评分 -->
+      <view class="card-rating">
+        <text>⭐</text>
+        <text>{{item.rating || 5.0}}</text>
+      </view>
+      
+      <!-- 选中标记 -->
+      <view class="card-selected" wx:if="{{selectedDomain === item.domain}}">
+        <text>✓</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 律师选项卡 -->
+  <view class="lawyer-tabs" wx:elif="{{mode === 'tabs'}}">
+    <scroll-view class="tabs-scroll" scroll-x>
+      <view 
+        class="tab-item {{selectedDomain === item.domain ? 'active' : ''}}" 
+        wx:for="{{lawyers}}" 
+        wx:key="domain"
+        bindtap="onSelectLawyer"
+        data-domain="{{item.domain}}">
+        
+        <image class="tab-icon" src="{{item.icon}}" mode="aspectFill"></image>
+        <text class="tab-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

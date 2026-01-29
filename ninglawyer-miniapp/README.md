@@ -1,5 +1,46 @@
 # 宁律师法律咨询小程序矩阵
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-red.svg)](https://fastapi.tiangolo.com/)
+[![Test](https://img.shields.io/badge/tests-28%2F28%20passing-brightgreen.svg)](tests/)
+
+## 🚀 快速开始
+
+### 一键启动（Linux/Mac）
+
+```bash
+# 克隆项目
+git clone https://github.com/hegui2022/ninglawyer-miniapp.git
+cd ninglawyer-miniapp
+
+# 启动数据库服务
+docker-compose up -d
+
+# 启动后端服务
+./start.sh
+```
+
+### 一键启动（Windows）
+
+```cmd
+git clone https://github.com/hegui2022/ninglawyer-miniapp.git
+cd ninglawyer-miniapp
+
+docker-compose up -d
+start.bat
+```
+
+### 详细文档
+
+- 📖 [本地运行指南](./LOCAL_RUN_GUIDE.md) - 详细的本地开发环境搭建和运行指南
+- 🚀 [部署文档](./DEPLOYMENT.md) - 生产环境部署指南
+- 📚 [开发文档](./DEVELOPMENT.md) - 开发规范和技术文档
+- 🧪 [测试用例](./TEST_CASES.md) - 完整的测试用例
+- 📝 [用户手册](./USER_MANUAL.md) - 用户使用手册
+
+---
+
 ## 项目概述
 
 宁律师法律咨询小程序矩阵是基于 AI 技术提供全方位法律服务的微信小程序生态系统，采用矩阵架构设计，核心理念是"代码即法律"，将律师技能嵌入工作流，实现企业管理和风险防控一体化。

@@ -1,150 +1,98 @@
 @echo off
 chcp 65001 >nul
-REM 一键启动自动化工具
+REM 宁律师小程序矩阵 - 快速启动脚本（Windows）
 
-REM 读取配置文件
-for /f "tokens=1,2 delims==" %%a in ('type sync-config.ini ^| find "="') do set %%a=%%b
+echo ======================================
+echo 宁律师小程序矩阵 - 快速启动
+echo ======================================
+echo.
 
-:menu
-cls
-echo ========================================
-echo 宁律师小程序 - 自动化工具
-echo ========================================
-echo.
-echo 项目路径: %PROJECT_PATH%
-echo 监控间隔: %MONITOR_INTERVAL% 秒
-echo.
-echo 请选择操作：
-echo.
-echo [1] 启动实时监控（每 %MONITOR_INTERVAL% 秒检查一次）
-echo [2] 立即同步最新代码
-echo [3] 查看最近提交记录
-echo [4] 打开微信开发者工具
-echo [5] 快速提交代码
-echo [6] 配置路径
-echo [0] 退出
-echo.
-set /p choice=请输入选项 (0-6):
-
-if "%choice%"=="1" goto monitor
-if "%choice%"=="2" goto sync
-if "%choice%"=="3" goto log
-if "%choice%"=="4" goto open_tools
-if "%choice%"=="5" goto quick_commit
-if "%choice%"=="6" goto config
-if "%choice%"=="0" goto end
-goto invalid
-
-:monitor
-cls
-echo ========================================
-echo 实时监控
-echo ========================================
-echo.
-echo [提示] 启动实时监控...
-echo [提示] 按 Ctrl+C 停止监控
-echo.
-if exist monitor.py (
-    python monitor.py
-) else (
-    echo [错误] 找不到 monitor.py
-    echo [提示] 请检查文件是否存在
+REM 检查 Python
+echo [1/8] 检查 Python...
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo [×] Python 未安装
+    echo 请先安装 Python 3.8 或更高版本
     pause
+    exit /b 1
 )
-goto menu
+for /f "tokens=2" %%i in ('python --version') do set PYTHON_VERSION=%%i
+echo [√] Python %PYTHON_VERSION% 已安装
 
-:sync
-cls
-echo ========================================
-echo 立即同步
-echo ========================================
-echo.
-call auto-sync.bat
-pause
-goto menu
-
-:log
-cls
-echo ========================================
-echo 最近 5 次提交记录
-echo ========================================
-echo.
-if exist "%PROJECT_PATH%" (
-    cd /d "%PROJECT_PATH%"
-    git log -5 --pretty=format:"%%h - %%s (%%cr)"
-    echo.
+REM 检查 pip
+echo [2/8] 检查 pip...
+pip --version >nul 2>&1
+if errorlevel 1 (
+    echo [!] pip 未安装
 ) else (
-    echo [错误] 项目路径不存在: %PROJECT_PATH%
+    echo [√] pip 已安装
 )
-pause
-goto menu
 
-:open_tools
-cls
-echo ========================================
-echo 打开微信开发者工具
-echo ========================================
-echo.
-echo [提示] 正在打开微信开发者工具...
-if exist "%WIN_PATH%" (
-    "%WIN_PATH%" open --project "%PROJECT_PATH%\legal-instructor"
-    echo [✓] 已打开法律教官小程序
+REM 检查虚拟环境
+echo [3/8] 检查虚拟环境...
+if exist venv (
+    echo [√] 虚拟环境已存在
 ) else (
-    echo [错误] 微信开发者工具路径不存在
-    echo [提示] 请运行 config-wizard.bat 配置路径
+    echo [!] 创建虚拟环境...
+    python -m venv venv
+    echo [√] 虚拟环境已创建
 )
-pause
-goto menu
 
-:quick_commit
-cls
-echo ========================================
-echo 快速提交代码
-echo ========================================
-echo.
-echo [提示] 正在提交代码...
-echo.
-if exist "%PROJECT_PATH%" (
-    cd /d "%PROJECT_PATH%"
-    call quick-commit.bat
+REM 激活虚拟环境
+echo [4/8] 激活虚拟环境...
+call venv\Scripts\activate.bat
+
+REM 检查依赖
+echo [5/8] 检查依赖...
+pip show fastapi >nul 2>&1
+if errorlevel 1 (
+    echo [!] 安装依赖...
+    pip install -r requirements.txt
+    echo [√] 依赖已安装
 ) else (
-    echo [错误] 项目路径不存在: %PROJECT_PATH%
+    echo [√] 依赖已安装
 )
-pause
-goto menu
 
-:config
-cls
-echo ========================================
-echo 配置路径
-echo ========================================
-echo.
-if exist config-wizard.bat (
-    call config-wizard.bat
+REM 检查环境配置
+echo [6/8] 检查环境配置...
+if exist .env (
+    echo [√] 环境配置已存在
 ) else (
-    echo [错误] 找不到 config-wizard.bat
+    echo [!] 创建环境配置...
+    copy .env.example .env
+    echo [√] 环境配置已创建（请编辑 .env 文件配置必要参数）
 )
-goto menu
 
-:invalid
-cls
-echo.
-echo ========================================
-echo [错误] 无效的选项
-echo ========================================
-echo.
-pause
-goto menu
+REM 检查数据库
+echo [7/8] 检查数据库...
+where psql >nul 2>&1
+if errorlevel 1 (
+    echo [!] PostgreSQL 未安装
+) else (
+    echo [√] PostgreSQL 已安装
+)
 
-:end
-cls
-echo ========================================
-echo 感谢使用！
-echo ========================================
+REM 检查 Redis
+echo [8/8] 检查 Redis...
+where redis-cli >nul 2>&1
+if errorlevel 1 (
+    echo [!] Redis 未安装
+) else (
+    redis-cli ping >nul 2>&1
+    if errorlevel 1 (
+        echo [!] Redis 未运行
+    ) else (
+        echo [√] Redis 运行正常
+    )
+)
+
 echo.
-echo 提示：
-echo - 下次运行 start.bat 快速访问自动化工具
-echo - 运行 config-wizard.bat 重新配置路径
-echo - 运行 auto-sync.bat 立即同步代码
+echo ======================================
+echo 启动后端服务...
+echo ======================================
 echo.
+
+REM 启动后端服务
+python src\main.py
+
 pause

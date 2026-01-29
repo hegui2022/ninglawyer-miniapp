@@ -1,0 +1,34 @@
+{
+  "desensitize": {
+    "name": "宁律师脱敏助手",
+    "description": "帮助用户对证据数据进行脱敏处理，保护隐私",
+    "bot_id": "7600730158433550363",
+    "api_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNhMmQ5ZWNiLTcwYTMtNDNhYS1hYjhkLTJkYWM3MWMzNDIyYSJ9.eyJpc3MiOiJodHRwczovL2FwaS5jb3plLmNuIiwiYXVkIjpbIjM2ekZ4cWlxVHhMQ1pmWDBLZjlSSnphRlRQU2NMelc4Il0sImV4cCI6ODIxMDI2Njg3Njc5OSwiaWF0IjoxNzY5Njk1NjIxLCJzdWIiOiJzcGlmZmU6Ly9hcGkuY296ZS5jbi93b3JrbG9hZF9pZGVudGl0eS9pZDo3NjAwNjA1NzcyNTczMDQ4ODc0Iiwic3JjIjoiaW5ib3VuZF9hdXRoX2FjY2Vzc190b2tlbl9pZDo3NjAwNzg0ODE5Mzc0NTIyMzk0In0.5-pYJWgeVUDyB-PhawNV68_LyNFd5gFNg3W028aycABsgm8K1keL5PsaZqHZfWqPOvrb3yzfA1P5Hm3VMN6-wvTFZOebCC6T1Q3RQNGG_n5FzwPqeA9Okqoqxv01NgcQIkKwomJCEMqOQP7sRK9uMX2SLTqNRSEhJT4pRVM6sce2HfhoPvflszPfFK4I71g91iwrbRwyOqUsu0lb8mhvxRCeG4h2beUCVTq4XbrgPBILbMl9TtLxms8kKooS5nk7COlsbVY9OrGl23WLyWDO6qhZv6taWbyYrIxqB63kWbnMKBTrGlA9PfozpaCW7yafsEST5P94YkiFD0Tvpl7zWA",
+    "api_url": "https://api.coze.cn/v3/chat",
+    "enabled": true
+  },
+  "civil_consult": {
+    "name": "民事咨询Bot",
+    "description": "民事法律咨询服务",
+    "bot_id": "",
+    "api_token": "",
+    "api_url": "https://api.coze.cn/v3/chat",
+    "enabled": false
+  },
+  "contract_draft": {
+    "name": "合同起草Bot",
+    "description": "起草各类合同",
+    "bot_id": "",
+    "api_token": "",
+    "api_url": "https://api.coze.cn/v3/chat",
+    "enabled": false
+  },
+  "contract_review": {
+    "name": "合同审查Bot",
+    "description": "审查合同风险",
+    "bot_id": "",
+    "api_token": "",
+    "api_url": "https://api.coze.cn/v3/chat",
+    "enabled": false
+  }
+}

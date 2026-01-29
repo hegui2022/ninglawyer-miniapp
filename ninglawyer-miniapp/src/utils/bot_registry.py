@@ -1,6 +1,7 @@
 """
 Bot注册表 - 用于管理和调用扣子Bot
 这是连接主脑调度器和扣子Bot的关键组件
+支持新版Coze API (v3)
 """
 
 import json
@@ -45,29 +46,33 @@ class BotRegistry:
             "desensitize": {
                 "name": "脱敏Bot",
                 "description": "对证据数据进行脱敏处理",
-                "bot_id": "",  # 需要用户填入
-                "api_key": "",  # 需要用户填入
+                "bot_id": "",
+                "api_token": "",
+                "api_url": "https://api.coze.cn/v3/chat",
                 "enabled": False
             },
             "civil_consult": {
                 "name": "民事咨询Bot",
                 "description": "民事法律咨询",
                 "bot_id": "",
-                "api_key": "",
+                "api_token": "",
+                "api_url": "https://api.coze.cn/v3/chat",
                 "enabled": False
             },
             "contract_draft": {
                 "name": "合同起草Bot",
                 "description": "起草各类合同",
                 "bot_id": "",
-                "api_key": "",
+                "api_token": "",
+                "api_url": "https://api.coze.cn/v3/chat",
                 "enabled": False
             },
             "contract_review": {
                 "name": "合同审查Bot",
                 "description": "审查合同风险",
                 "bot_id": "",
-                "api_key": "",
+                "api_token": "",
+                "api_url": "https://api.coze.cn/v3/chat",
                 "enabled": False
             }
         }
@@ -82,14 +87,14 @@ class BotRegistry:
         self.bots = default_bots
         logger.info(f"创建默认Bot配置文件：{BOT_CONFIG_PATH}")
     
-    def register_bot(self, bot_type: str, bot_id: str, api_key: str, name: str, description: str = ""):
+    def register_bot(self, bot_type: str, bot_id: str, api_token: str, name: str, description: str = ""):
         """
         注册一个新的Bot
         
         Args:
             bot_type: Bot类型（desensitize、civil_consult等）
             bot_id: Bot ID（从扣子获取）
-            api_key: API Key（从扣子获取）
+            api_token: API Token（从扣子获取）
             name: Bot名称
             description: Bot描述
         """
@@ -97,7 +102,8 @@ class BotRegistry:
             "name": name,
             "description": description,
             "bot_id": bot_id,
-            "api_key": api_key,
+            "api_token": api_token,
+            "api_url": "https://api.coze.cn/v3/chat",
             "enabled": True
         }
         
@@ -133,7 +139,7 @@ class BotRegistry:
     
     def call_bot(self, bot_type: str, query: str, user_id: str = "default") -> Dict[str, Any]:
         """
-        调用Bot
+        调用Bot（新版API v3）
         
         Args:
             bot_type: Bot类型
@@ -153,19 +159,28 @@ class BotRegistry:
             }
         
         try:
-            # 调用扣子API
-            url = "https://api.coze.com/open_api/v2/bot/publish"
+            # 使用新版Coze API v3
+            url = bot.get('api_url', 'https://api.coze.cn/v3/chat')
             
             headers = {
-                'Authorization': f'Bearer {bot["api_key"]}',
+                'Authorization': f'Bearer {bot["api_token"]}',
                 'Content-Type': 'application/json'
             }
             
+            # 新版API格式
             data = {
                 'bot_id': bot['bot_id'],
-                'user': user_id,
-                'query': query,
-                'stream': False
+                'user_id': user_id,
+                'stream': False,
+                'additional_messages': [
+                    {
+                        'content': query,
+                        'content_type': 'text',
+                        'role': 'user',
+                        'type': 'question'
+                    }
+                ],
+                'parameters': {}
             }
             
             logger.info(f"调用Bot：{bot['name']}，查询：{query}")
@@ -177,11 +192,15 @@ class BotRegistry:
             # 解析响应
             result = response.json()
             
+            # 提取回复内容
+            content = self._extract_content(result)
+            
             logger.info(f"Bot调用成功：{bot['name']}")
             
             return {
                 'success': True,
                 'data': result,
+                'content': content,
                 'bot_name': bot['name']
             }
             
@@ -197,6 +216,37 @@ class BotRegistry:
                 'success': False,
                 'error': f'服务器错误：{str(e)}'
             }
+    
+    def _extract_content(self, result: Dict[str, Any]) -> str:
+        """
+        从API响应中提取内容
+        
+        Args:
+            result: API响应结果
+        
+        Returns:
+            提取的内容字符串
+        """
+        try:
+            # 新版API可能的响应结构
+            if 'messages' in result:
+                for msg in result['messages']:
+                    if msg.get('type') == 'answer':
+                        return msg.get('content', '')
+            
+            # 旧版响应结构
+            if 'data' in result:
+                data = result['data']
+                if isinstance(data, dict):
+                    return data.get('content', str(data))
+                return str(data)
+            
+            # 直接返回整个结果
+            return json.dumps(result, ensure_ascii=False)
+            
+        except Exception as e:
+            logger.error(f"提取内容失败：{str(e)}")
+            return json.dumps(result, ensure_ascii=False)
     
     def list_bots(self) -> Dict[str, Dict[str, Any]]:
         """

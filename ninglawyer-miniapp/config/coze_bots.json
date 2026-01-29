@@ -1,18 +1,15 @@
-# 扣子Bot配置（安全版本）
-# 注意：API Token不应该写在这里，应该通过环境变量设置
-
 {
   "desensitize": {
-    "name": "宁律师脱敏助手",
-    "description": "帮助用户对证据数据进行脱敏处理，保护隐私",
-    "bot_id": "7600730158433550363",
+    "name": "脱敏Bot",
+    "description": "对证据数据进行脱敏处理",
+    "bot_id": "",
     "api_url": "https://api.coze.cn/v3/chat",
-    "enabled": true,
+    "enabled": false,
     "api_token_env": "COZE_DESENSITIZE_BOT_TOKEN"
   },
   "civil_consult": {
     "name": "民事咨询Bot",
-    "description": "民事法律咨询服务",
+    "description": "民事法律咨询",
     "bot_id": "",
     "api_url": "https://api.coze.cn/v3/chat",
     "enabled": false,

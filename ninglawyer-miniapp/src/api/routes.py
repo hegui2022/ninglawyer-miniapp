@@ -31,3 +31,8 @@ def test():
         'message': '宁律师 API 测试成功',
         'status': 'ok'
     }
+
+
+def register_routes(app):
+    """注册所有路由到Flask应用"""
+    app.register_blueprint(api_bp, url_prefix='/api')

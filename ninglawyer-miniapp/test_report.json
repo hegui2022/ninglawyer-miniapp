@@ -1,0 +1,323 @@
+[
+  {
+    "test_name": "健康检查",
+    "method": "GET",
+    "endpoint": "/health",
+    "data": null,
+    "status_code": 200,
+    "response": {
+      "service": "ninglawyer-miniapp",
+      "status": "ok",
+      "version": "1.0.0-alpha"
+    },
+    "passed": true,
+    "timestamp": 1769697870.1107087
+  },
+  {
+    "test_name": "API根路径",
+    "method": "GET",
+    "endpoint": "/",
+    "data": null,
+    "status_code": 200,
+    "response": {
+      "endpoints": {
+        "consultation": "/api/consultation",
+        "contract": "/api/contract",
+        "risk": "/api/risk"
+      },
+      "service": "宁律师法律咨询小程序矩阵",
+      "version": "1.0.0-alpha"
+    },
+    "passed": true,
+    "timestamp": 1769697870.1139464
+  },
+  {
+    "test_name": "API测试接口",
+    "method": "GET",
+    "endpoint": "/api/test",
+    "data": null,
+    "status_code": 200,
+    "response": {
+      "message": "宁律师 API 测试成功",
+      "status": "ok"
+    },
+    "passed": true,
+    "timestamp": 1769697870.1172807
+  },
+  {
+    "test_name": "主脑测试接口",
+    "method": "GET",
+    "endpoint": "/api/master/test",
+    "data": null,
+    "status_code": 200,
+    "response": {
+      "available_apis": [
+        "POST /route - 主脑路由",
+        "POST /desensitize - 脱敏",
+        "POST /consult - 法律咨询",
+        "POST /draft-contract - 合同起草",
+        "POST /review-contract - 合同审查",
+        "GET /list-bots - 列出Bot",
+        "POST /register-bot - 注册Bot",
+        "GET /health - 健康检查",
+        "GET /test - 测试接口"
+      ],
+      "message": "宁律师主脑调度接口测试成功",
+      "status": "ok"
+    },
+    "passed": true,
+    "timestamp": 1769697870.1203117
+  },
+  {
+    "test_name": "路由-脱敏请求",
+    "method": "POST",
+    "endpoint": "/api/master/route",
+    "data": {
+      "user_input": "帮我脱敏一下，我叫张三，身份证号123456789012345678"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：desensitize",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.130438
+  },
+  {
+    "test_name": "路由-民事咨询",
+    "method": "POST",
+    "endpoint": "/api/master/route",
+    "data": {
+      "user_input": "我欠别人钱被起诉了怎么办"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1350904
+  },
+  {
+    "test_name": "路由-合同起草",
+    "method": "POST",
+    "endpoint": "/api/master/route",
+    "data": {
+      "user_input": "帮我起草一个借款合同"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.139433
+  },
+  {
+    "test_name": "脱敏-完整信息",
+    "method": "POST",
+    "endpoint": "/api/master/desensitize",
+    "data": {
+      "name": "张三",
+      "id_card": "123456789012345678",
+      "phone": "13812345678",
+      "address": "北京市朝阳区xxx"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：desensitize",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1439507
+  },
+  {
+    "test_name": "脱敏-部分信息",
+    "method": "POST",
+    "endpoint": "/api/master/desensitize",
+    "data": {
+      "name": "李四",
+      "phone": "13987654321"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：desensitize",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1482296
+  },
+  {
+    "test_name": "脱敏-空数据",
+    "method": "POST",
+    "endpoint": "/api/master/desensitize",
+    "data": {},
+    "status_code": 400,
+    "response": {
+      "error": "缺少请求参数",
+      "success": false
+    },
+    "passed": false,
+    "timestamp": 1769697870.151544
+  },
+  {
+    "test_name": "咨询-债务纠纷",
+    "method": "POST",
+    "endpoint": "/api/master/consult",
+    "data": {
+      "question": "朋友借钱不还怎么办",
+      "domain": "民事"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1565845
+  },
+  {
+    "test_name": "咨询-婚姻问题",
+    "method": "POST",
+    "endpoint": "/api/master/consult",
+    "data": {
+      "question": "离婚后孩子抚养费怎么算",
+      "domain": "婚姻"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1608853
+  },
+  {
+    "test_name": "咨询-劳动争议",
+    "method": "POST",
+    "endpoint": "/api/master/consult",
+    "data": {
+      "question": "公司无故辞退怎么办",
+      "domain": "劳动"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1655512
+  },
+  {
+    "test_name": "合同-起草借款合同",
+    "method": "POST",
+    "endpoint": "/api/master/draft-contract",
+    "data": {
+      "contract_type": "借款合同",
+      "details": "借款方：张三，出借方：李四，金额：10000元，期限：6个月"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1697109
+  },
+  {
+    "test_name": "合同-起草租赁合同",
+    "method": "POST",
+    "endpoint": "/api/master/draft-contract",
+    "data": {
+      "contract_type": "租赁合同",
+      "details": "出租方：王五，承租方：赵六，房屋：北京市朝阳区xxx"
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1737876
+  },
+  {
+    "test_name": "合同-审查",
+    "method": "POST",
+    "endpoint": "/api/master/review-contract",
+    "data": {
+      "contract_content": "甲方：张三，乙方：李四。甲方借款10000元给乙方..."
+    },
+    "status_code": 200,
+    "response": {
+      "error": "Bot不存在或未启用：civil_consult",
+      "success": false
+    },
+    "passed": true,
+    "timestamp": 1769697870.1780212
+  },
+  {
+    "test_name": "合同-缺少类型",
+    "method": "POST",
+    "endpoint": "/api/master/draft-contract",
+    "data": {},
+    "status_code": 400,
+    "response": {
+      "error": "缺少请求参数",
+      "success": false
+    },
+    "passed": false,
+    "timestamp": 1769697870.1811235
+  },
+  {
+    "test_name": "错误处理-路由缺少输入",
+    "method": "POST",
+    "endpoint": "/api/master/route",
+    "data": {},
+    "status_code": 400,
+    "response": {
+      "error": "缺少user_input参数",
+      "success": false
+    },
+    "passed": false,
+    "timestamp": 1769697870.1843755
+  },
+  {
+    "test_name": "错误处理-咨询缺少问题",
+    "method": "POST",
+    "endpoint": "/api/master/consult",
+    "data": {},
+    "status_code": 400,
+    "response": {
+      "error": "缺少question参数",
+      "success": false
+    },
+    "passed": false,
+    "timestamp": 1769697870.1875682
+  },
+  {
+    "test_name": "错误处理-审查缺少内容",
+    "method": "POST",
+    "endpoint": "/api/master/review-contract",
+    "data": {},
+    "status_code": 400,
+    "response": {
+      "error": "缺少contract_content参数",
+      "success": false
+    },
+    "passed": false,
+    "timestamp": 1769697870.1908975
+  },
+  {
+    "test_name": "错误处理-404接口",
+    "method": "GET",
+    "endpoint": "/api/not-exist",
+    "data": null,
+    "status_code": 404,
+    "response": {
+      "code": 404,
+      "message": "Not Found"
+    },
+    "passed": false,
+    "timestamp": 1769697870.1938007
+  }
+]

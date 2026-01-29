@@ -224,6 +224,118 @@ def list_bots():
         }), 500
 
 
+@master_bp.route('/draft-contract', methods=['POST'])
+@log_function_call
+def draft_contract():
+    """
+    合同起草接口
+    
+    请求格式：
+    {
+        "contract_type": "合同类型",
+        "details": "合同详情"
+    }
+    
+    返回格式：
+    {
+        "success": true/false,
+        "data": {
+            "contract": "合同文本",
+            "tips": "提示信息"
+        }
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': '缺少请求参数'
+            }), 400
+        
+        contract_type = data.get('contract_type', '')
+        details = data.get('details', '')
+        
+        logger.info(f"合同起草接口被调用，类型：{contract_type}，详情：{details}")
+        
+        # 构造查询
+        if contract_type and details:
+            query = f"起草一个{contract_type}，要求：{details}"
+        elif contract_type:
+            query = f"起草一个{contract_type}"
+        else:
+            return jsonify({
+                'success': False,
+                'error': '请提供合同类型'
+            }), 400
+        
+        # 调用主脑路由
+        result = master_agent.route(user_input=query)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"合同起草接口异常：{str(e)}")
+        logger.error(traceback.format_exc())
+        
+        return jsonify({
+            'success': False,
+            'error': f'服务器错误：{str(e)}'
+        }), 500
+
+
+@master_bp.route('/review-contract', methods=['POST'])
+@log_function_call
+def review_contract():
+    """
+    合同审查接口
+    
+    请求格式：
+    {
+        "contract_content": "合同内容"
+    }
+    
+    返回格式：
+    {
+        "success": true/false,
+        "data": {
+            "risks": "风险点",
+            "suggestions": "建议"
+        }
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data or 'contract_content' not in data:
+            return jsonify({
+                'success': False,
+                'error': '缺少contract_content参数'
+            }), 400
+        
+        contract_content = data['contract_content']
+        
+        logger.info(f"合同审查接口被调用")
+        
+        # 构造查询
+        query = f"帮我审查这个合同：{contract_content}"
+        
+        # 调用主脑路由
+        result = master_agent.route(user_input=query)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"合同审查接口异常：{str(e)}")
+        logger.error(traceback.format_exc())
+        
+        return jsonify({
+            'success': False,
+            'error': f'服务器错误：{str(e)}'
+        }), 500
+
+
 @master_bp.route('/register-bot', methods=['POST'])
 def register_bot():
     """
@@ -233,7 +345,7 @@ def register_bot():
     {
         "bot_type": "Bot类型",
         "bot_id": "Bot ID",
-        "api_key": "API Key",
+        "api_token_env": "环境变量名",
         "name": "Bot名称",
         "description": "Bot描述"
     }
@@ -255,21 +367,21 @@ def register_bot():
         
         bot_type = data.get('bot_type')
         bot_id = data.get('bot_id')
-        api_key = data.get('api_key')
+        api_token_env = data.get('api_token_env')
         name = data.get('name', '')
         description = data.get('description', '')
         
-        if not bot_type or not bot_id or not api_key:
+        if not bot_type or not bot_id or not api_token_env:
             return jsonify({
                 'success': False,
-                'error': '缺少必需参数：bot_type, bot_id, api_key'
+                'error': '缺少必需参数：bot_type, bot_id, api_token_env'
             }), 400
         
         # 注册Bot
         master_agent.bot_registry.register_bot(
             bot_type=bot_type,
             bot_id=bot_id,
-            api_key=api_key,
+            api_token=api_token_env,
             name=name,
             description=description
         )
@@ -288,6 +400,23 @@ def register_bot():
         }), 500
 
 
+@master_bp.route('/health', methods=['GET'])
+def health():
+    """
+    健康检查接口
+    
+    返回格式：
+    {
+        "status": "ok",
+        "timestamp": "时间戳"
+    }
+    """
+    return jsonify({
+        'status': 'ok',
+        'timestamp': str(loguru.logger)
+    })
+
+
 @master_bp.route('/test', methods=['GET'])
 def test():
     """测试接口"""
@@ -296,11 +425,15 @@ def test():
     return jsonify({
         'message': '宁律师主脑调度接口测试成功',
         'status': 'ok',
-        'features': [
-            '/route - 主脑路由',
-            '/desensitize - 脱敏',
-            '/consult - 法律咨询',
-            '/list-bots - 列出Bot',
-            '/register-bot - 注册Bot'
+        'available_apis': [
+            'POST /route - 主脑路由',
+            'POST /desensitize - 脱敏',
+            'POST /consult - 法律咨询',
+            'POST /draft-contract - 合同起草',
+            'POST /review-contract - 合同审查',
+            'GET /list-bots - 列出Bot',
+            'POST /register-bot - 注册Bot',
+            'GET /health - 健康检查',
+            'GET /test - 测试接口'
         ]
     })

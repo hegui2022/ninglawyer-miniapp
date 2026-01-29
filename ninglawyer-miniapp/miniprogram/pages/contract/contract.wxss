@@ -1,0 +1,167 @@
+/* pages/contract/contract.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 40rpx 30rpx;
+}
+
+.page-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10rpx;
+}
+
+.page-desc {
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+/* 通用样式 */
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+/* 起草模式 */
+.draft-section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.type-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.type-item {
+  padding: 30rpx;
+  background-color: #f5f5f5;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333;
+  text-align: center;
+  transition: all 0.3s;
+  border: 2rpx solid transparent;
+}
+
+.type-item.active {
+  background-color: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.type-item:active {
+  transform: scale(0.95);
+}
+
+/* 审查模式 */
+.review-section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.contract-input {
+  width: 100%;
+  min-height: 300rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+  box-sizing: border-box;
+}
+
+/* 操作按钮 */
+.btn-action {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  border: none;
+  margin-top: 20rpx;
+}
+
+.btn-action[disabled] {
+  background: #ccc;
+}
+
+.btn-clear {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  background-color: #fff;
+  color: #999;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  border: 1rpx solid #eee;
+  margin-bottom: 20rpx;
+}
+
+/* 结果区域 */
+.result-section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.result-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.btn-copy-mini {
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  background-color: #f5f5f5;
+  color: #333;
+  border-radius: 4rpx;
+  border: none;
+  line-height: 1.5;
+}
+
+.result-scroll {
+  max-height: 600rpx;
+}
+
+.result-content {
+  padding: 10rpx 0;
+}
+
+.result-text {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #333;
+  white-space: pre-wrap;
+  font-family: monospace;
+}

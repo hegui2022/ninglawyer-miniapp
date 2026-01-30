@@ -28,10 +28,18 @@ Page({
 
   async loadStats() {
     try {
-      const result = await this.request('/api/records/stats')
-      if (result.success) {
-        this.setData({ stats: result.data })
-      }
+      // 从本地缓存获取统计数据
+      const consultationRecords = wx.getStorageSync('consultation_records') || []
+      const contractRecords = wx.getStorageSync('contract_records') || []
+      const desensitizeRecords = wx.getStorageSync('desensitize_records') || []
+
+      this.setData({
+        stats: {
+          consultation_count: consultationRecords.length,
+          contract_count: contractRecords.length,
+          desensitize_count: desensitizeRecords.length
+        }
+      })
     } catch (error) {
       console.error('加载统计数据失败:', error)
     }

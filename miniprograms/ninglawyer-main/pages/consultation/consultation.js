@@ -147,7 +147,7 @@ Page({
   requestConsultation(question, domain) {
     return new Promise((resolve, reject) => {
       wx.request({
-        url: app.globalData.apiBase + '/api/consultation/consult',
+        url: app.globalData.apiBase + '/api/consultation/',
         method: 'POST',
         header: {
           'Authorization': `Bearer ${app.globalData.token || wx.getStorageSync('token')}`,

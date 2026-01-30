@@ -42,7 +42,7 @@ Page({
 
     // 调用后端发送验证码
     wx.request({
-      url: app.globalData.apiBase + '/api/user/send-code',
+      url: app.globalData.apiBase + '/api/auth/send-code',
       method: 'POST',
       data: {
         phone: this.data.phone
@@ -92,7 +92,7 @@ Page({
         if (res.code) {
           // 发送 code 到后端
           wx.request({
-            url: app.globalData.apiBase + '/api/user/wechat-login',
+            url: app.globalData.apiBase + '/api/auth/wechat-login',
             method: 'POST',
             data: {
               code: res.code
@@ -169,7 +169,7 @@ Page({
     })
 
     wx.request({
-      url: app.globalData.apiBase + '/api/user/phone-login',
+      url: app.globalData.apiBase + '/api/auth/phone-login',
       method: 'POST',
       data: {
         phone: this.data.phone,

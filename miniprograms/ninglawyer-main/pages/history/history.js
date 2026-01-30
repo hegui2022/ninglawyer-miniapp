@@ -91,7 +91,7 @@ Page({
 
   async loadConsultationRecords(domain, page, pageSize) {
     try {
-      const result = await this.request('/api/records/consultations', {
+      const result = await this.request('/api/consultation/records', {
         skip: page * pageSize,
         limit: pageSize,
         domain: domain || undefined
@@ -124,7 +124,7 @@ Page({
 
   async loadContractRecords(page, pageSize) {
     try {
-      const result = await this.request('/api/records/contracts', {
+      const result = await this.request('/api/contract/records', {
         skip: page * pageSize,
         limit: pageSize
       })
@@ -147,7 +147,7 @@ Page({
 
   async loadDesensitizeRecords(page, pageSize) {
     try {
-      const result = await this.request('/api/records/desensitizes', {
+      const result = await this.request('/api/desensitize/records', {
         skip: page * pageSize,
         limit: pageSize
       })

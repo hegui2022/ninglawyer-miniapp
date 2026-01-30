@@ -41,18 +41,9 @@ Page({
     this.setData({ loading: true })
 
     try {
-      // 构建查询语句
-      const parts = []
-      if (this.data.name) parts.push(`姓名${this.data.name}`)
-      if (this.data.idCard) parts.push(`身份证${this.data.idCard}`)
-      if (this.data.phone) parts.push(`手机${this.data.phone}`)
-      if (this.data.address) parts.push(`地址${this.data.address}`)
-
-      const query = `帮我脱敏：${parts.join('，')}`
-
       // 调用后端API
       const res = await wx.request({
-        url: `${app.globalData.apiConfig.baseUrl}/api/master/desensitize`,
+        url: `${app.globalData.apiBase}/api/desensitize/`,
         method: 'POST',
         data: {
           name: this.data.name,
@@ -60,30 +51,14 @@ Page({
           phone: this.data.phone,
           address: this.data.address
         },
-        timeout: app.globalData.apiConfig.timeout
+        header: {
+          'Authorization': `Bearer ${app.globalData.token || wx.getStorageSync('token')}`
+        }
       })
 
       if (res.data.success) {
-        const content = res.data.content || res.data.data
-        let result = null
-
-        // 尝试解析JSON
-        try {
-          if (typeof content === 'string') {
-            result = JSON.parse(content)
-          } else {
-            result = content
-          }
-        } catch (e) {
-          wx.showToast({
-            title: '解析失败，请重试',
-            icon: 'none'
-          })
-          this.setData({ loading: false })
-          return
-        }
-
-        this.setData({ result })
+        const data = res.data.data
+        this.setData({ result: data })
       } else {
         wx.showToast({
           title: res.data.error || '脱敏失败',

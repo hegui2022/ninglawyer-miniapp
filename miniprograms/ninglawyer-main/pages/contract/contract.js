@@ -57,16 +57,18 @@ Page({
 
     try {
       const res = await wx.request({
-        url: `${app.globalData.apiConfig.baseUrl}/api/master/route`,
+        url: `${app.globalData.apiBase}/api/contract/draft`,
         method: 'POST',
         data: {
-          user_input: `起草一个${this.data.selectedType}`
+          contract_type: this.data.selectedType
         },
-        timeout: app.globalData.apiConfig.timeout
+        header: {
+          'Authorization': `Bearer ${app.globalData.token || wx.getStorageSync('token')}`
+        }
       })
 
       if (res.data.success) {
-        const content = res.data.content || res.data.data
+        const content = res.data.data.contract_content
         this.setData({
           result: content
         })
@@ -101,18 +103,37 @@ Page({
 
     try {
       const res = await wx.request({
-        url: `${app.globalData.apiConfig.baseUrl}/api/master/route`,
+        url: `${app.globalData.apiBase}/api/contract/review`,
         method: 'POST',
         data: {
-          user_input: `帮我审查这个合同：${this.data.contractContent}`
+          contract_text: this.data.contractContent
         },
-        timeout: app.globalData.apiConfig.timeout
+        header: {
+          'Authorization': `Bearer ${app.globalData.token || wx.getStorageSync('token')}`
+        }
       })
 
       if (res.data.success) {
-        const content = res.data.content || res.data.data
+        const data = res.data.data
+        let result = `风险评分：${data.risk_score}\n\n`
+
+        if (data.risks && data.risks.length > 0) {
+          result += '发现的风险点：\n'
+          data.risks.forEach((risk, index) => {
+            result += `${index + 1}. ${risk.risk_type}：${risk.description}\n`
+            result += `   建议：${risk.suggestion}\n\n`
+          })
+        }
+
+        if (data.suggestions && data.suggestions.length > 0) {
+          result += '修改建议：\n'
+          data.suggestions.forEach((suggestion, index) => {
+            result += `${index + 1}. ${suggestion}\n`
+          })
+        }
+
         this.setData({
-          result: content
+          result: result
         })
       } else {
         wx.showToast({

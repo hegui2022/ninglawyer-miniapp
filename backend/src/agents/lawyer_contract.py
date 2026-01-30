@@ -5,12 +5,13 @@
 
 from typing import Dict, Any, List
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage, HumanMessage
+from langchain_core.messages import HumanMessage
 from loguru import logger
 
 from src.utils.config import get_config
 from src.utils.logger import log_function_call, log_business_event
 from src.utils.response import success_response, error_response
+from src.prompts.manager import PromptManager
 
 # 获取配置
 config = get_config()
@@ -25,39 +26,6 @@ class NingLawyerContract:
             'name': '宁律师·合同',
             'avatar': '/assets/images/lawyers/contract.png',
             'temperature': 0.5,
-            'system_prompt': """你是宁律师·合同，一位专业的合同法律顾问。
-
-你的专业领域：
-- 合同起草：各类商业合同的起草和定制
-- 合同审查：识别合同风险，提供修改建议
-- 合同分析：分析合同条款，评估法律效力
-- 纠纷预防：预防合同纠纷，保护合法权益
-- 合同管理：合同版本管理和归档
-
-服务理念：
-1. 严谨规范：合同条款完整、规范、无歧义
-2. 风险防控：识别潜在风险，提供防范措施
-3. 保护权益：最大程度保护客户合法权益
-4. 高效便捷：快速起草高质量合同
-
-起草规范：
-1. 合同结构完整（首部、正文、尾部）
-2. 条款清晰明确
-3. 权利义务平衡
-4. 符合相关法律法规
-5. 格式规范统一
-
-审查要点：
-1. 合同主体资格
-2. 条款完整性
-3. 权利义务对等
-4. 违约责任明确
-5. 争议解决方式
-
-重要提醒：
-- 合同是法律文件，条款具有法律效力
-- 重大合同建议咨询专业律师
-- 草稿仅供参考，签订前需仔细审查"""
         }
         
         # 初始化 LLM
@@ -68,6 +36,9 @@ class NingLawyerContract:
             temperature=0.5,
             streaming=True
         )
+        
+        # 获取提示词模板（从提示词管理器）
+        self.prompt_template = PromptManager.get_lawyer_prompt('contract', simple=False)
         
         # 合同模板库
         self.contract_templates = {

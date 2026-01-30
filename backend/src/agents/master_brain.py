@@ -7,12 +7,13 @@ import os
 import re
 import json
 from typing import Dict, Any, List
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-from coze_coding_dev_sdk import LLMClient
-from coze_coding_utils.runtime_ctx.context import new_context
 from loguru import logger
 
+from coze_coding_dev_sdk import LLMClient
+from coze_coding_utils.runtime_ctx.context import new_context
+
 from src.utils.skill_registry import skill_registry
+from src.prompts.manager import PromptManager
 
 
 class MasterBrain:
@@ -28,47 +29,8 @@ class MasterBrain:
         self.model = model
         self.client = LLMClient(ctx=new_context(method="invoke"))
         
-        # 系统提示词
-        self.system_prompt = """你是宁律师主脑智能体，负责理解用户意图并路由到对应的技能模块。
-
-## 你的职责
-1. 理解用户输入的真实意图
-2. 根据意图选择合适的技能模块
-3. 将用户请求转发给对应技能
-4. 整合技能返回的结果
-
-## 可用技能模块
-### 1. 脱敏技能（desensitize）
-- 功能：对敏感信息进行脱敏处理
-- 触发关键词：脱敏、隐私、匿名、隐藏信息、XXX
-- 处理内容：姓名、身份证、手机号、地址等
-
-### 2. 民事咨询技能（civil_consult）
-- 功能：提供民事法律咨询服务
-- 触发关键词：咨询、法律、纠纷、起诉、官司、怎么办、怎么处理
-- 涵盖领域：债务纠纷、婚姻家庭、劳动争议、侵权责任等
-
-### 3. 合同起草技能（contract）
-- 功能：起草和审查合同
-- 触发关键词：合同、协议、条款、起草、审查、模板
-- 支持类型：借款合同、租赁合同、劳动合同、买卖合同等
-
-## 工作流程
-1. 分析用户输入，识别意图
-2. 选择合适的技能模块
-3. 返回JSON格式的路由决策：
-   {
-     "skill": "技能名称",
-     "confidence": 置信度(0-1),
-     "reasoning": "选择理由",
-     "parameters": "传递给技能的参数"
-   }
-
-## 注意事项
-- 如果用户意图不明确，设置 confidence 较低
-- 优先选择最相关的技能
-- reasoning 字段简要说明选择理由
-"""
+        # 获取提示词模板（从提示词管理器）
+        self.prompt_template = PromptManager.get_skill_prompt('master_brain')
         
         logger.info("🧠 主脑智能体初始化完成")
     
@@ -98,35 +60,16 @@ class MasterBrain:
         logger.info(f"🎯 路由到：{skill_name} (置信度：{confidence:.2f})")
         
         # 2. 执行技能
-        if confidence < 0.5:
-            # 置信度低，需要澄清
+        try:
+            result = self._execute_skill(skill_name, user_input, user_id, context)
+            return result
+        except Exception as e:
+            logger.error(f"❌ 技能执行失败：{str(e)}")
             return {
                 "success": False,
-                "error": "意图不明确，请问您需要：\n1. 脱敏信息\n2. 法律咨询\n3. 合同起草/审查",
-                "clarification_needed": True
+                "error": f"技能执行失败：{str(e)}",
+                "skill": skill_name
             }
-        
-        # 3. 权限检查
-        if user_id:
-            permission_check = skill_registry.check_user_permission(skill_name, user_id)
-            if not permission_check["has_permission"]:
-                logger.warning(f"⚠️ 用户 {user_id} 无权限使用技能：{skill_name}")
-                return {
-                    "success": False,
-                    "error": permission_check["error"],
-                    "upgrade_required": True,
-                    "required_subscription": permission_check.get("required_subscription")
-                }
-        
-        # 4. 执行对应技能
-        result = skill_registry.execute_skill(
-            skill_name, 
-            user_id=user_id,
-            user_input=user_input, 
-            context=context or {}
-        )
-        
-        return result
     
     def _identify_intent(self, user_input: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
         """
@@ -134,51 +77,35 @@ class MasterBrain:
         
         Args:
             user_input: 用户输入
-            context: 上下文
+            context: 上下文信息
             
         Returns:
             意图识别结果
         """
         try:
-            # 构造提示词
-            prompt = f"""用户输入：{user_input}
-
-请识别用户意图并返回JSON格式结果：
-{{
-  "skill": "技能名称(desensitize/civil_consult/contract)",
-  "confidence": 置信度(0-1),
-  "reasoning": "选择理由",
-  "parameters": "传递给技能的参数"
-}}
-
-只返回JSON，不要其他内容。"""
+            # 使用提示词模板
+            messages = self.prompt_template.format_messages(
+                user_input=user_input
+            )
             
-            messages = [
-                SystemMessage(content=self.system_prompt),
-                HumanMessage(content=prompt)
-            ]
-            
-            # 调用LLM
+            # 调用 LLM
             response = self.client.invoke(
                 messages=messages,
                 model=self.model,
                 temperature=0.3,
-                max_completion_tokens=2000
+                max_completion_tokens=1000
             )
             
-            # 解析响应
-            content = response.content
-            if isinstance(content, str):
-                content = content.strip()
+            content = response.content.strip()
             
-            # 提取JSON
+            # 解析 JSON
             json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
             if json_match:
                 decision = json.loads(json_match.group())
             else:
                 decision = json.loads(content)
             
-            logger.info(f"🎯 意图识别：{decision}")
+            logger.info(f"✅ 意图识别成功：{decision.get('skill')}")
             
             return {
                 "success": True,
@@ -187,64 +114,119 @@ class MasterBrain:
             
         except Exception as e:
             logger.error(f"❌ 意图识别失败：{str(e)}")
-            
-            # 降级处理：基于关键词匹配
-            return self._keyword_routing(user_input)
+            # 降级策略：使用关键词匹配
+            return self._fallback_intent_recognition(user_input)
     
-    def _keyword_routing(self, user_input: str) -> Dict[str, Any]:
+    def _fallback_intent_recognition(self, user_input: str) -> Dict[str, Any]:
         """
-        基于关键词的降级路由
+        降级意图识别（关键词匹配）
         
         Args:
             user_input: 用户输入
             
         Returns:
-            路由决策
+            意图识别结果
         """
-        input_lower = user_input.lower()
+        question_lower = user_input.lower()
         
-        # 关键词匹配规则
-        if any(keyword in input_lower for keyword in ["脱敏", "隐私", "匿名", "隐藏"]):
-            skill = "desensitize"
-            confidence = 0.8
-            reasoning = "关键词匹配到脱敏功能"
-        elif any(keyword in input_lower for keyword in ["咨询", "法律", "纠纷", "起诉", "官司", "怎么办"]):
-            skill = "civil_consult"
-            confidence = 0.85
-            reasoning = "关键词匹配到法律咨询"
-        elif any(keyword in input_lower for keyword in ["合同", "协议", "条款", "起草", "审查"]):
-            skill = "contract"
-            confidence = 0.85
-            reasoning = "关键词匹配到合同功能"
+        # 脱敏
+        if any(keyword in question_lower for keyword in ["脱敏", "隐私", "匿名", "隐藏", "xxx"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "desensitize",
+                    "confidence": 0.9,
+                    "reasoning": "关键词匹配到脱敏功能",
+                    "parameters": user_input
+                }
+            }
+        
+        # 合同
+        elif any(keyword in question_lower for keyword in ["合同", "协议", "起草", "审查"]):
+            if "审查" in question_lower or "风险" in question_lower:
+                return {
+                    "success": True,
+                    "data": {
+                        "skill": "contract_review",
+                        "confidence": 0.85,
+                        "reasoning": "关键词匹配到合同审查功能",
+                        "parameters": user_input
+                    }
+                }
+            else:
+                return {
+                    "success": True,
+                    "data": {
+                        "skill": "contract_draft",
+                        "confidence": 0.85,
+                        "reasoning": "关键词匹配到合同起草功能",
+                        "parameters": user_input
+                    }
+                }
+        
+        # 法律咨询
+        elif any(keyword in question_lower for keyword in ["咨询", "法律", "纠纷", "起诉", "官司", "怎么办"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "civil_consult",
+                    "confidence": 0.8,
+                    "reasoning": "关键词匹配到法律咨询功能",
+                    "parameters": user_input
+                }
+            }
+        
+        # 默认
         else:
-            skill = "civil_consult"  # 默认
-            confidence = 0.3
-            reasoning = "无法明确识别，默认法律咨询"
-        
-        return {
-            "success": True,
-            "data": {
-                "skill": skill,
-                "confidence": confidence,
-                "reasoning": reasoning,
-                "parameters": user_input
+            return {
+                "success": True,
+                "data": {
+                    "skill": "civil_consult",
+                    "confidence": 0.5,
+                    "reasoning": "默认路由到法律咨询",
+                    "parameters": user_input
+                }
             }
-        }
     
-    def list_available_skills(self) -> Dict[str, Any]:
-        """列出所有可用技能"""
-        skills = skill_registry.list_skills()
+    def _execute_skill(self, skill_name: str, user_input: str, user_id: int, context: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        执行技能
         
-        result = {}
-        for name, skill in skills.items():
-            result[name] = {
-                "name": skill["name"],
-                "description": skill["description"],
-                "category": skill["category"]
+        Args:
+            skill_name: 技能名称
+            user_input: 用户输入
+            user_id: 用户ID
+            context: 上下文信息
+            
+        Returns:
+            执行结果
+        """
+        # 从技能注册表获取技能
+        skill = skill_registry.get_skill(skill_name)
+        
+        if not skill:
+            logger.warning(f"⚠️ 技能不存在：{skill_name}")
+            return {
+                "success": False,
+                "error": f"技能不存在：{skill_name}"
             }
+        
+        # 检查权限
+        if user_id:
+            if not skill_registry.check_permission(user_id, skill_name):
+                logger.warning(f"⚠️ 用户无权限使用技能：{skill_name}")
+                return {
+                    "success": False,
+                    "error": "无权限使用该功能，请升级套餐",
+                    "skill": skill_name
+                }
+        
+        # 执行技能
+        logger.info(f"🚀 执行技能：{skill_name}")
+        result = skill.execute(user_input, context)
         
         return result
 
 
-# 全局主脑实例
+# 创建全局实例
 master_brain = MasterBrain()

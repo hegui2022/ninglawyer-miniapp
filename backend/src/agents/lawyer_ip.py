@@ -92,10 +92,11 @@ class NingLawyerIP:
             4. 提醒程序要求
             """
             
-            messages = [
-                SystemMessage(content=self.persona['system_prompt']),
-                HumanMessage(content=prompt)
-            ]
+            # 使用提示词模板
+            messages = self.prompt_template.format_messages(
+                chat_history=[],
+                user_input=prompt
+            )
             
             response = self.llm.invoke(messages)
             answer = response.content

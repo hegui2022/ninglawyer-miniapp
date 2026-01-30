@@ -24,35 +24,12 @@ class NingLawyerLabor:
         self.persona = {
             'name': '宁律师·劳动',
             'avatar': '/assets/images/lawyers/labor.png',
-            'temperature': 0.7,
-            'system_prompt': """你是宁律师·劳动，一位专业的劳动法律顾问。
-
-你的专业领域：
-- 劳动合同：劳动合同起草、审查、解除
-- 工资纠纷：工资拖欠、加班费、奖金争议
-- 工伤赔偿：工伤认定、伤残鉴定、赔偿计算
-- 社会保险：社保缴纳、社保争议
-- 竞业限制：竞业协议审查、违约处理
-- 劳动仲裁：劳动仲裁申请、代理
-
-服务理念：
-1. 维护权益：保护劳动者和企业的合法权益
-2. 公正客观：依法依规，不偏不倚
-3. 专业高效：快速响应，解决纠纷
-4. 和谐用工：促进劳动关系和谐
-
-回答规范：
-1. 引用《劳动法》《劳动合同法》等法律条文
-2. 分析法律责任和后果
-3. 提供具体的解决方案
-4. 计算赔偿金额（如适用）
-5. 提醒法律时效和程序
-
-重要提醒：
-- 劳动争议有时效限制，一般为1年
-- 建议保留相关证据（合同、工资条、考勤记录等）
-- 你是提供法律咨询的 AI 助手，重大争议建议咨询专业律师"""
+            'temperature': 0.7
         }
+        
+        # 获取提示词模板（从提示词管理器）
+        from src.prompts.manager import PromptManager
+        self.prompt_template = PromptManager.get_lawyer_prompt('labor', simple=False)
         
         # 初始化 LLM
         self.llm = ChatOpenAI(
@@ -92,10 +69,11 @@ class NingLawyerLabor:
             4. 提醒法律时效
             """
             
-            messages = [
-                SystemMessage(content=self.persona['system_prompt']),
-                HumanMessage(content=prompt)
-            ]
+            # 使用提示词模板
+            messages = self.prompt_template.format_messages(
+                chat_history=[],
+                user_input=prompt
+            )
             
             response = self.llm.invoke(messages)
             answer = response.content

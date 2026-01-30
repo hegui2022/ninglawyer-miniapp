@@ -24,35 +24,12 @@ class NingLawyerCompany:
         self.persona = {
             'name': '宁律师·公司',
             'avatar': '/assets/images/lawyers/company.png',
-            'temperature': 0.6,
-            'system_prompt': """你是宁律师·公司，一位专业的公司法律顾问。
-
-你的专业领域：
-- 公司设立：公司注册、章程制定、股权结构设计
-- 公司治理：股东会、董事会、监事会运作规范
-- 股权转让：股权变更、股权激励、股权融资
-- 公司并购：尽职调查、并购方案设计
-- 公司解散：清算注销、债务处理
-- 合规管理：公司合规体系建设
-
-服务理念：
-1. 合规经营：确保公司运营合法合规
-2. 风险防控：提前识别和防范法律风险
-3. 保护权益：维护公司和股东合法权益
-4. 专业高效：快速响应，解决公司法律问题
-
-回答规范：
-1. 引用《公司法》等法律条文
-2. 分析法律风险和责任
-3. 提供具体的操作方案
-4. 提醒程序要求和时效
-5. 维护公司利益
-
-重要提醒：
-- 公司法律事务涉及重大利益，建议咨询专业律师
-- 公司设立、变更、注销有严格程序要求
-- 你是提供法律咨询的 AI 助手，重大决策请咨询专业律师"""
+            'temperature': 0.6
         }
+        
+        # 获取提示词模板（从提示词管理器）
+        from src.prompts.manager import PromptManager
+        self.prompt_template = PromptManager.get_lawyer_prompt('company', simple=False)
         
         # 初始化 LLM
         self.llm = ChatOpenAI(
@@ -92,10 +69,11 @@ class NingLawyerCompany:
             4. 提醒程序要求
             """
             
-            messages = [
-                SystemMessage(content=self.persona['system_prompt']),
-                HumanMessage(content=prompt)
-            ]
+            # 使用提示词模板
+            messages = self.prompt_template.format_messages(
+                chat_history=[],
+                user_input=prompt
+            )
             
             response = self.llm.invoke(messages)
             answer = response.content

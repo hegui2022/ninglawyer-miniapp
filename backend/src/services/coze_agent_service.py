@@ -1,18 +1,17 @@
 """
 扣子智能体服务（Coze Agent Service）
 提供调用扣子平台智能体/Bot的API接口
+基于BaseThirdPartyAPIService基类实现
 """
 
-import os
-import requests
-import json
-import time
 from typing import Dict, Any, Optional, List
 from loguru import logger
 
+from .base_service import BaseThirdPartyAPIService
+
 
 class CozeAuthService:
-    """扣子认证服务"""
+    """扣子认证服务（独立于智能体服务）"""
     
     def __init__(self, client_id: str = None, client_secret: str = None):
         """
@@ -22,9 +21,9 @@ class CozeAuthService:
             client_id: 扣子Client ID
             client_secret: 扣子Client Secret
         """
-        self.client_id = client_id or os.getenv("COZE_CLIENT_ID", "")
-        self.client_secret = client_secret or os.getenv("COZE_CLIENT_SECRET", "")
-        self.base_url = os.getenv("COZE_API_BASE_URL", "https://api.coze.cn")
+        self.client_id = client_id or ""
+        self.client_secret = client_secret or ""
+        self.base_url = "https://api.coze.cn"
         self.access_token = None
         self.token_expires_at = 0
         
@@ -37,6 +36,9 @@ class CozeAuthService:
         Returns:
             有效的 Access Token
         """
+        import time
+        import requests
+        
         # 检查 token 是否有效
         if self.access_token and time.time() < self.token_expires_at:
             return self.access_token
@@ -60,7 +62,7 @@ class CozeAuthService:
                 raise Exception(f"获取Token失败: {result.get('error_description')}")
             
             self.access_token = result.get("access_token")
-            expires_in = result.get("expires_in", 7200)  # 默认 2 小时
+            expires_in = result.get("expires_in", 7200)
             
             # 提前 5 分钟过期
             self.token_expires_at = time.time() + expires_in - 300
@@ -71,34 +73,23 @@ class CozeAuthService:
         except Exception as e:
             logger.error(f"❌ 获取 Access Token 失败：{str(e)}")
             raise
-    
-    def get_headers(self) -> Dict[str, str]:
-        """
-        获取带认证的请求头
-        
-        Returns:
-            包含 Authorization 的请求头
-        """
-        token = self.get_access_token()
-        return {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
-        }
 
 
-class CozeAgentService:
-    """扣子智能体服务"""
+class CozeAgentService(BaseThirdPartyAPIService):
+    """扣子智能体服务（继承基础服务类）"""
     
-    def __init__(self, client_id: str = None, client_secret: str = None):
+    def __init__(self, access_token: str = None):
         """
         初始化智能体服务
         
         Args:
-            client_id: 扣子Client ID
-            client_secret: 扣子Client Secret
+            access_token: 访问令牌（可选，如果不提供则使用认证服务获取）
         """
-        self.auth = CozeAuthService(client_id, client_secret)
-        self.base_url = self.auth.base_url
+        # 使用固定值初始化（占位符）
+        api_key = access_token or "ACCESS_TOKEN"
+        base_url = "https://api.coze.cn"
+        
+        super().__init__(api_key=api_key, base_url=base_url, timeout=60)
         
         logger.info("🤖 扣子智能体服务初始化完成")
     
@@ -125,9 +116,6 @@ class CozeAgentService:
         Returns:
             Bot 执行结果
         """
-        url = f"{self.base_url}/v1/bot/run"
-        headers = self.auth.get_headers()
-        
         # 构建请求数据
         data = {
             "bot_id": bot_id,
@@ -144,38 +132,21 @@ class CozeAgentService:
         if additional_messages:
             data["additional_messages"] = additional_messages
         
-        try:
-            logger.info(f"🚀 调用智能体 Bot ID: {bot_id}, 用户: {user_id}")
-            
-            response = requests.post(url, headers=headers, json=data, timeout=60)
-            response.raise_for_status()
-            
-            result = response.json()
-            
-            # 检查是否有错误
-            if result.get("code") != 0:
-                raise Exception(f"Bot 调用失败: {result.get('msg', '未知错误')}")
-            
-            logger.info(f"✅ 智能体调用成功，会话ID: {result.get('conversation_id')}")
-            
-            # 格式化返回结果
-            return {
-                "success": True,
-                "bot_id": bot_id,
-                "conversation_id": result.get("conversation_id", ""),
-                "answer": result.get("answer", ""),
-                "messages": self._format_messages(result.get("messages", [])),
-                "status": "completed"
-            }
-            
-        except Exception as e:
-            logger.error(f"❌ 智能体调用失败：{str(e)}")
-            return {
-                "success": False,
-                "bot_id": bot_id,
-                "error": str(e),
-                "status": "failed"
-            }
+        logger.info(f"🚀 调用智能体 Bot ID: {bot_id}, 用户: {user_id}")
+        
+        # 调用基础请求方法
+        result = self._request(
+            method="POST",
+            path="/v1/bot/run",
+            json=data
+        )
+        
+        # 格式化返回结果
+        if result.get("success"):
+            data = result.get("data", {})
+            result["data"] = self._format_bot_result(data)
+        
+        return result
     
     def run_bot_stream(
         self,
@@ -185,7 +156,7 @@ class CozeAgentService:
         conversation_id: Optional[str] = None
     ):
         """
-        流式运行智能体/Bot
+        流式运行智能体/Bot（流式请求不走通用请求方法）
         
         Args:
             bot_id: Bot ID
@@ -196,8 +167,10 @@ class CozeAgentService:
         Yields:
             流式响应数据块
         """
+        import requests
+        
         url = f"{self.base_url}/v1/bot/run"
-        headers = self.auth.get_headers()
+        headers = self.headers
         
         data = {
             "bot_id": bot_id,
@@ -217,9 +190,9 @@ class CozeAgentService:
             
             for line in response.iter_lines():
                 if line:
-                    # SSE 格式: "data: {...}"
                     line_str = line.decode("utf-8")
                     if line_str.startswith("data: "):
+                        import json
                         json_data = line_str[6:]
                         try:
                             yield json.loads(json_data)
@@ -245,34 +218,15 @@ class CozeAgentService:
         Returns:
             Bot 列表
         """
-        url = f"{self.base_url}/v1/bot/list"
-        headers = self.auth.get_headers()
+        params = {"page_size": page_size}
         
-        params = {
-            "page_size": page_size
-        }
+        result = self._request(
+            method="GET",
+            path="/v1/bot/list",
+            params=params
+        )
         
-        try:
-            response = requests.get(url, headers=headers, params=params, timeout=10)
-            response.raise_for_status()
-            
-            result = response.json()
-            
-            if result.get("code") != 0:
-                raise Exception(f"获取 Bot 列表失败: {result.get('msg', '未知错误')}")
-            
-            return {
-                "success": True,
-                "bots": result.get("data", {}).get("bots", []),
-                "total": result.get("data", {}).get("total", 0)
-            }
-            
-        except Exception as e:
-            logger.error(f"❌ 获取 Bot 列表失败：{str(e)}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
+        return result
     
     def get_bot_info(self, bot_id: str) -> Dict[str, Any]:
         """
@@ -284,33 +238,33 @@ class CozeAgentService:
         Returns:
             Bot 详细信息
         """
-        url = f"{self.base_url}/v1/bot/info"
-        headers = self.auth.get_headers()
+        params = {"bot_id": bot_id}
         
-        params = {
-            "bot_id": bot_id
+        result = self._request(
+            method="GET",
+            path="/v1/bot/info",
+            params=params
+        )
+        
+        return result
+    
+    def _format_bot_result(self, data: Dict) -> Dict[str, Any]:
+        """
+        格式化Bot结果
+        
+        Args:
+            data: 原始数据
+            
+        Returns:
+            格式化后的结果
+        """
+        return {
+            "bot_id": data.get("bot_id", ""),
+            "conversation_id": data.get("conversation_id", ""),
+            "answer": data.get("answer", ""),
+            "messages": self._format_messages(data.get("messages", [])),
+            "status": "completed"
         }
-        
-        try:
-            response = requests.get(url, headers=headers, params=params, timeout=10)
-            response.raise_for_status()
-            
-            result = response.json()
-            
-            if result.get("code") != 0:
-                raise Exception(f"获取 Bot 信息失败: {result.get('msg', '未知错误')}")
-            
-            return {
-                "success": True,
-                "bot_info": result.get("data", {})
-            }
-            
-        except Exception as e:
-            logger.error(f"❌ 获取 Bot 信息失败：{str(e)}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
     
     def _format_messages(self, messages: List[Dict]) -> List[Dict[str, Any]]:
         """
@@ -337,17 +291,22 @@ class CozeAgentService:
 _coze_agent_service = None
 
 
-def get_coze_agent_service() -> CozeAgentService:
+def get_coze_agent_service(access_token: str = None) -> CozeAgentService:
     """
     获取扣子智能体服务实例（单例模式）
     
+    Args:
+        access_token: Access Token（可选）
+        
     Returns:
         CozeAgentService 实例
     """
     global _coze_agent_service
     
     if _coze_agent_service is None:
-        _coze_agent_service = CozeAgentService()
+        _coze_agent_service = CozeAgentService(access_token)
+    elif access_token:
+        _coze_agent_service.set_api_key(access_token)
     
     return _coze_agent_service
 

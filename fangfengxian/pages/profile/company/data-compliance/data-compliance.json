@@ -1,8 +1,0 @@
-{
-  "usingComponents": {
-    "nav-bar": "../../../components/nav-bar/nav-bar",
-    "home-indicator": "../../../components/home-indicator/home-indicator"
-  },
-  "navigationBarTitleText": "数据合规",
-  "navigationStyle": "custom"
-}

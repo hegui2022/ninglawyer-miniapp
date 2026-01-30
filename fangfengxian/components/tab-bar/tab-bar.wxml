@@ -1,9 +1,0 @@
-<!--components/tab-bar/tab-bar.wxml-->
-<view class="tab-bar">
-  <view class="tab-item" wx:for="{{tabs}}" wx:key="pagePath" data-path="{{item.pagePath}}" bindtap="switchTab">
-    <view class="tab-icon {{currentPath === item.pagePath ? 'active' : ''}}">
-      <text>{{item.icon}}</text>
-    </view>
-    <text class="tab-text {{currentPath === item.pagePath ? 'active' : ''}}">{{item.text}}</text>
-  </view>
-</view>

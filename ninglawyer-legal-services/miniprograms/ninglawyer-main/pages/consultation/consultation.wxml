@@ -1,0 +1,99 @@
+<view class="consultation-container">
+  <!-- 法律领域选择 -->
+  <view class="domain-section">
+    <scroll-view class="domain-scroll" scroll-x>
+      <view class="domain-list">
+        <view 
+          class="domain-item {{currentDomain === item.id ? 'active' : ''}}" 
+          wx:for="{{domains}}" 
+          wx:key="id"
+          bindtap="selectDomain"
+          data-id="{{item.id}}"
+        >
+          <image class="domain-icon" src="{{item.icon}}"></image>
+          <text class="domain-name">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 聊天区域 -->
+  <scroll-view 
+    class="chat-container" 
+    scroll-y 
+    scroll-into-view="{{scrollIntoView}}"
+    bindscrolltoupper="loadMore"
+  >
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{messages.length === 0}}">
+      <image class="empty-icon" src="/static/icons/consult-empty.png"></image>
+      <text class="empty-text">请选择法律领域后开始咨询</text>
+      <view class="tips">
+        <text class="tip-item" wx:for="{{tips}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 消息列表 -->
+    <view class="message-list">
+      <view 
+        class="message-item {{item.role}}" 
+        id="msg-{{index}}"
+        wx:for="{{messages}}" 
+        wx:key="id"
+      >
+        <!-- 用户消息 -->
+        <view class="message-content user" wx:if="{{item.role === 'user'}}">
+          <text class="message-text">{{item.content}}</text>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+        <image class="message-avatar user" src="{{userInfo.avatar || '/static/default-avatar.png'}}" wx:if="{{item.role === 'user'}}"></image>
+
+        <!-- AI 消息 -->
+        <image class="message-avatar ai" src="/static/logo.png" wx:if="{{item.role === 'assistant'}}"></image>
+        <view class="message-content assistant" wx:if="{{item.role === 'assistant'}}">
+          <text class="message-text">{{item.content}}</text>
+          <view class="message-actions" wx:if="{{item.canCopy}}">
+            <text class="action-btn" bindtap="copyMessage" data-content="{{item.content}}">复制</text>
+          </view>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+      </view>
+
+      <!-- 加载中 -->
+      <view class="message-item assistant" wx:if="{{loading}}">
+        <image class="message-avatar ai" src="/static/logo.png"></image>
+        <view class="message-content assistant">
+          <view class="typing-indicator">
+            <text class="dot"></text>
+            <text class="dot"></text>
+            <text class="dot"></text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-container">
+      <view class="input-wrapper">
+        <textarea 
+          class="input-field"
+          placeholder="请输入您的法律问题..."
+          value="{{inputText}}"
+          bindinput="onInput"
+          bindconfirm="sendMessage"
+          confirm-type="send"
+          auto-height
+          maxlength="500"
+        ></textarea>
+      </view>
+      <button class="send-btn" bindtap="sendMessage" disabled="{{!inputText || loading}}">
+        <image class="send-icon" src="/static/icons/send.png"></image>
+      </button>
+    </view>
+    <view class="input-tips">
+      <text>按 Enter 发送，最多 500 字</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,235 @@
+/* 合同签署页面样式 */
+.sign-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 160rpx;
+}
+
+/* 合同摘要 */
+.contract-summary {
+  background: #ffffff;
+  padding: 32rpx;
+  margin: 24rpx;
+  border-radius: 16rpx;
+}
+
+.contract-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 24rpx;
+}
+
+.contract-info {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 2;
+}
+
+.info-label {
+  font-weight: 600;
+  margin-right: 8rpx;
+}
+
+.info-value {
+  color: #333333;
+}
+
+.btn-detail {
+  font-size: 26rpx;
+  color: #07C160;
+  text-align: center;
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #F5F5F5;
+}
+
+/* 签署区域 */
+.sign-section {
+  background: #ffffff;
+  margin: 24rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 32rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #F5F5F5;
+}
+
+.party-sign {
+  margin-bottom: 48rpx;
+}
+
+.party-sign:last-child {
+  margin-bottom: 0;
+}
+
+.party-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.party-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.sign-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+
+.status-text {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+/* 签名显示 */
+.signature-display {
+  background: #F5F5F5;
+  height: 200rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signature-image {
+  width: 100%;
+  height: 100%;
+}
+
+.signature-placeholder {
+  background: #F5F5F5;
+  height: 200rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx dashed #CCCCCC;
+}
+
+.placeholder-text {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* 手写签名区域 */
+.sign-canvas {
+  background: #ffffff;
+  margin: 24rpx;
+  padding: 32rpx;
+  border-radius: 16rpx;
+}
+
+.canvas-header {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.canvas-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.canvas-tip {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.canvas-wrapper {
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+}
+
+.signature-canvas {
+  background: #ffffff;
+}
+
+.canvas-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16rpx;
+}
+
+.btn-clear {
+  background: #F5F5F5;
+  color: #666666;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+}
+
+.btn-cancel {
+  background: #F5F5F5;
+  color: #666666;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+}
+
+.btn-confirm {
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+}
+
+.btn-confirm[disabled] {
+  background: #CCCCCC;
+  color: #999999;
+}
+
+/* 底部操作 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  padding: 24rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-finish {
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.btn-finish[disabled] {
+  background: #CCCCCC;
+  color: #999999;
+}

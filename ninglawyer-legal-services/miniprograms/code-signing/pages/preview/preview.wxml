@@ -1,0 +1,120 @@
+<!-- 合同预览页面 -->
+<view class="preview-page" wx:if="{{contract}}">
+  <view class="contract-header">
+    <text class="contract-title">{{contract.title}}</text>
+    <text class="contract-date">创建时间：{{contract.createdAt}}</text>
+  </view>
+  
+  <view class="contract-content">
+    <view class="content-section">
+      <view class="section-title">一、合同双方</view>
+      <view class="party-info">
+        <view class="party-title">甲方（用人单位）：</view>
+        <view class="party-detail">
+          <text class="party-label">名称：</text>
+          <text class="party-value">{{contract.partyA.name}}</text>
+        </view>
+        <view class="party-detail" wx:if="{{contract.partyA.address}}">
+          <text class="party-label">地址：</text>
+          <text class="party-value">{{contract.partyA.address}}</text>
+        </view>
+        <view class="party-detail" wx:if="{{contract.partyA.contact}}">
+          <text class="party-label">联系人：</text>
+          <text class="party-value">{{contract.partyA.contact}}</text>
+        </view>
+        <view class="party-detail" wx:if="{{contract.partyA.phone}}">
+          <text class="party-label">联系电话：</text>
+          <text class="party-value">{{contract.partyA.phone}}</text>
+        </view>
+      </view>
+      <view class="party-info">
+        <view class="party-title">乙方（劳动者）：</view>
+        <view class="party-detail">
+          <text class="party-label">姓名：</text>
+          <text class="party-value">{{contract.partyB.name}}</text>
+        </view>
+        <view class="party-detail">
+          <text class="party-label">身份证号：</text>
+          <text class="party-value">{{contract.partyB.idCard}}</text>
+        </view>
+        <view class="party-detail" wx:if="{{contract.partyB.phone}}">
+          <text class="party-label">联系电话：</text>
+          <text class="party-value">{{contract.partyB.phone}}</text>
+        </view>
+        <view class="party-detail" wx:if="{{contract.partyB.address}}">
+          <text class="party-label">住址：</text>
+          <text class="party-value">{{contract.partyB.address}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="content-section">
+      <view class="section-title">二、合同期限</view>
+      <view class="section-content">
+        <text>合同类型：</text>
+        <text class="highlight">{{contract.contractTerm.type === 'fixed' ? '固定期限' : contract.contractTerm.type === 'indefinite' ? '无固定期限' : '以完成一定工作任务为期限'}}</text>
+      </view>
+      <view class="section-content" wx:if="{{contract.contractTerm.startDate}}">
+        <text>开始日期：</text>
+        <text class="highlight">{{contract.contractTerm.startDate}}</text>
+      </view>
+      <view class="section-content" wx:if="{{contract.contractTerm.endDate}}">
+        <text>结束日期：</text>
+        <text class="highlight">{{contract.contractTerm.endDate}}</text>
+      </view>
+    </view>
+    
+    <view class="content-section">
+      <view class="section-title">三、薪资待遇</view>
+      <view class="section-content">
+        <text>薪资金额：</text>
+        <text class="highlight">{{contract.salary.amount}} 元</text>
+      </view>
+      <view class="section-content">
+        <text>计薪方式：</text>
+        <text class="highlight">{{contract.salary.payMethod === 'month' ? '月薪' : contract.salary.payMethod === 'day' ? '日薪' : '项目制'}}</text>
+      </view>
+      <view class="section-content" wx:if="{{contract.salary.payMethod === 'month'}}">
+        <text>发放日期：</text>
+        <text class="highlight">每月{{contract.salary.payDate}}日</text>
+      </view>
+    </view>
+    
+    <view class="content-section">
+      <view class="section-title">四、工作内容与地点</view>
+      <view class="section-content">
+        <text class="content-label">工作内容：</text>
+        <text class="content-text">{{contract.workContent}}</text>
+      </view>
+      <view class="section-content">
+        <text class="content-label">工作地点：</text>
+        <text class="content-text">{{contract.workPlace}}</text>
+      </view>
+      <view class="section-content">
+        <text>工作时间：</text>
+        <text class="highlight">{{contract.workingHours === 'standard' ? '标准工时制' : contract.workingHours === 'flexible' ? '不定时工作制' : '综合计算工时工作制'}}</text>
+      </view>
+    </view>
+    
+    <view class="content-section">
+      <view class="section-title">五、社会保险</view>
+      <view class="section-content">
+        <text>缴纳社保：</text>
+        <text class="highlight">{{contract.socialInsurance ? '是' : '否'}}</text>
+      </view>
+    </view>
+    
+    <view class="content-section" wx:if="{{contract.otherTerms}}">
+      <view class="section-title">六、补充条款</view>
+      <view class="section-content">
+        <text class="content-text">{{contract.otherTerms}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="action-buttons">
+    <button class="btn-edit" bindtap="onEdit">修改</button>
+    <button class="btn-share" bindtap="onShare">分享</button>
+    <button class="btn-sign" bindtap="onSign">签署</button>
+  </view>
+</view>

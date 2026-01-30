@@ -1,0 +1,306 @@
+/* app.wxss - 全局样式 */
+
+/* 微信风格 - 基础颜色 */
+page {
+  background-color: #f7f7f7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 28rpx;
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* 主题色 */
+.theme-primary {
+  color: #07C160;
+}
+
+.theme-warning {
+  color: #FF9800;
+}
+
+.theme-danger {
+  color: #F44336;
+}
+
+.theme-info {
+  color: #2196F3;
+}
+
+.theme-gray {
+  color: #999999;
+}
+
+/* 背景色 */
+.bg-primary {
+  background-color: #07C160;
+}
+
+.bg-warning {
+  background-color: #FF9800;
+}
+
+.bg-danger {
+  background-color: #F44336;
+}
+
+.bg-info {
+  background-color: #2196F3;
+}
+
+.bg-gray {
+  background-color: #999999;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.bg-light {
+  background-color: #f7f7f7;
+}
+
+/* 容器 */
+.container {
+  padding: 24rpx;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+/* 按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 40rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: #07C160;
+  color: #ffffff;
+}
+
+.btn-warning {
+  background-color: #FF9800;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background-color: #F44336;
+  color: #ffffff;
+}
+
+.btn-info {
+  background-color: #2196F3;
+  color: #ffffff;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2rpx solid #07C160;
+  color: #07C160;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+.btn-large {
+  padding: 24rpx 48rpx;
+  font-size: 32rpx;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 8rpx 16rpx;
+  border-radius: 4rpx;
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.tag-primary {
+  background-color: rgba(7, 193, 96, 0.1);
+  color: #07C160;
+}
+
+.tag-warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: #FF9800;
+}
+
+.tag-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+}
+
+.tag-info {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #2196F3;
+}
+
+/* 风险等级 */
+.risk-low {
+  color: #07C160;
+  background-color: rgba(7, 193, 96, 0.1);
+}
+
+.risk-medium {
+  color: #FF9800;
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.risk-high {
+  color: #F44336;
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+/* 文本 */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-lg {
+  font-size: 32rpx;
+}
+
+.text-xl {
+  font-size: 36rpx;
+}
+
+.text-xxl {
+  font-size: 40rpx;
+}
+
+.text-sm {
+  font-size: 24rpx;
+}
+
+.text-xs {
+  font-size: 20rpx;
+}
+
+/* 间距 */
+.mt-8 {
+  margin-top: 16rpx;
+}
+
+.mt-16 {
+  margin-top: 32rpx;
+}
+
+.mt-24 {
+  margin-top: 48rpx;
+}
+
+.mb-8 {
+  margin-bottom: 16rpx;
+}
+
+.mb-16 {
+  margin-bottom: 32rpx;
+}
+
+.mb-24 {
+  margin-bottom: 48rpx;
+}
+
+.ml-8 {
+  margin-left: 16rpx;
+}
+
+.mr-8 {
+  margin-right: 16rpx;
+}
+
+/* 布局 */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* 加载动画 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  color: #999999;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 40rpx;
+  color: #999999;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background-color: #e5e5e5;
+  margin: 24rpx 0;
+}

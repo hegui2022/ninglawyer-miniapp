@@ -1,0 +1,140 @@
+<!-- 合同起草页面 -->
+<view class="draft-page">
+  <view class="form-section">
+    <view class="section-title">合同基本信息</view>
+    <view class="form-item">
+      <text class="form-label">合同标题 *</text>
+      <input class="form-input" placeholder="请输入合同标题" value="{{contractTitle}}" bindinput="onInputChange" data-field="contractTitle" />
+    </view>
+  </view>
+  
+  <view class="form-section">
+    <view class="section-title">甲方信息</view>
+    <view class="form-item">
+      <text class="form-label">公司名称 *</text>
+      <input class="form-input" placeholder="请输入公司名称" value="{{partyA.name}}" bindinput="onInputChange" data-field="partyA.name" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">公司地址</text>
+      <input class="form-input" placeholder="请输入公司地址" value="{{partyA.address}}" bindinput="onInputChange" data-field="partyA.address" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">联系人</text>
+      <input class="form-input" placeholder="请输入联系人" value="{{partyA.contact}}" bindinput="onInputChange" data-field="partyA.contact" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">联系电话</text>
+      <input class="form-input" placeholder="请输入联系电话" value="{{partyA.phone}}" bindinput="onInputChange" data-field="partyA.phone" />
+    </view>
+  </view>
+  
+  <view class="form-section">
+    <view class="section-title">乙方信息</view>
+    <view class="form-item">
+      <text class="form-label">姓名 *</text>
+      <input class="form-input" placeholder="请输入姓名" value="{{partyB.name}}" bindinput="onInputChange" data-field="partyB.name" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">身份证号 *</text>
+      <input class="form-input" placeholder="请输入身份证号" value="{{partyB.idCard}}" bindinput="onInputChange" data-field="partyB.idCard" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">联系电话</text>
+      <input class="form-input" placeholder="请输入联系电话" value="{{partyB.phone}}" bindinput="onInputChange" data-field="partyB.phone" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">住址</text>
+      <input class="form-input" placeholder="请输入住址" value="{{partyB.address}}" bindinput="onInputChange" data-field="partyB.address" />
+    </view>
+  </view>
+  
+  <view class="form-section">
+    <view class="section-title">合同期限</view>
+    <view class="form-item">
+      <text class="form-label">合同类型</text>
+      <picker mode="selector" range="{{['固定期限', '无固定期限', '以完成一定工作任务为期限']}}" bindchange="onPickerChange" data-field="contractTerm.type" data-options="{{['fixed', 'indefinite', 'project']}}">
+        <view class="picker-value">
+          {{contractTerm.type === 'fixed' ? '固定期限' : contractTerm.type === 'indefinite' ? '无固定期限' : '以完成一定工作任务为期限'}} ›
+        </view>
+      </picker>
+    </view>
+    <view class="form-item" wx:if="{{contractTerm.type === 'fixed' || contractTerm.type === 'project'}}">
+      <text class="form-label">开始日期 *</text>
+      <picker mode="date" value="{{contractTerm.startDate}}" bindchange="onDateChange" data-field="contractTerm.startDate">
+        <view class="picker-value">
+          {{contractTerm.startDate || '请选择开始日期'}} ›
+        </view>
+      </picker>
+    </view>
+    <view class="form-item" wx:if="{{contractTerm.type === 'fixed'}}">
+      <text class="form-label">结束日期</text>
+      <picker mode="date" value="{{contractTerm.endDate}}" bindchange="onDateChange" data-field="contractTerm.endDate">
+        <view class="picker-value">
+          {{contractTerm.endDate || '请选择结束日期'}} ›
+        </view>
+      </picker>
+    </view>
+  </view>
+  
+  <view class="form-section">
+    <view class="section-title">薪资待遇</view>
+    <view class="form-item">
+      <text class="form-label">薪资金额 *</text>
+      <input class="form-input" placeholder="请输入薪资金额" value="{{salary.amount}}" bindinput="onInputChange" data-field="salary.amount" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">计薪方式</text>
+      <picker mode="selector" range="{{['月薪', '日薪', '项目制']}}" bindchange="onPickerChange" data-field="salary.payMethod" data-options="{{['month', 'day', 'project']}}">
+        <view class="picker-value">
+          {{salary.payMethod === 'month' ? '月薪' : salary.payMethod === 'day' ? '日薪' : '项目制'}} ›
+        </view>
+      </picker>
+    </view>
+    <view class="form-item" wx:if="{{salary.payMethod === 'month'}}">
+      <text class="form-label">发放日期</text>
+      <picker mode="selector" range="{{['每月1日', '每月5日', '每月10日', '每月15日', '每月20日', '每月25日']}}" bindchange="onPickerChange" data-field="salary.payDate" data-options="{{['1', '5', '10', '15', '20', '25']}}">
+        <view class="picker-value">
+          每月{{salary.payDate}}日 ›
+        </view>
+      </picker>
+    </view>
+  </view>
+  
+  <view class="form-section">
+    <view class="section-title">工作信息</view>
+    <view class="form-item">
+      <text class="form-label">工作内容 *</text>
+      <textarea class="form-textarea" placeholder="请详细描述工作内容" value="{{workContent}}" bindinput="onInputChange" data-field="workContent" maxlength="500" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">工作地点 *</text>
+      <input class="form-input" placeholder="请输入工作地点" value="{{workPlace}}" bindinput="onInputChange" data-field="workPlace" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">工作时间</text>
+      <picker mode="selector" range="{{['标准工时制', '不定时工作制', '综合计算工时工作制']}}" bindchange="onPickerChange" data-field="workingHours" data-options="{{['standard', 'flexible', 'shift']}}">
+        <view class="picker-value">
+          {{workingHours === 'standard' ? '标准工时制' : workingHours === 'flexible' ? '不定时工作制' : '综合计算工时工作制'}} ›
+        </view>
+      </picker>
+    </view>
+  </view>
+  
+  <view class="form-section">
+    <view class="section-title">其他条款</view>
+    <view class="form-item switch-item">
+      <text class="form-label">缴纳社保</text>
+      <switch checked="{{socialInsurance}}" bindchange="onSwitchChange" data-field="socialInsurance" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">补充条款</text>
+      <textarea class="form-textarea" placeholder="请输入其他补充条款" value="{{otherTerms}}" bindinput="onInputChange" data-field="otherTerms" maxlength="500" />
+    </view>
+  </view>
+  
+  <view class="action-buttons">
+    <button class="btn-save" bindtap="onSaveDraft">保存草稿</button>
+    <button class="btn-preview" bindtap="onPreview">预览合同</button>
+    <button class="btn-next" bindtap="onNext">下一步：签署</button>
+  </view>
+</view>

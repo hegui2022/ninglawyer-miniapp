@@ -1,0 +1,228 @@
+/* 履约提醒页面样式 */
+.reminder-page {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 160rpx;
+}
+
+/* 过滤器 */
+.filter-tabs {
+  background: #ffffff;
+  display: flex;
+  padding: 24rpx 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.filter-tab {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  position: relative;
+}
+
+.tab-name {
+  font-size: 28rpx;
+  color: #666666;
+}
+
+.filter-tab.active .tab-name {
+  color: #07C160;
+  font-weight: 600;
+}
+
+.filter-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 4rpx;
+  background: #07C160;
+  border-radius: 2rpx;
+}
+
+/* 提醒列表 */
+.reminder-list {
+  padding: 24rpx;
+}
+
+.reminder-card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.card-icon {
+  font-size: 36rpx;
+}
+
+.card-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.importance-badge {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.importance-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.card-info {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.info-label {
+  color: #999999;
+  margin-right: 8rpx;
+}
+
+.info-value {
+  color: #333333;
+}
+
+.info-value.next-date {
+  color: #07C160;
+  font-weight: 600;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-badge {
+  font-size: 22rpx;
+  color: #ffffff;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+}
+
+.status-badge.pending {
+  background: #FF9800;
+}
+
+.status-badge.active {
+  background: #2196F3;
+}
+
+.status-badge.completed {
+  background: #E8F5E9;
+  color: #07C160;
+}
+
+.card-action {
+  font-size: 24rpx;
+  color: #07C160;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 32rpx;
+  border-radius: 50%;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+  margin-bottom: 48rpx;
+}
+
+.btn-add {
+  background: #07C160;
+  color: #ffffff;
+  border: none;
+  border-radius: 48rpx;
+  font-size: 28rpx;
+  padding: 20rpx 64rpx;
+  height: 80rpx;
+  line-height: 40rpx;
+}
+
+/* 底部操作 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  padding: 24rpx;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 16rpx;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-settings,
+.btn-add-main {
+  background: #F5F5F5;
+  color: #666666;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.btn-add-main {
+  background: #07C160;
+  color: #ffffff;
+}
+
+.btn-icon {
+  font-size: 32rpx;
+}
+
+.btn-text {
+  font-size: 26rpx;
+}

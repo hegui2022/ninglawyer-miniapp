@@ -1,0 +1,129 @@
+<!-- 违约判断页面 -->
+<view class="breach-page">
+  <!-- 表单区域 -->
+  <view class="form-section" wx:if="{{!result}}">
+    <view class="section-title">违约信息填写</view>
+    
+    <view class="form-item">
+      <text class="form-label">合同类型 *</text>
+      <picker mode="selector" range="{{contractTypes}}" bindchange="onContractTypeChange">
+        <view class="picker-value">
+          {{contractType || '请选择合同类型'}} ›
+        </view>
+      </picker>
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">违约类型 *</text>
+      <picker mode="selector" range="{{breachTypes}}" bindchange="onBreachTypeChange">
+        <view class="picker-value">
+          {{breachType || '请选择违约类型'}} ›
+        </view>
+      </picker>
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">违约日期</text>
+      <picker mode="date" value="{{breachDate}}" bindchange="onDateChange" data-field="breachDate">
+        <view class="picker-value">
+          {{breachDate || '请选择违约日期'}} ›
+        </view>
+      </picker>
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">涉及金额</text>
+      <input class="form-input" placeholder="请输入涉及金额" value="{{amount}}" bindinput="onAmountInput" />
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">详细描述 *</text>
+      <textarea class="form-textarea" placeholder="请详细描述违约情况，包括合同约定和实际履行的差异" value="{{description}}" bindinput="onDescriptionInput" maxlength="500" />
+      <text class="char-count">{{description.length}}/500</text>
+    </view>
+    
+    <view class="form-tips">
+      <text class="tips-icon">💡</text>
+      <text class="tips-text">请如实填写相关信息，我们将基于法律知识和判例为您分析</text>
+    </view>
+    
+    <button class="btn-analyze" bindtap="onAnalyze" disabled="{{analyzing}}">
+      {{analyzing ? '分析中...' : '开始分析'}}
+    </button>
+  </view>
+  
+  <!-- 分析结果 -->
+  <view class="result-section" wx:if="{{result}}">
+    <view class="result-header">
+      <text class="result-title">分析结果</text>
+      <text class="result-confidence">置信度：{{(result.confidence * 100).toFixed(0)}}%</text>
+    </view>
+    
+    <!-- 判断结论 -->
+    <view class="result-card">
+      <view class="card-title">
+        <text class="title-icon">{{result.isBreach ? '⚖️' : '✓'}}</text>
+        <text class="title-text">{{result.isBreach ? '构成违约' : '不构成违约'}}</text>
+      </view>
+      <view class="card-content">
+        <text class="content-label">违约性质：</text>
+        <text class="content-value">{{result.breach.severity}}</text>
+      </view>
+      <view class="card-content">
+        <text class="content-label">判断说明：</text>
+        <text class="content-value">{{result.breach.description}}</text>
+      </view>
+    </view>
+    
+    <!-- 法律依据 -->
+    <view class="result-card">
+      <text class="card-header-text">法律依据</text>
+      <view class="law-list">
+        <view class="law-item" wx:for="{{result.lawBasis}}" wx:key="law">
+          <text class="law-title">{{item.law}}</text>
+          <text class="law-content">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 救济途径 -->
+    <view class="result-card">
+      <text class="card-header-text">可采取的救济措施</text>
+      <view class="remedy-list">
+        <view class="remedy-item" wx:for="{{result.remedies}}" wx:key="*this">
+          <text class="remedy-dot">•</text>
+          <text class="remedy-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 证据建议 -->
+    <view class="result-card">
+      <text class="card-header-text">建议收集的证据</text>
+      <view class="evidence-list">
+        <view class="evidence-item" wx:for="{{result.evidence}}" wx:key="*this">
+          <text class="evidence-icon">📎</text>
+          <text class="evidence-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 建议 -->
+    <view class="result-card">
+      <text class="card-header-text">维权建议</text>
+      <view class="recommendation-list">
+        <view class="recommendation-item" wx:for="{{result.recommendations}}" wx:key="*this">
+          <text class="rec-number">{{index + 1}}.</text>
+          <text class="rec-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="result-actions">
+      <button class="btn-reset" bindtap="onReset">重新判断</button>
+      <button class="btn-rights" bindtap="onGoRights">维权指导</button>
+      <button class="btn-cases" bindtap="onGoCases">相似案例</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,68 @@
+<!--pages/contract/contract.wxml-->
+<view class="container">
+  <view class="page-title">{{mode === 'draft' ? '📄 合同起草' : '🔍 合同审查'}}</view>
+  <view class="page-desc">{{mode === 'draft' ? '快速生成各类合同模板' : '智能审查合同风险'}}</view>
+
+  <!-- 起草模式 -->
+  <view class="draft-section" wx:if="{{mode === 'draft'}}">
+    <view class="section-title">选择合同类型</view>
+    <view class="type-list">
+      <view
+        class="type-item {{selectedType === item ? 'active' : ''}}"
+        wx:for="{{types.draft}}"
+        wx:key="*this"
+        bindtap="onTypeSelect"
+        data-type="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+
+    <button
+      class="btn-action"
+      bindtap="onDraft"
+      loading="{{loading}}"
+      disabled="{{!selectedType}}"
+    >
+      {{loading ? '起草中...' : '开始起草'}}
+    </button>
+  </view>
+
+  <!-- 审查模式 -->
+  <view class="review-section" wx:if="{{mode === 'review'}}">
+    <view class="section-title">输入合同内容</view>
+    <textarea
+      class="contract-input"
+      placeholder="请粘贴需要审查的合同内容..."
+      value="{{contractContent}}"
+      bindinput="onContentInput"
+      auto-height
+    />
+
+    <button
+      class="btn-action"
+      bindtap="onReview"
+      loading="{{loading}}"
+    >
+      {{loading ? '审查中...' : '开始审查'}}
+    </button>
+  </view>
+
+  <!-- 结果展示 -->
+  <view class="result-section" wx:if="{{result}}">
+    <view class="result-header">
+      <text class="result-title">{{mode === 'draft' ? '起草结果' : '审查结果'}}</text>
+      <button class="btn-copy-mini" bindtap="onCopyResult">复制</button>
+    </view>
+    <scroll-view class="result-scroll" scroll-y>
+      <view class="result-content">
+        <text class="result-text">{{result}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 清空按钮 -->
+  <button class="btn-clear" bindtap="onClear" wx:if="{{result || selectedType || contractContent}}">
+    清空重置
+  </button>
+</view>

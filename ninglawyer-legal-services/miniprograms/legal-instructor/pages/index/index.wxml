@@ -1,0 +1,65 @@
+<!-- 法律教官 - 首页 -->
+<view class="index-page">
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#ffffff" autoplay interval="3000" bindchange="onBannerChange">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image class="banner-image" src="{{item.image}}" mode="aspectFill"></image>
+      <view class="banner-title">{{item.title}}</view>
+    </swiper-item>
+  </swiper>
+  
+  <!-- 统计数据 -->
+  <view class="stats-section">
+    <view class="stats-card">
+      <text class="stats-value">{{stats.users}}</text>
+      <text class="stats-label">用户数</text>
+    </view>
+    <view class="stats-card">
+      <text class="stats-value">{{stats.consultations}}</text>
+      <text class="stats-label">咨询次数</text>
+    </view>
+    <view class="stats-card">
+      <text class="stats-value">{{stats.satisfaction}}%</text>
+      <text class="stats-label">满意度</text>
+    </view>
+  </view>
+  
+  <!-- 服务入口 -->
+  <view class="services-section">
+    <view class="section-header">
+      <text class="section-title">法律服务</text>
+      <text class="section-more" bindtap="onGoLawyerFamily">更多 ></text>
+    </view>
+    <view class="services-grid">
+      <view class="service-item" wx:for="{{services}}" wx:key="id" bindtap="onServiceTap" data-url="{{item.url}}">
+        <view class="service-icon">{{item.icon}}</view>
+        <text class="service-title">{{item.title}}</text>
+        <text class="service-desc">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 宁律师推荐 -->
+  <view class="lawyer-section">
+    <view class="section-header">
+      <text class="section-title">宁律师家族</text>
+      <text class="section-more" bindtap="onGoLawyerFamily">全部 ></text>
+    </view>
+    <view class="lawyer-list">
+      <view class="lawyer-item" wx:for="{{lawyers}}" wx:key="id" bindtap="onLawyerTap" data-id="{{item.id}}">
+        <image class="lawyer-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view class="lawyer-info">
+          <text class="lawyer-name">{{item.name}}</text>
+          <text class="lawyer-domain">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 快捷咨询 -->
+  <view class="quick-consult">
+    <button class="btn-primary btn-large" bindtap="onLawyerTap" data-id="civil">
+      开始咨询
+    </button>
+  </view>
+</view>

@@ -1,0 +1,42 @@
+<!-- 法律教官 - 宁律师家族 -->
+<view class="lawyer-family-page">
+  <!-- 欢迎卡片 -->
+  <view class="welcome-card">
+    <text class="welcome-title">宁律师家族</text>
+    <text class="welcome-desc">7大专业领域，为您提供全方位法律服务</text>
+  </view>
+  
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <input class="search-input" placeholder="搜索律师领域" value="{{searchKeyword}}" bindinput="onSearchInput" />
+    <image class="search-icon" src="/assets/icons/search.png" mode="aspectFit"></image>
+  </view>
+  
+  <!-- 律师列表 -->
+  <view class="lawyer-list">
+    <view class="lawyer-card" wx:for="{{filteredLawyers}}" wx:key="id" bindtap="onLawyerTap" data-lawyer="{{item}}">
+      <image class="lawyer-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+      <view class="lawyer-content">
+        <view class="lawyer-header">
+          <text class="lawyer-name">{{item.name}}</text>
+          <view class="lawyer-rating">
+            <image class="star-icon" src="/assets/icons/star.png" mode="aspectFit"></image>
+            <text class="rating-text">{{item.rating}}</text>
+          </view>
+        </view>
+        <text class="lawyer-domain">{{item.domain}}</text>
+        <text class="lawyer-desc">{{item.description}}</text>
+        <view class="lawyer-footer">
+          <text class="lawyer-count">已帮助 {{item.helpCount}} 人</text>
+          <button class="btn-consult" bindtap="onConsultNow" data-lawyer="{{item}}">立即咨询</button>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{filteredLawyers.length === 0}}">
+    <image class="empty-icon" src="/assets/images/empty.png" mode="aspectFit"></image>
+    <text class="empty-text">未找到匹配的律师</text>
+  </view>
+</view>

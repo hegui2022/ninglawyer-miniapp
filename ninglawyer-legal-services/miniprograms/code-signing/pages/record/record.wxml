@@ -1,0 +1,63 @@
+<!-- 合同列表页面 -->
+<view class="record-page">
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === item.id ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onTabChange"
+    >
+      <text class="tab-name">{{item.name}}</text>
+      <text class="tab-count" wx:if="{{item.id !== 'all'}}">
+        {{contracts.filter(c => c.status === item.id).length}}
+      </text>
+    </view>
+  </view>
+  
+  <!-- 合同列表 -->
+  <view class="contract-list" wx:if="{{filteredContracts.length > 0}}">
+    <view 
+      class="contract-item" 
+      wx:for="{{filteredContracts}}" 
+      wx:key="id"
+      data-contract="{{item}}"
+      bindtap="onContractTap"
+    >
+      <view class="contract-header">
+        <text class="contract-title">{{item.title}}</text>
+        <view class="contract-status" style="background: {{onStatusColor(item.status)}};">
+          {{onStatusText(item.status)}}
+        </view>
+      </view>
+      
+      <view class="contract-info">
+        <view class="info-row">
+          <text class="info-label">甲方：</text>
+          <text class="info-value">{{item.partyA.name}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">乙方：</text>
+          <text class="info-value">{{item.partyB.name}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">期限：</text>
+          <text class="info-value">{{item.contractTerm.startDate}} 至 {{item.contractTerm.endDate || '无固定期限'}}</text>
+        </view>
+      </view>
+      
+      <view class="contract-footer">
+        <text class="create-time">{{item.createdAt}}</text>
+        <text class="view-detail">查看详情 ›</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{filteredContracts.length === 0}}">
+    <image class="empty-icon" src="https://via.placeholder.com/200x200/07C160/ffffff?text=📝" mode="aspectFit"></image>
+    <text class="empty-text">暂无合同记录</text>
+    <button class="btn-create" bindtap="onCreateContract">创建合同</button>
+  </view>
+</view>

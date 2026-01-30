@@ -1,0 +1,88 @@
+<!-- 数据统计页面 -->
+<view class="statistics-page">
+  <!-- 时间范围选择 -->
+  <view class="time-range">
+    <text class="time-label">统计范围</text>
+    <text class="time-value" bindtap="onTimeRangeChange">{{timeRange}} ›</text>
+  </view>
+  
+  <!-- 概览卡片 -->
+  <view class="overview-section">
+    <view class="overview-card" bindtap="onConsultDetail">
+      <text class="overview-value">{{overview.totalConsults}}</text>
+      <text class="overview-label">咨询次数</text>
+      <text class="overview-icon">💬</text>
+    </view>
+    <view class="overview-card" bindtap="onContractDetail">
+      <text class="overview-value">{{overview.totalContracts}}</text>
+      <text class="overview-label">合同数量</text>
+      <text class="overview-icon">📝</text>
+    </view>
+  </view>
+  
+  <view class="overview-section">
+    <view class="overview-card">
+      <text class="overview-value">{{overview.satisfaction}}%</text>
+      <text class="overview-label">满意度</text>
+      <text class="overview-icon">⭐</text>
+    </view>
+    <view class="overview-card">
+      <text class="overview-value">{{overview.savings}}</text>
+      <text class="overview-label">节省成本</text>
+      <text class="overview-icon">💰</text>
+    </view>
+  </view>
+  
+  <!-- 咨询分类统计 -->
+  <view class="section">
+    <view class="section-title">咨询分类</view>
+    <view class="stat-list">
+      <view class="stat-item" wx:for="{{consultStats}}" wx:key="*this">
+        <view class="stat-info">
+          <text class="stat-name">{{item.name}}</text>
+          <text class="stat-count">{{item.count}} 次</text>
+        </view>
+        <view class="stat-bar">
+          <view class="bar-fill" style="width: {{item.percentage}}%;"></view>
+        </view>
+        <text class="stat-percentage">{{item.percentage}}%</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 合同状态统计 -->
+  <view class="section">
+    <view class="section-title">合同状态</view>
+    <view class="contract-stats">
+      <view class="contract-item" wx:for="{{contractStats}}" wx:key="name">
+        <view class="contract-dot" style="background: {{item.color}};"></view>
+        <text class="contract-name">{{item.name}}</text>
+        <text class="contract-count">{{item.count}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 月度趋势 -->
+  <view class="section">
+    <view class="section-title">月度趋势</view>
+    <view class="trend-chart">
+      <view class="chart-item" wx:for="{{monthlyTrend}}" wx:key="month">
+        <view class="chart-bars">
+          <view class="bar consult-bar" style="height: {{item.consults * 8}}rpx;"></view>
+          <view class="bar contract-bar" style="height: {{item.contracts * 8}}rpx;"></view>
+        </view>
+        <text class="chart-label">{{item.month}}</text>
+      </view>
+    </view>
+    <view class="chart-legend">
+      <view class="legend-item">
+        <view class="legend-dot consult-dot"></view>
+        <text class="legend-label">咨询</text>
+      </view>
+      <view class="legend-item">
+        <view class="legend-dot contract-dot"></view>
+        <text class="legend-label">合同</text>
+      </view>
+    </view>
+  </view>
+</view>

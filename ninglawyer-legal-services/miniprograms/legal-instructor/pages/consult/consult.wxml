@@ -1,0 +1,42 @@
+<!-- 咨询对话页面 - 组件化版本 -->
+<view class="consult-page">
+  <!-- 消息列表组件 -->
+  <message-list
+    messages="{{messages}}"
+    userInfo="{{userInfo}}"
+    lawyerInfo="{{lawyerInfo}}"
+    showWelcome="{{showWelcome}}"
+    welcomeMessage="{{welcomeMessage}}"
+    loading="{{loading}}"
+    scrollIntoView="{{scrollToView}}"
+    bind:action="onActionClick"
+    bind:cardAction="onCardActionClick">
+  </message-list>
+
+  <!-- 快捷问题 -->
+  <view class="quick-questions" wx:if="{{showQuickQuestions}}">
+    <scroll-view class="questions-scroll" scroll-x>
+      <view 
+        class="question-item" 
+        wx:for="{{quickQuestions}}" 
+        wx:key="*this"
+        bindtap="onQuickQuestion"
+        data-question="{{item}}"
+      >
+        <text>{{item}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 聊天输入组件 -->
+  <view class="chat-input-container">
+    <chat-input
+      placeholder="请输入您的问题..."
+      maxlength="1000"
+      disabled="{{loading}}"
+      bind:send="onSendMessage"
+      bind:focus="onInputFocus"
+      bind:blur="onInputBlur">
+    </chat-input>
+  </view>
+</view>

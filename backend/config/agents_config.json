@@ -1,0 +1,59 @@
+{
+  "apps": {
+    "ninglawyer": {
+      "name": "宁律师",
+      "description": "刑事法律咨询小程序",
+      "agents": {
+        "criminal_consultation": {
+          "name": "刑事咨询",
+          "description": "提供刑事法律咨询，分析案件风险，提供法律建议",
+          "bot_id": "请替换为实际的Bot ID",
+          "enabled": true
+        }
+      }
+    },
+    "fangfengxian": {
+      "name": "防风险",
+      "description": "民事法律咨询小程序",
+      "agents": {
+        "civil_consultation": {
+          "name": "民事咨询",
+          "description": "提供民事法律咨询，分析纠纷风险，提供维权建议",
+          "bot_id": "请替换为实际的Bot ID",
+          "enabled": true
+        }
+      }
+    },
+    "contract": {
+      "name": "合同专家",
+      "description": "合同起草和审查小程序",
+      "agents": {
+        "contract_drafter": {
+          "name": "合同起草",
+          "description": "根据需求起草合同",
+          "bot_id": "请替换为实际的Bot ID",
+          "enabled": true
+        },
+        "contract_reviewer": {
+          "name": "合同审查",
+          "description": "审查合同内容，识别风险",
+          "bot_id": "请替换为实际的Bot ID",
+          "enabled": true
+        }
+      }
+    }
+  },
+  "common": {
+    "api_endpoint": "https://api.coze.cn/open_api/v2/chat",
+    "api_timeout": 300,
+    "max_retries": 3,
+    "stream": false
+  },
+  "version": "1.0.0",
+  "created_at": "2025-01-10",
+  "notes": [
+    "第一版使用扣子官方智能体API",
+    "Bot ID需要替换为实际的智能体ID",
+    "配置文件需要保密，不要提交到版本控制"
+  ]
+}

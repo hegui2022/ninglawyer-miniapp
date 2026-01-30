@@ -1,309 +1,422 @@
-# 智能法律服务后端系统
+# 宁律师项目 - 第一版后端API文档
 
-## 项目概述
+## 📋 项目概述
 
-基于 Python + Flask + LangChain + LangGraph 的智能法律服务后端系统，采用扣子官方的 SKILL 框架构建，提供智能体、知识库、工作流、技能的统一封装与集成。
+本项目是宁律师智能法律服务系统的第一版后端API，采用Flask框架，全部智能体使用扣子官方API实现。
 
-## 技术栈
+## 🎯 第一版特性
 
-- **后端框架**: Python 3.10+ + Flask
-- **AI框架**: LangChain + LangGraph
-- **扣子框架**: SKILL 框架（Skill Registry + Bot Registry）
-- **工具库**: LLMClient, 语音, 检索
-- **编码规范**: PEP 8 (Python)
+- ✅ 微信小程序登录认证
+- ✅ 电话验证码登录
+- ✅ 刑事法律咨询
+- ✅ 民事法律咨询
+- ✅ 合同起草
+- ✅ 合同审查
+- ✅ 扣子智能体集成
+- ✅ Redis对话缓存
+- ✅ PostgreSQL数据存储
 
-## 目录结构
+## 🗂️ 项目结构
 
 ```
 backend/
+├── config/
+│   └── agents_config.json      # 扣子智能体配置
+├── docs/
+│   └── DECISIONS.md            # 项目决策记录
+├── scripts/
+│   ├── init_db.py              # 数据库初始化脚本
+│   └── test_api.py             # API测试脚本
 ├── src/
-│   ├── services/                    # 服务层
-│   │   ├── base_service.py         # 第三方API基类
-│   │   ├── coze_agent_service.py   # 扣子智能体服务
-│   │   ├── coze_knowledge_service.py # 扣子知识库服务
-│   │   ├── coze_workflow_service.py # 扣子工作流服务
-│   │   └── coze_skill_service.py   # 扣子技能服务
-│   ├── adapters/                    # 数据适配器层
-│   │   ├── base_adapter.py         # 数据适配器基类
-│   │   └── legal_knowledge_adapter.py # 法律知识库适配器
-│   ├── skills/                      # 技能层
-│   │   └── ...                     # 具体技能实现
-│   ├── tools/                       # 工具层
-│   │   └── ...                     # 具体工具实现
-│   └── main.py                      # 应用入口
-├── tests/                           # 单元测试
-│   ├── test_coze_agent_service.py
-│   ├── test_coze_knowledge_service.py
-│   └── test_data_adapter.py
-├── examples/                        # 示例代码
-│   ├── coze_agent_example.py
-│   ├── coze_knowledge_example.py
-│   └── data_adapter_example.py
-├── docs/                            # 文档
-│   ├── coze_agent_service.md
-│   ├── coze_knowledge_service.md
-│   ├── coze_workflow_service.md
-│   ├── coze_skill_service.md
-│   └── data_adapter.md
-├── requirements.txt                 # 依赖列表
-├── .env.example                     # 环境变量示例
-└── README.md                        # 本文档
+│   ├── models/
+│   │   └── v1_models.py        # 数据库模型
+│   ├── routes/
+│   │   ├── auth.py             # 认证路由
+│   │   ├── consultation.py     # 咨询路由
+│   │   └── contract.py         # 合同路由
+│   ├── services/
+│   │   ├── auth.py             # 认证服务
+│   │   └── coze_agent.py       # 扣子智能体服务
+│   ├── utils/
+│   │   ├── database.py         # 数据库配置
+│   │   └── redis_client.py     # Redis客户端
+│   └── app.py                  # Flask应用主文件
+├── .env                        # 环境变量配置
+├── .env.example                # 环境变量示例
+├── requirements.txt            # Python依赖
+└── README.md                   # 本文档
 ```
 
-## 核心功能
+## 🚀 快速开始
 
-### 1. 扣子服务集成
+### 1. 环境准备
 
-- **智能体服务** (`CozeAgentService`): 管理扣子智能体的创建、调用和管理
-- **知识库服务** (`CozeKnowledgeService`): 管理扣子知识库的导入、检索和管理
-- **工作流服务** (`CozeWorkflowService`): 管理扣子工作流的执行和管理
-- **技能服务** (`CozeSkillService`): 管理扣子技能的注册和调用
-
-### 2. 数据适配层
-
-- **数据适配器基类** (`DataAdapterBase`): 提供三阶段数据处理架构（清洗、转换、增强）
-- **法律知识库适配器** (`LegalKnowledgeAdapter`): 专门用于法律数据的格式转换
-- **正则表达式 + LLM增强**: 优先使用正则表达式提取结构化信息，按需使用LLM生成摘要
-
-### 3. 第三方API统一封装
-
-- **BaseThirdPartyAPIService基类**: 统一的错误处理、请求管理和数据适配
-- 支持扣子、微信、支付宝等第三方API
-- 统一的错误码处理（401/404/400/429等）
-
-## 快速开始
-
-### 环境准备
+确保已安装Python 3.8+和以下依赖：
 
 ```bash
-# 1. 克隆项目
-git clone <repository_url>
-cd backend
-
-# 2. 创建虚拟环境
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 3. 安装依赖
 pip install -r requirements.txt
+```
 
-# 4. 配置环境变量
+### 2. 配置环境变量
+
+复制`.env.example`为`.env`并配置：
+
+```bash
 cp .env.example .env
-# 编辑 .env 文件，填入必要的配置
 ```
 
-### 基础用法
-
-#### 1. 使用扣子智能体服务
-
-```python
-from backend.src.services import get_coze_agent_service
-
-agent_service = get_coze_agent_service(access_token="YOUR_ACCESS_TOKEN")
-
-# 调用智能体
-result = agent_service.chat(
-    bot_id="YOUR_BOT_ID",
-    message="你好"
-)
-```
-
-#### 2. 使用扣子知识库服务
-
-```python
-from backend.src.services import get_coze_knowledge_service
-from backend.src.adapters import get_legal_knowledge_adapter
-
-kb_service = get_coze_knowledge_service(
-    access_token="YOUR_ACCESS_TOKEN",
-    dataset_id="YOUR_DATASET_ID"
-)
-
-# 检索知识库
-raw_result = kb_service.search(
-    query="刑法第二百六十四条",
-    top_k=3
-)
-
-# 使用数据适配器转换格式
-adapter = get_legal_knowledge_adapter(enable_llm_enhance=False)
-adapted_result = adapter.adapt(raw_result)
-```
-
-#### 3. 使用数据适配器
-
-```python
-from backend.src.adapters import get_legal_knowledge_adapter
-
-# 获取适配器实例
-adapter = get_legal_knowledge_adapter(enable_llm_enhance=True)
-
-# 适配数据
-result = adapter.adapt(raw_data)
-
-# 使用适配后的数据
-for item in result["data"]:
-    print(f"法条编号: {item['article_number']}")
-    print(f"罪名: {item['crime_name']}")
-    print(f"摘要: {item['summary']}")
-    print(f"关键点: {item['key_points']}")
-```
-
-## 架构设计
-
-### SKILL 框架
-
-```
-┌─────────────────────────────────────────┐
-│         前端（微信小程序/H5）            │
-└────────────────┬────────────────────────┘
-                 │
-                 ↓
-┌─────────────────────────────────────────┐
-│         Master Brain（主脑）             │
-│         路由决策引擎                      │
-└────────────────┬────────────────────────┘
-                 │
-    ┌────────────┼────────────┐
-    ↓            ↓            ↓
-┌─────────┐ ┌──────────┐ ┌──────────┐
-│ Skill 1 │ │ Skill 2  │ │ Skill 3  │
-│ (技能)  │ │ (技能)   │ │ (技能)   │
-└────┬────┘ └────┬─────┘ └────┬─────┘
-     │           │            │
-     ↓           ↓            ↓
-┌──────────────────────────────────────┐
-│            Tool（工具层）              │
-│  - LLMClient                         │
-│  - 语音处理                          │
-│  - 检索服务                          │
-└──────────────────────────────────────┘
-```
-
-### 数据流转
-
-```
-前端请求 → Master Brain → Skill → Tool → 第三方API → 数据适配 → 返回前端
-```
-
-## 文档
-
-- [扣子智能体服务文档](./docs/coze_agent_service.md)
-- [扣子知识库服务文档](./docs/coze_knowledge_service.md)
-- [扣子工作流服务文档](./docs/coze_workflow_service.md)
-- [扣子技能服务文档](./docs/coze_skill_service.md)
-- [数据适配器文档](./docs/data_adapter.md)
-
-## 开发指南
-
-### 编码规范
-
-- Python: 遵循 PEP 8 规范
-- 使用 `black` 格式化代码
-- 使用 `flake8` 检查代码质量
-- 使用 `mypy` 进行类型检查
-
-### 测试
-
-```bash
-# 运行所有测试
-python -m pytest tests/ -v
-
-# 运行单个测试文件
-python -m pytest tests/test_coze_agent_service.py -v
-
-# 运行特定测试
-python -m pytest tests/test_coze_agent_service.py::TestCozeAgentService::test_create_bot -v
-```
-
-### 运行示例
-
-```bash
-# 运行智能体示例
-python examples/coze_agent_example.py
-
-# 运行知识库示例
-python examples/coze_knowledge_example.py
-
-# 运行数据适配器示例
-python examples/data_adapter_example.py
-```
-
-## 环境变量
-
-参考 `.env.example` 文件配置以下环境变量：
+编辑`.env`文件，配置以下关键参数：
 
 ```env
-# 扣子配置
-COZE_ACCESS_TOKEN=your_access_token
+# 数据库配置
+DATABASE_URL=postgresql://username:password@localhost:5432/legal_assistant
+
+# Redis配置
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+REDIS_PASSWORD=
+
+# 扣子API配置
+COZE_API_KEY=your_coze_api_key_here
 COZE_API_BASE_URL=https://api.coze.cn
 
-# LLM配置
-COZE_LLM_MODEL=doubao-seed-1-8-251228
-COZE_LLM_API_KEY=your_llm_api_key
-COZE_LLM_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
+# 微信小程序配置
+WECHAT_APP_ID=your_wechat_app_id_here
+WECHAT_APP_SECRET=your_wechat_app_secret_here
 
-# 应用配置
-APP_ENV=development
-APP_PORT=5000
-APP_DEBUG=True
+# JWT配置
+JWT_SECRET_KEY=your_jwt_secret_key_here_change_this_in_production
 ```
 
-## 部署
+### 3. 配置扣子智能体
 
-### Docker 部署
+编辑`config/agents_config.json`，将`请替换为实际的Bot ID`替换为实际的扣子智能体Bot ID。
+
+### 4. 初始化数据库
 
 ```bash
-# 构建镜像
-docker build -t legal-service-backend .
-
-# 运行容器
-docker run -d -p 5000:5000 \
-  --env-file .env \
-  --name legal-service-backend \
-  legal-service-backend
+cd backend
+python scripts/init_db.py
 ```
 
-### 传统部署
+### 5. 启动服务
 
 ```bash
-# 安装依赖
-pip install -r requirements.txt
-
-# 启动服务
-python src/main.py
+cd backend/src
+python app.py
 ```
 
-## 贡献指南
+服务将在 `http://localhost:5000` 启动。
 
-1. Fork 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+### 6. 测试API
 
-## 许可证
+```bash
+cd backend
+python scripts/test_api.py
+```
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+## 📡 API接口文档
 
-## 联系方式
+### 1. 认证接口
 
-- 项目主页: [GitHub Repository](https://github.com/your-username/legal-service-backend)
-- 问题反馈: [GitHub Issues](https://github.com/your-username/legal-service-backend/issues)
+#### 1.1 微信登录
 
-## 更新日志
+**接口：** `POST /api/auth/wechat/login`
 
-### v1.0.0 (2025-01-15)
+**请求体：**
+```json
+{
+  "code": "微信登录凭证"
+}
+```
 
-- ✅ 实现扣子智能体服务
-- ✅ 实现扣子知识库服务
-- ✅ 实现扣子工作流服务
-- ✅ 实现扣子技能服务
-- ✅ 实现数据适配层（基类 + 法律知识库适配器）
-- ✅ 实现第三方API统一封装
-- ✅ 完整的单元测试和示例代码
-- ✅ 完善的文档
+**响应：**
+```json
+{
+  "success": true,
+  "data": {
+    "token": "JWT token",
+    "user": {
+      "id": 1,
+      "name": "用户昵称",
+      "avatar": "头像URL",
+      "role": "individual",
+      "has_phone": false
+    }
+  }
+}
+```
+
+#### 1.2 发送验证码
+
+**接口：** `POST /api/auth/verification-code/send`
+
+**请求体：**
+```json
+{
+  "phone": "手机号",
+  "code_type": "验证码类型（login/register/bind_phone）"
+}
+```
+
+#### 1.3 绑定手机号
+
+**接口：** `POST /api/auth/bind-phone`
+
+**请求头：** `Authorization: Bearer <token>`
+
+**请求体：**
+```json
+{
+  "phone": "手机号",
+  "code": "验证码"
+}
+```
+
+#### 1.4 获取用户信息
+
+**接口：** `GET /api/auth/user-info`
+
+**请求头：** `Authorization: Bearer <token>`
+
+### 2. 咨询接口
+
+#### 2.1 刑事咨询
+
+**接口：** `POST /api/consultation/criminal`
+
+**请求头：** `Authorization: Bearer <token>`
+
+**请求体：**
+```json
+{
+  "query": "用户咨询问题",
+  "session_id": "会话ID（可选）",
+  "stream": false
+}
+```
+
+**响应（非流式）：**
+```json
+{
+  "success": true,
+  "data": {
+    "session_id": "会话ID",
+    "answer": "智能体回复",
+    "bot_id": "Bot ID",
+    "bot_name": "Bot名称",
+    "conversation_type": "criminal_consultation"
+  }
+}
+```
+
+#### 2.2 民事咨询
+
+**接口：** `POST /api/consultation/civil`
+
+参数同刑事咨询。
+
+#### 2.3 获取对话历史
+
+**接口：** `GET /api/consultation/history/<session_id>`
+
+**请求头：** `Authorization: Bearer <token>`
+
+#### 2.4 清除对话
+
+**接口：** `POST /api/consultation/clear`
+
+**请求头：** `Authorization: Bearer <token>`
+
+### 3. 合同接口
+
+#### 3.1 合同起草
+
+**接口：** `POST /api/contract/draft`
+
+**请求头：** `Authorization: Bearer <token>`
+
+**请求体：**
+```json
+{
+  "query": "合同需求描述",
+  "contract_type": "合同类型（采购合同/服务合同/租赁合同/劳动合同/合作协议/保密协议/借款合同）",
+  "session_id": "会话ID（可选）",
+  "stream": false,
+  "save_to_db": false
+}
+```
+
+#### 3.2 合同审查
+
+**接口：** `POST /api/contract/review`
+
+**请求头：** `Authorization: Bearer <token>`
+
+**请求体：**
+```json
+{
+  "contract_text": "合同内容",
+  "contract_type": "合同类型（可选）",
+  "session_id": "会话ID（可选）",
+  "stream": false
+}
+```
+
+#### 3.3 获取合同列表
+
+**接口：** `GET /api/contract/list`
+
+**请求头：** `Authorization: Bearer <token>`
+
+**查询参数：**
+- `page`: 页码（默认1）
+- `page_size`: 每页数量（默认20）
+- `contract_type`: 合同类型（可选）
+- `status`: 状态（可选）
+
+#### 3.4 获取合同详情
+
+**接口：** `GET /api/contract/detail/<contract_id>`
+
+**请求头：** `Authorization: Bearer <token>`
+
+#### 3.5 更新合同
+
+**接口：** `PUT /api/contract/update/<contract_id>`
+
+**请求头：** `Authorization: Bearer <token>`
+
+#### 3.6 删除合同
+
+**接口：** `DELETE /api/contract/delete/<contract_id>`
+
+**请求头：** `Authorization: Bearer <token>`
+
+### 4. 健康检查
+
+**接口：** `GET /health`
+
+**响应：**
+```json
+{
+  "status": "ok",
+  "service": "legal-assistant-backend",
+  "version": "1.0.0"
+}
+```
+
+## 🔧 数据库表结构
+
+### users（用户表）
+- `id`: 用户ID
+- `wechat_openid`: 微信openid
+- `wechat_unionid`: 微信unionid
+- `phone`: 手机号
+- `name`: 姓名
+- `avatar`: 头像URL
+- `role`: 角色（individual/enterprise_member/admin）
+- `status`: 状态
+
+### enterprises（企业表）
+- `id`: 企业ID
+- `name`: 企业名称
+- `unified_code`: 统一社会信用代码
+- `business_license`: 营业执照URL
+- `verified`: 是否已认证
+- `contact_name`: 联系人姓名
+- `contact_phone`: 联系电话
+
+### user_enterprise_relations（用户-企业关系表）
+- `id`: 关系ID
+- `user_id`: 用户ID
+- `enterprise_id`: 企业ID
+- `role_in_enterprise`: 在企业中的角色
+- `department`: 部门
+- `position`: 职位
+
+### contracts（合同表）
+- `id`: 合同ID
+- `user_id`: 用户ID
+- `contract_type`: 合同类型
+- `contract_title`: 合同标题
+- `contract_text`: 合同内容
+- `status`: 状态（draft/signed/archived）
+- `party_a`: 甲方
+- `party_b`: 乙方
+- `contract_amount`: 合同金额
+
+### user_feedback（用户反馈表）
+- `id`: 反馈ID
+- `user_id`: 用户ID
+- `feedback_text`: 反馈内容
+- `feedback_type`: 反馈类型
+- `rating`: 评分
+
+### conversations（会话表）
+- `id`: 会话ID
+- `user_id`: 用户ID
+- `session_id`: 会话ID
+- `conversation_type`: 会话类型
+- `user_message`: 用户消息
+- `bot_response`: 智能体回复
+- `bot_id`: Bot ID
+- `bot_name`: Bot名称
+
+### verification_codes（验证码表）
+- `id`: 验证码ID
+- `phone`: 手机号
+- `code`: 验证码
+- `code_type`: 验证码类型
+- `expires_at`: 过期时间
+- `used`: 是否已使用
+
+## 🔐 安全注意事项
+
+1. **环境变量**：`.env`文件包含敏感信息，不要提交到版本控制
+2. **Bot ID**：扣子智能体Bot ID需要保密
+3. **JWT密钥**：生产环境必须使用强密钥
+4. **API密钥**：扣子API Key需要保密
+
+## 📝 注意事项
+
+1. **Redis依赖**：Redis服务需要启动，否则验证码和对话缓存功能将不可用
+2. **微信API**：微信登录需要真实的微信小程序App ID和Secret
+3. **扣子API**：需要配置真实的扣子Bot ID和API Key
+4. **流式输出**：流式输出使用SSE格式，前端需要相应处理
+
+## 🐛 故障排除
+
+### 1. Redis连接失败
+
+检查Redis服务是否启动：
+
+```bash
+# 检查Redis服务状态
+redis-cli ping
+
+# 启动Redis服务
+redis-server
+```
+
+### 2. 数据库连接失败
+
+检查DATABASE_URL配置是否正确，数据库服务是否启动。
+
+### 3. 微信登录失败
+
+检查微信小程序App ID和Secret是否正确，code是否有效。
+
+### 4. 扣子智能体调用失败
+
+检查Bot ID和API Key是否正确，网络是否通畅。
+
+## 📧 联系方式
+
+如有问题，请联系开发团队。
 
 ---
 
-**注意**: 本项目遵循扣子官方 SKILL 框架规范，拒绝在 Agent 中硬编码数据或引入不符合框架的知识库逻辑。所有数据获取必须通过 Skill 调用 LLM 或工具实现。
+**版本：** v1.0.0  
+**最后更新：** 2025-01-30

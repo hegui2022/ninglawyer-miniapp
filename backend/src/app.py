@@ -1,0 +1,185 @@
+"""
+Flask应用主文件
+"""
+
+import os
+import sys
+import logging
+from logging.handlers import RotatingFileHandler
+from flask import Flask, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
+
+# 添加项目路径到sys.path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from utils.database import init_db, get_db
+from routes.auth import auth_bp
+from routes.consultation import consultation_bp
+from routes.contract import contract_bp
+
+# ============================================
+# 配置日志
+# ============================================
+
+def setup_logging(app):
+    """配置日志"""
+    log_level = os.getenv('LOG_LEVEL', 'INFO')
+    log_file = os.getenv('LOG_FILE', 'logs/app.log')
+    
+    # 确保日志目录存在
+    log_dir = os.path.dirname(log_file)
+    if log_dir and not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    
+    # 配置日志格式
+    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(log_format)
+    
+    # 文件处理器
+    file_handler = RotatingFileHandler(
+        log_file,
+        maxBytes=10 * 1024 * 1024,  # 10MB
+        backupCount=10
+    )
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(log_level)
+    
+    # 控制台处理器
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    console_handler.setLevel(log_level)
+    
+    # 配置app日志
+    app.logger.addHandler(file_handler)
+    app.logger.addHandler(console_handler)
+    app.logger.setLevel(log_level)
+    
+    # 配置第三方库日志
+    logging.getLogger('werkzeug').setLevel(logging.WARNING)
+    logging.getLogger('sqlalchemy').setLevel(logging.WARNING)
+    
+    return app.logger
+
+
+# ============================================
+# 创建Flask应用
+# ============================================
+
+def create_app():
+    """创建Flask应用"""
+    app = Flask(__name__)
+    
+    # 配置CORS
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": "*",
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
+    
+    # 配置日志
+    logger = setup_logging(app)
+    logger.info("Flask应用启动中...")
+    
+    # 配置
+    app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'default-secret-key')
+    app.config['JSON_AS_ASCII'] = False  # 支持中文
+    
+    # ============================================
+    # 注册蓝图
+    # ============================================
+    
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(consultation_bp)
+    app.register_blueprint(contract_bp)
+    
+    logger.info("蓝图注册完成")
+    
+    # ============================================
+    # 初始化数据库
+    # ============================================
+    
+    try:
+        init_db()
+        logger.info("数据库初始化完成")
+    except Exception as e:
+        logger.error(f"数据库初始化失败: {str(e)}")
+    
+    # ============================================
+    # 健康检查接口
+    # ============================================
+    
+    @app.route('/health', methods=['GET'])
+    def health_check():
+        """健康检查"""
+        return jsonify({
+            "status": "ok",
+            "service": "legal-assistant-backend",
+            "version": "1.0.0"
+        })
+    
+    # ============================================
+    # 404错误处理
+    # ============================================
+    
+    @app.errorhandler(404)
+    def not_found(error):
+        """404错误处理"""
+        return jsonify({
+            "success": False,
+            "message": "接口不存在"
+        }), 404
+    
+    # ============================================
+    # 500错误处理
+    # ============================================
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        """500错误处理"""
+        return jsonify({
+            "success": False,
+            "message": "服务器内部错误"
+        }), 500
+    
+    # ============================================
+    # 全局异常处理
+    # ============================================
+    
+    @app.errorhandler(Exception)
+    def handle_exception(error):
+        """全局异常处理"""
+        logger.error(f"未捕获的异常: {str(error)}", exc_info=True)
+        return jsonify({
+            "success": False,
+            "message": f"服务器错误: {str(error)}"
+        }), 500
+    
+    logger.info("Flask应用创建完成")
+    
+    return app
+
+
+# ============================================
+# 运行应用
+# ============================================
+
+if __name__ == '__main__':
+    app = create_app()
+    
+    # 获取配置
+    host = os.getenv('FLASK_HOST', '0.0.0.0')
+    port = int(os.getenv('FLASK_PORT', 5000))
+    debug = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    
+    # 运行应用
+    app.run(
+        host=host,
+        port=port,
+        debug=debug
+    )

@@ -1,0 +1,38 @@
+{
+  "name": "ninglawyer-legal-services",
+  "version": "1.0.0",
+  "description": "宁律师法律服务项目 - Monorepo 架构",
+  "scripts": {
+    "install:all": "npm install && cd packages/@ninglawyer/shared && npm install",
+    "build:shared": "cd packages/@ninglawyer/shared && npm run build",
+    "test": "npm run test:backend && npm run test:shared",
+    "test:backend": "cd backend && python3 -m pytest",
+    "test:shared": "cd packages/@ninglawyer/shared && npm test",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "law",
+    "legal",
+    "miniprogram",
+    "ai",
+    "contract",
+    "monorepo"
+  ],
+  "author": "NingLawyer Team",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ninglawyer/ninglawyer-legal-services.git"
+  }
+}

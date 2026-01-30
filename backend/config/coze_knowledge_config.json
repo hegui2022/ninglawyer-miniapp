@@ -1,0 +1,40 @@
+{
+  "description": "扣子知识库配置文件",
+  "note": "请根据实际情况填写以下配置项",
+
+  "knowledge_bases": {
+    "civil_law": {
+      "name": "民事法律知识库",
+      "dataset_id": "DATASET_ID",
+      "description": "包含民事法律条文、案例等内容"
+    },
+    "criminal_law": {
+      "name": "刑事法律知识库",
+      "dataset_id": "DATASET_ID",
+      "description": "包含刑事法律条文、案例等内容"
+    },
+    "contract_law": {
+      "name": "合同法律知识库",
+      "dataset_id": "DATASET_ID",
+      "description": "包含合同法律条文、模板等内容"
+    },
+    "labor_law": {
+      "name": "劳动法律知识库",
+      "dataset_id": "DATASET_ID",
+      "description": "包含劳动法律条文、案例等内容"
+    }
+  },
+
+  "search_config": {
+    "default_top_k": 5,
+    "default_min_score": 0.0,
+    "timeout": 30
+  },
+
+  "usage_note": {
+    "step1": "在扣子平台创建知识库并上传文档",
+    "step2": "获取知识库的Dataset ID",
+    "step3": "将Dataset ID填写到上面对应的配置项中",
+    "step4": "确保Access Token已配置在环境变量中"
+  }
+}

@@ -51,9 +51,14 @@ class MasterBrain:
         
         # 场景关键词映射
         self.scenario_keywords = {
-            "family_law": ["离婚", "婚姻", "夫妻", "抚养权", "财产分割", "家暴", "出轨", "分居", "彩礼", "抚养费", "配偶", "孩子", "房子怎么分", "抚养", "打人", "保护令", "他打我", "他老婆"],
-            "commercial": ["合同", "公司", "企业", "商事", "股权", "股东", "投资", "融资"],
-            "compliance": ["合规", "监管", "制度", "规定", "法规", "标准"]
+            "family_law": ["离婚", "婚姻", "夫妻", "配偶", "妻子", "丈夫", "老公", "老婆", 
+                          "抚养权", "抚养费", "子女抚养", "孩子", "抚养", "探视", "探视权",
+                          "财产分割", "财产", "分割", "房产", "房子", "存款", "股票", "车",
+                          "家暴", "暴力", "打人", "保护令", "打我", "老公打", "老婆打", "丈夫打", "妻子打",
+                          "出轨", "分居", "彩礼", "感情", "结婚证", "领证"],
+            "commercial": ["合同", "协议", "公司", "企业", "商事", "股权", "股东", "投资", "融资",
+                          "起草", "审查", "风险", "签约", "签约"],
+            "compliance": ["合规", "监管", "制度", "规定", "法规", "标准", "审计", "内控"]
         }
         
         logger.info("🧠 主脑智能体初始化完成（新架构：单一宁律师 + 动态人设 + 知识检索）")
@@ -106,8 +111,12 @@ class MasterBrain:
         legal_scenarios = ["family_law", "commercial", "compliance"]
         if scenario in legal_scenarios:
             logger.info(f"📚 触发知识检索（场景={scenario}）")
-            knowledge = knowledge_retriever.retrieve(user_input, scenario)
-            context["knowledge"] = knowledge
+            try:
+                knowledge = knowledge_retriever.retrieve(user_input, scenario)
+                context["knowledge"] = knowledge
+            except Exception as e:
+                logger.warning(f"⚠️ 知识检索失败，降级处理：{e}")
+                context["knowledge"] = ""  # 知识检索失败时使用空字符串
         else:
             context["knowledge"] = ""  # 情感场景无需知识
         
@@ -171,7 +180,7 @@ class MasterBrain:
         # 从缓存获取
         if user_id:
             try:
-                from storage.redis_client import RedisClient
+                from src.utils.redis_client import RedisClient
                 redis_client = RedisClient()
                 user_type = redis_client.get_user_type(user_id)
                 if user_type:
@@ -230,20 +239,27 @@ class MasterBrain:
             )
             
             content = response.content.strip()
+            logger.debug(f"📝 意图识别返回：{content[:200]}...")
             
             # 解析 JSON
-            json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
-            if json_match:
-                decision = json.loads(json_match.group())
-            else:
-                decision = json.loads(content)
-            
-            logger.info(f"✅ 意图识别成功：{decision.get('skill')}")
-            
-            return {
-                "success": True,
-                "data": decision
-            }
+            try:
+                json_match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+                if json_match:
+                    decision = json.loads(json_match.group())
+                else:
+                    decision = json.loads(content)
+                
+                logger.info(f"✅ 意图识别成功：{decision.get('skill')}")
+                
+                return {
+                    "success": True,
+                    "data": decision
+                }
+            except json.JSONDecodeError as e:
+                logger.error(f"❌ JSON解析失败：{e}")
+                logger.debug(f"原始内容：{content}")
+                # 降级策略：使用关键词匹配
+                return self._fallback_intent_recognition(user_input, context)
             
         except Exception as e:
             logger.error(f"❌ 意图识别失败：{str(e)}")
@@ -276,7 +292,7 @@ class MasterBrain:
             }
         
         # 财产分割
-        elif any(keyword in question_lower for keyword in ["财产分割", "财产", "分割", "房子怎么分", "房产分割", "存款分割", "股票分割"]):
+        elif any(keyword in question_lower for keyword in ["财产分割", "财产", "分割", "房产", "房子", "存款", "股票", "车", "怎么分"]):
             return {
                 "success": True,
                 "data": {

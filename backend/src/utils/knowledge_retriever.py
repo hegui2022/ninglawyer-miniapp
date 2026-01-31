@@ -43,7 +43,7 @@ class KnowledgeRetriever:
         # Redis客户端（用于缓存）
         self.redis_client = None
         try:
-            from storage.redis_client import RedisClient
+            from src.utils.redis_client import RedisClient
             self.redis_client = RedisClient()
         except Exception as e:
             logger.warning(f"⚠️ Redis客户端初始化失败，知识检索将不缓存：{e}")

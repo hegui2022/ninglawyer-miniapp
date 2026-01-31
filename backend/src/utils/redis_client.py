@@ -79,6 +79,51 @@ class RedisClient:
         if self._client:
             self._client.close()
             logger.info("Redis连接已关闭")
+    
+    def get_user_type(self, user_id: int) -> Optional[str]:
+        """
+        获取用户类型
+        
+        Args:
+            user_id: 用户ID
+        
+        Returns:
+            用户类型 (personal/corporate) 或 None
+        """
+        if not self.is_connected():
+            return None
+        
+        try:
+            key = f"user_type:{user_id}"
+            user_type = self._client.get(key)
+            return user_type
+        except Exception as e:
+            logger.error(f"获取用户类型失败: {str(e)}")
+            return None
+    
+    def set_user_type(self, user_id: int, user_type: str, ttl: int = 3600) -> bool:
+        """
+        设置用户类型
+        
+        Args:
+            user_id: 用户ID
+            user_type: 用户类型 (personal/corporate)
+            ttl: 过期时间（秒），默认1小时
+        
+        Returns:
+            是否设置成功
+        """
+        if not self.is_connected():
+            return False
+        
+        try:
+            key = f"user_type:{user_id}"
+            self._client.setex(key, ttl, user_type)
+            logger.info(f"用户类型设置成功: user_id={user_id}, type={user_type}")
+            return True
+        except Exception as e:
+            logger.error(f"设置用户类型失败: {str(e)}")
+            return False
 
 
 # ============================================

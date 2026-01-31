@@ -51,7 +51,7 @@ class MasterBrain:
         
         # 场景关键词映射
         self.scenario_keywords = {
-            "family_law": ["离婚", "婚姻", "夫妻", "抚养权", "财产分割", "家暴", "出轨", "分居", "彩礼", "抚养费", "配偶"],
+            "family_law": ["离婚", "婚姻", "夫妻", "抚养权", "财产分割", "家暴", "出轨", "分居", "彩礼", "抚养费", "配偶", "孩子", "房子怎么分", "抚养", "打人", "保护令", "他打我", "他老婆"],
             "commercial": ["合同", "公司", "企业", "商事", "股权", "股东", "投资", "融资"],
             "compliance": ["合规", "监管", "制度", "规定", "法规", "标准"]
         }
@@ -240,48 +240,53 @@ class MasterBrain:
         """
         question_lower = user_input.lower()
         
-        # 婚姻家事相关
-        if any(keyword in question_lower for keyword in ["离婚", "婚姻", "夫妻", "抚养", "财产分割", "家暴", "出轨", "分居", "彩礼"]):
-            if "流程" in question_lower or "怎么" in question_lower:
-                return {
-                    "success": True,
-                    "data": {
-                        "skill": "divorce_procedure",
-                        "confidence": 0.85,
-                        "reasoning": "关键词匹配到离婚流程功能",
-                        "parameters": user_input
-                    }
+        # 家暴维权（优先级最高）
+        if any(keyword in question_lower for keyword in ["家暴", "暴力", "打人", "保护令", "打我", "老公打", "老婆打", "丈夫打", "妻子打"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "domestic_violence",
+                    "confidence": 0.9,
+                    "reasoning": "关键词匹配到家暴维权功能",
+                    "parameters": user_input
                 }
-            elif "财产" in question_lower or "分割" in question_lower:
-                return {
-                    "success": True,
-                    "data": {
-                        "skill": "property_division",
-                        "confidence": 0.85,
-                        "reasoning": "关键词匹配到财产分割功能",
-                        "parameters": user_input
-                    }
+            }
+        
+        # 财产分割
+        elif any(keyword in question_lower for keyword in ["财产分割", "财产", "分割", "房子怎么分", "房产分割", "存款分割", "股票分割"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "property_division",
+                    "confidence": 0.85,
+                    "reasoning": "关键词匹配到财产分割功能",
+                    "parameters": user_input
                 }
-            elif "抚养" in question_lower or "孩子" in question_lower:
-                return {
-                    "success": True,
-                    "data": {
-                        "skill": "child_custody",
-                        "confidence": 0.85,
-                        "reasoning": "关键词匹配到子女抚养功能",
-                        "parameters": user_input
-                    }
+            }
+        
+        # 子女抚养
+        elif any(keyword in question_lower for keyword in ["抚养权", "抚养费", "子女抚养", "孩子归谁", "孩子抚养", "探视权", "探视"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "child_custody",
+                    "confidence": 0.85,
+                    "reasoning": "关键词匹配到子女抚养功能",
+                    "parameters": user_input
                 }
-            elif "家暴" in question_lower or "暴力" in question_lower:
-                return {
-                    "success": True,
-                    "data": {
-                        "skill": "domestic_violence",
-                        "confidence": 0.9,
-                        "reasoning": "关键词匹配到家暴维权功能",
-                        "parameters": user_input
-                    }
+            }
+        
+        # 离婚流程
+        elif any(keyword in question_lower for keyword in ["离婚流程", "怎么离婚", "离婚", "离婚材料", "协议离婚", "诉讼离婚"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "divorce_procedure",
+                    "confidence": 0.85,
+                    "reasoning": "关键词匹配到离婚流程功能",
+                    "parameters": user_input
                 }
+            }
         
         # 脱敏
         elif any(keyword in question_lower for keyword in ["脱敏", "隐私", "匿名", "隐藏", "xxx"]):
@@ -295,28 +300,29 @@ class MasterBrain:
                 }
             }
         
-        # 合同
-        elif any(keyword in question_lower for keyword in ["合同", "协议", "起草", "审查"]):
-            if "审查" in question_lower or "风险" in question_lower:
-                return {
-                    "success": True,
-                    "data": {
-                        "skill": "contract_review",
-                        "confidence": 0.85,
-                        "reasoning": "关键词匹配到合同审查功能",
-                        "parameters": user_input
-                    }
+        # 合同审查
+        elif any(keyword in question_lower for keyword in ["合同审查", "合同风险", "审查合同"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "contract_review",
+                    "confidence": 0.85,
+                    "reasoning": "关键词匹配到合同审查功能",
+                    "parameters": user_input
                 }
-            else:
-                return {
-                    "success": True,
-                    "data": {
-                        "skill": "contract_draft",
-                        "confidence": 0.85,
-                        "reasoning": "关键词匹配到合同起草功能",
-                        "parameters": user_input
-                    }
+            }
+        
+        # 合同起草
+        elif any(keyword in question_lower for keyword in ["合同起草", "起草合同", "合同", "协议", "协议起草"]):
+            return {
+                "success": True,
+                "data": {
+                    "skill": "contract_draft",
+                    "confidence": 0.85,
+                    "reasoning": "关键词匹配到合同起草功能",
+                    "parameters": user_input
                 }
+            }
         
         # 法律咨询（默认）
         else:

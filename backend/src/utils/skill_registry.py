@@ -25,17 +25,9 @@ class SkillRegistry:
     def __init__(self):
         self.skills: Dict[str, Dict[str, Any]] = {}
         
-        # 根据环境变量决定是否自动注册
-        auto_register = os.getenv("SKILL_AUTO_REGISTER", "true") == "true"
-        
-        if auto_register:
-            logger.info("📋 启用自动发现模式，扫描 skills/ 目录...")
-            self.auto_register()
-        else:
-            logger.info("📋 启用手动注册模式，注册核心技能...")
-            self._manual_register_core_skills()
-        
-        logger.info(f"✅ 技能注册表初始化完成，共注册 {len(self.skills)} 个技能")
+        # 默认使用手动注册模式（避免循环导入）
+        logger.info("📋 技能注册表初始化完成（手动注册模式）")
+        logger.info("💡 提示：请通过 skills.register_all_skills() 注册技能")
     
     def auto_register(self):
         """自动扫描 skills/ 目录并注册技能"""
@@ -51,7 +43,7 @@ class SkillRegistry:
         
         for file in os.listdir(skills_dir):
             if file.endswith("_skill.py") and not file.startswith("__"):
-                module_name = f"skills.{file[:-3]}"
+                module_name = f"src.skills.{file[:-3]}"
                 try:
                     module = importlib.import_module(module_name)
                     
@@ -87,7 +79,7 @@ class SkillRegistry:
         
         for skill_name, description, category in core_skills:
             try:
-                module_name = f"skills.{skill_name}_skill"
+                module_name = f"src.skills.{skill_name}_skill"
                 module = importlib.import_module(module_name)
                 skill_func = getattr(module, f"execute_{skill_name}")
                 

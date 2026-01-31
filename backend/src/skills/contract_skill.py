@@ -144,24 +144,6 @@ class ContractSkill:
             result = json.loads(content)
         
         return result
-
-
-# 全局实例
-_contract_skill = ContractSkill()
-
-
-def execute_contract(user_input: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
-    """
-    执行合同技能（全局函数，用于注册到技能注册表）
-    
-    Args:
-        user_input: 用户输入
-        context: 上下文信息
-        
-    Returns:
-        合同处理结果
-    """
-    return _contract_skill.execute(user_input, context)
     
     def _review_contract(self, contract_content: str) -> Dict[str, Any]:
         """

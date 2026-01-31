@@ -58,6 +58,24 @@ def register_all_skills():
         category="legal"
     )
     
+    # 注册合同风险识别技能
+    from src.skills.contract_risk_skill import execute_contract_risk
+    skill_registry.register_skill(
+        skill_name="contract_risk",
+        skill_func=execute_contract_risk,
+        description="识别合同中的各类法律风险（违约风险、条款缺失、责任不清等）",
+        category="legal"
+    )
+    
+    # 注册风险等级评估技能
+    from src.skills.risk_assessment_skill import execute_risk_assessment
+    skill_registry.register_skill(
+        skill_name="risk_assessment",
+        skill_func=execute_risk_assessment,
+        description="对业务场景、法律问题或合同进行整体风险评估（风险等级、评分、防控建议）",
+        category="legal"
+    )
+    
     # 注册婚姻家事技能
     _register_family_law_skills()
     

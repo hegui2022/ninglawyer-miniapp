@@ -76,6 +76,42 @@ def register_all_skills():
         category="legal"
     )
     
+    # 注册案例查询技能
+    from src.skills.case_query_skill import execute_case_query
+    skill_registry.register_skill(
+        skill_name="case_query",
+        skill_func=execute_case_query,
+        description="查询相关案例和判决结果（怎么判小程序）",
+        category="legal"
+    )
+    
+    # 注册合同提醒技能
+    from src.skills.contract_reminder_skill import execute_contract_reminder
+    skill_registry.register_skill(
+        skill_name="contract_reminder",
+        skill_func=execute_contract_reminder,
+        description="管理合同提醒（乐约小程序）",
+        category="legal"
+    )
+    
+    # 注册律师统计技能
+    from src.skills.lawyer_statistics_skill import execute_lawyer_statistics
+    skill_registry.register_skill(
+        skill_name="lawyer_statistics",
+        skill_func=execute_lawyer_statistics,
+        description="统计律师业绩和案例数据（法律教官小程序）",
+        category="legal"
+    )
+    
+    # 注册电子签名技能
+    from src.skills.electronic_signature_skill import execute_electronic_signature
+    skill_registry.register_skill(
+        skill_name="electronic_signature",
+        skill_func=execute_electronic_signature,
+        description="电子签名功能（码上签约小程序）",
+        category="legal"
+    )
+    
     # 注册婚姻家事技能
     _register_family_law_skills()
     

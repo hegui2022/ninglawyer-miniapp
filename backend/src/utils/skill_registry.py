@@ -1,58 +1,170 @@
 """
-服务注册表（Skill Registry）
-用于注册和管理所有技能模块
+技能注册表
+支持自动发现和手动注册，统一管理所有技能
 """
 
+import os
+import importlib
 from typing import Dict, Callable, Any, Optional
+from datetime import datetime
 from loguru import logger
-from src.config.subscription import check_permission
+from .exception_handler import exception_handler, RouteError, SkillExecutionError, ExceptionLevel
 
 
 class SkillRegistry:
-    """技能注册表"""
+    """
+    技能注册表
+    
+    功能：
+    - 自动扫描 skills/ 目录并注册技能（开发阶段）
+    - 手动注册核心技能（生产阶段）
+    - 执行技能（带异常处理）
+    - 列出所有技能
+    """
     
     def __init__(self):
-        self._skills: Dict[str, Dict[str, Any]] = {}
-        self._db_session = None  # 数据库会话，用于权限检查
-        logger.info("📋 技能注册表初始化完成")
+        self.skills: Dict[str, Dict[str, Any]] = {}
+        
+        # 根据环境变量决定是否自动注册
+        auto_register = os.getenv("SKILL_AUTO_REGISTER", "true") == "true"
+        
+        if auto_register:
+            logger.info("📋 启用自动发现模式，扫描 skills/ 目录...")
+            self.auto_register()
+        else:
+            logger.info("📋 启用手动注册模式，注册核心技能...")
+            self._manual_register_core_skills()
+        
+        logger.info(f"✅ 技能注册表初始化完成，共注册 {len(self.skills)} 个技能")
     
-    def set_db_session(self, db_session):
-        """设置数据库会话"""
-        self._db_session = db_session
+    def auto_register(self):
+        """自动扫描 skills/ 目录并注册技能"""
+        import os.path
+        
+        skills_dir = os.path.join(os.path.dirname(__file__), "../skills")
+        
+        if not os.path.exists(skills_dir):
+            logger.warning(f"⚠️ skills 目录不存在：{skills_dir}")
+            return
+        
+        logger.info(f"🔍 正在扫描目录：{skills_dir}")
+        
+        for file in os.listdir(skills_dir):
+            if file.endswith("_skill.py") and not file.startswith("__"):
+                module_name = f"skills.{file[:-3]}"
+                try:
+                    module = importlib.import_module(module_name)
+                    
+                    # 查找以 execute_ 开头的函数
+                    for name in dir(module):
+                        if name.startswith("execute_") and callable(getattr(module, name)):
+                            skill_name = name.replace("execute_", "")
+                            skill_func = getattr(module, name)
+                            
+                            self.register_skill(
+                                skill_name=skill_name,
+                                skill_func=skill_func,
+                                description=getattr(skill_func, "__doc__", skill_name),
+                                category=self._infer_category(skill_name),
+                                module=module_name
+                            )
+                
+                except Exception as e:
+                    logger.error(f"❌ 加载技能模块 {module_name} 失败：{e}")
+        
+        logger.info(f"✅ 自动注册完成，共注册 {len(self.skills)} 个技能")
     
-    def register(self, 
-                 skill_name: str,
-                 description: str,
-                 execute_func: Callable,
-                 category: str = "general",
-                 required_subscription: str = "basic"):
+    def _manual_register_core_skills(self):
+        """手动注册核心技能（生产环境）"""
+        # 婚姻家事技能
+        core_skills = [
+            ("divorce_procedure", "离婚流程说明", "family_law"),
+            ("property_division", "财产分割计算", "family_law"),
+            ("child_custody", "子女抚养权", "family_law"),
+            ("domestic_violence", "家暴维权", "family_law"),
+            ("alimony_calculation", "抚养费计算", "family_law"),
+        ]
+        
+        for skill_name, description, category in core_skills:
+            try:
+                module_name = f"skills.{skill_name}_skill"
+                module = importlib.import_module(module_name)
+                skill_func = getattr(module, f"execute_{skill_name}")
+                
+                self.register_skill(
+                    skill_name=skill_name,
+                    skill_func=skill_func,
+                    description=description,
+                    category=category,
+                    module=module_name
+                )
+            
+            except Exception as e:
+                logger.error(f"❌ 注册技能 {skill_name} 失败：{e}")
+        
+        logger.info(f"✅ 手动注册完成，共注册 {len(self.skills)} 个核心技能")
+    
+    def register_skill(
+        self,
+        skill_name: str,
+        skill_func: Callable,
+        description: str = "",
+        category: str = "general",
+        module: str = "",
+        tags: list = None
+    ):
         """
         注册技能
         
         Args:
             skill_name: 技能名称
+            skill_func: 技能函数
             description: 技能描述
-            execute_func: 技能执行函数
             category: 技能分类
-            required_subscription: 需要的套餐类型
+            module: 所属模块
+            tags: 技能标签
         """
-        self._skills[skill_name] = {
-            "name": skill_name,
+        self.skills[skill_name] = {
+            "func": skill_func,
             "description": description,
-            "execute": execute_func,
             "category": category,
-            "required_subscription": required_subscription
+            "module": module,
+            "tags": tags or [],
+            "registered_at": datetime.now().isoformat()
         }
-        logger.info(f"✅ 注册技能：{skill_name} ({category}) - 需要{required_subscription}套餐")
+        logger.info(f"✅ 注册技能：{skill_name} ({description}) [{category}]")
     
-    def get_skill(self, skill_name: str) -> Optional[Dict[str, Any]]:
-        """获取技能"""
-        skill = self._skills.get(skill_name)
-        if skill:
-            return skill
-        else:
-            logger.warning(f"⚠️ 未找到技能：{skill_name}")
-            return None
+    @exception_handler(
+        default_return={"success": False, "reply": "抱歉，我暂时还不了解这个问题～"},
+        log_level=ExceptionLevel.ERROR
+    )
+    def execute(self, skill_name: str, user_input: str, context: dict) -> dict:
+        """
+        执行技能
+        
+        Args:
+            skill_name: 技能名称
+            user_input: 用户输入
+            context: 上下文信息
+        
+        Returns:
+            执行结果
+        """
+        if skill_name not in self.skills:
+            logger.warning(f"⚠️ 技能不存在：{skill_name}")
+            raise RouteError(f"技能不存在：{skill_name}")
+        
+        skill_info = self.skills[skill_name]
+        logger.info(f"🚀 执行技能：{skill_name}")
+        
+        try:
+            result = skill_info["func"](user_input, context)
+            logger.info(f"✅ 技能执行完成：{skill_name}")
+            return result
+        
+        except Exception as e:
+            logger.error(f"❌ 技能执行异常：{skill_name} - {e}")
+            raise SkillExecutionError(f"技能 {skill_name} 执行失败：{e}")
     
     def list_skills(self, category: str = None) -> Dict[str, Dict[str, Any]]:
         """
@@ -60,108 +172,78 @@ class SkillRegistry:
         
         Args:
             category: 筛选分类，None表示全部
+        
+        Returns:
+            技能列表
         """
         if category:
             return {
-                name: skill 
-                for name, skill in self._skills.items() 
-                if skill["category"] == category
+                name: skill
+                for name, skill in self.skills.items()
+                if skill.get("category") == category
             }
-        return self._skills.copy()
+        return self.skills.copy()
     
-    def check_user_permission(self, skill_name: str, user_id: Optional[int] = None, 
-                             user_subscription: Optional[str] = None) -> Dict[str, Any]:
+    def get_skill_info(self, skill_name: str) -> Optional[Dict[str, Any]]:
         """
-        检查用户是否有权限使用某个技能
+        获取技能信息
         
         Args:
             skill_name: 技能名称
-            user_id: 用户ID
-            user_subscription: 用户套餐类型（可选，如果不传则通过user_id查询）
         
         Returns:
-            检查结果：{"has_permission": bool, "error": str}
+            技能信息
         """
-        skill = self.get_skill(skill_name)
-        if not skill:
-            return {
-                "has_permission": False,
-                "error": f"技能不存在：{skill_name}"
-            }
-        
-        # 如果没有提供用户订阅信息，尝试从数据库查询
-        if not user_subscription and user_id and self._db_session:
-            try:
-                from src.models.models import User
-                user = self._db_session.query(User).filter(User.id == user_id).first()
-                if user:
-                    user_subscription = user.subscription_type
-            except Exception as e:
-                logger.error(f"查询用户套餐失败：{str(e)}")
-                user_subscription = "basic"  # 默认基础版
-        
-        # 如果还是没有订阅信息，默认为基础版
-        if not user_subscription:
-            user_subscription = "basic"
-        
-        # 检查权限
-        if check_permission(user_subscription, skill["required_subscription"]):
-            return {
-                "has_permission": True,
-                "error": None
-            }
-        else:
-            return {
-                "has_permission": False,
-                "error": f"您没有权限使用此功能，需要{skill['required_subscription']}套餐或更高",
-                "required_subscription": skill["required_subscription"]
-            }
+        return self.skills.get(skill_name)
     
-    def execute_skill(self, skill_name: str, user_id: Optional[int] = None, 
-                     user_subscription: Optional[str] = None, *args, **kwargs) -> Any:
+    def skill_exists(self, skill_name: str) -> bool:
         """
-        执行技能（带权限检查）
+        检查技能是否存在
         
         Args:
             skill_name: 技能名称
-            user_id: 用户ID（用于权限检查）
-            user_subscription: 用户套餐类型（用于权限检查）
-            *args, **kwargs: 技能参数
-            
+        
         Returns:
-            技能执行结果
+            是否存在
         """
-        skill = self.get_skill(skill_name)
-        if not skill:
-            return {
-                "success": False,
-                "error": f"未找到技能：{skill_name}"
-            }
+        return skill_name in self.skills
+    
+    def _infer_category(self, skill_name: str) -> str:
+        """
+        推断技能分类
         
-        # 权限检查
-        permission_check = self.check_user_permission(skill_name, user_id, user_subscription)
-        if not permission_check["has_permission"]:
-            logger.warning(f"⚠️ 用户无权限使用技能：{skill_name}")
-            return {
-                "success": False,
-                "error": permission_check["error"],
-                "upgrade_required": True,
-                "required_subscription": skill.get("required_subscription", "premium")
-            }
+        Args:
+            skill_name: 技能名称
         
-        # 执行技能
-        try:
-            logger.info(f"🔧 执行技能：{skill_name}")
-            result = skill["execute"](*args, **kwargs)
-            logger.info(f"✅ 技能执行完成：{skill_name}")
-            return result
-        except Exception as e:
-            logger.error(f"❌ 技能执行失败：{skill_name} - {str(e)}")
-            return {
-                "success": False,
-                "error": f"技能执行错误：{str(e)}"
-            }
+        Returns:
+            分类名称
+        """
+        category_map = {
+            "divorce": "family_law",
+            "property": "family_law",
+            "child": "family_law",
+            "custody": "family_law",
+            "domestic": "family_law",
+            "violence": "family_law",
+            "alimony": "family_law",
+            "contract": "commercial",
+            "company": "commercial",
+            "compliance": "compliance",
+        }
+        
+        for keyword, category in category_map.items():
+            if keyword in skill_name:
+                return category
+        
+        return "general"
 
 
-# 全局技能注册表实例
+# 全局实例
 skill_registry = SkillRegistry()
+
+
+# 导出
+__all__ = [
+    'SkillRegistry',
+    'skill_registry',
+]

@@ -1,12 +1,13 @@
 """
 主脑智能体（Master Brain）
 负责任务路由和协调各个技能模块
+新架构：单一宁律师 + 主脑调度技能
 """
 
 import os
 import re
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from loguru import logger
 
 from coze_coding_dev_sdk import LLMClient
@@ -17,7 +18,7 @@ from src.prompts.manager import PromptManager
 
 
 class MasterBrain:
-    """主脑智能体"""
+    """主脑智能体 - 负责识别用户意图并调度技能"""
     
     def __init__(self, model: str = "doubao-seed-1-8-251228"):
         """
@@ -32,11 +33,13 @@ class MasterBrain:
         # 获取提示词模板（从提示词管理器）
         self.prompt_template = PromptManager.get_skill_prompt('master_brain')
         
-        logger.info("🧠 主脑智能体初始化完成")
+        logger.info("🧠 主脑智能体初始化完成（新架构：单一宁律师 + 技能调度）")
     
     def route(self, user_input: str, user_id: int = None, context: Dict[str, Any] = None) -> Dict[str, Any]:
         """
-        路由请求到对应技能（带权限检查）
+        路由请求到对应技能
+        
+        新架构：直接路由到技能，由宁律师统一处理
         
         Args:
             user_input: 用户输入
@@ -57,7 +60,7 @@ class MasterBrain:
         skill_name = routing_decision["data"]["skill"]
         confidence = routing_decision["data"]["confidence"]
         
-        logger.info(f"🎯 路由到：{skill_name} (置信度：{confidence:.2f})")
+        logger.info(f"🎯 路由到技能：{skill_name} (置信度：{confidence:.2f})")
         
         # 2. 执行技能
         try:
@@ -213,7 +216,8 @@ class MasterBrain:
         
         # 检查权限
         if user_id:
-            if not skill_registry.check_permission(user_id, skill_name):
+            permission_check = skill_registry.check_user_permission(skill_name, user_id)
+            if not permission_check["has_permission"]:
                 logger.warning(f"⚠️ 用户无权限使用技能：{skill_name}")
                 return {
                     "success": False,
@@ -223,7 +227,7 @@ class MasterBrain:
         
         # 执行技能
         logger.info(f"🚀 执行技能：{skill_name}")
-        result = skill.execute(user_input, context)
+        result = skill["execute"](user_input, context)
         
         return result
 

@@ -34,15 +34,17 @@ class PersonalitySelector:
         self,
         user_type: str = "personal",
         scenario: str = "general",
-        force_personality: str = None
+        force_personality: str = None,
+        app_id: str = None
     ) -> str:
         """
-        根据用户类型和场景选择人设
+        根据用户类型、场景和小程序选择人设
         
         Args:
             user_type: 用户类型 ("personal" | "corporate")
             scenario: 场景类型 ("family_law" | "commercial" | "compliance" | "general")
             force_personality: 强制指定人设（用于测试或特殊场景）
+            app_id: 小程序标识（用于调整人设策略）
         
         Returns:
             人设ID
@@ -52,10 +54,17 @@ class PersonalitySelector:
             logger.info(f"🎭 强制使用人设：{force_personality}")
             return force_personality
         
+        # 根据小程序标识调整人设策略
+        if app_id:
+            # 文本脱敏小程序使用专业严谨型
+            if app_id == 'miniprogram_desensitize':
+                logger.info(f"🎭 小程序专用人设：{app_id} → 专业严谨型")
+                return "professional_personal"
+        
         # 获取人设
         try:
             personality_id = self.personality_map[user_type][scenario]
-            logger.info(f"🎭 选择人设：用户类型={user_type}, 场景={scenario}, 人设={personality_id}")
+            logger.info(f"🎭 选择人设：用户类型={user_type}, 场景={scenario}, 小程序={app_id}, 人设={personality_id}")
             return personality_id
         except KeyError:
             # 如果找不到对应人设，返回默认人设

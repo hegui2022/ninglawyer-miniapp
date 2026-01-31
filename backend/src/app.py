@@ -1,14 +1,16 @@
 """
 Flask应用主文件
+统一API网关，支持6个小程序调用
 """
 
 import os
 import sys
 import logging
 from logging.handlers import RotatingFileHandler
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
+from loguru import logger
 
 # 加载环境变量
 load_dotenv()
@@ -20,6 +22,21 @@ from utils.database import init_db, get_db
 from routes.auth import auth_bp
 from routes.consultation import consultation_bp
 from routes.contract import contract_bp
+from agents.master_brain import master_brain
+from utils.skill_registry import skill_registry
+
+# ============================================
+# 小程序标识映射
+# ============================================
+
+APP_IDS = {
+    'miniprogram_civil': '民事咨询',
+    'miniprogram_family': '婚姻家事',
+    'miniprogram_contract_draft': '合同起草',
+    'miniprogram_contract_review': '合同审查',
+    'miniprogram_desensitize': '文本脱敏',
+    'miniprogram_contract_reminder': '合同提醒'
+}
 
 # ============================================
 # 配置日志
@@ -73,12 +90,21 @@ def create_app():
     """创建Flask应用"""
     app = Flask(__name__)
     
-    # 配置CORS
+    # 配置CORS（支持环境变量限制域名）
+    allowed_origins = os.getenv('ALLOWED_ORIGINS', '*')
+    if allowed_origins != '*':
+        allowed_origins_list = [origin.strip() for origin in allowed_origins.split(',')]
+    else:
+        allowed_origins_list = '*'
+    
     CORS(app, resources={
         r"/api/*": {
-            "origins": "*",
+            "origins": allowed_origins_list,
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"]
+        },
+        r"/health": {
+            "origins": "*"
         }
     })
     
@@ -120,8 +146,150 @@ def create_app():
         return jsonify({
             "status": "ok",
             "service": "legal-assistant-backend",
-            "version": "1.0.0"
+            "version": "1.0.0",
+            "skills": list(skill_registry.list_skills().keys())
         })
+    
+    # ============================================
+    # 统一聊天接口（支持所有小程序）
+    # ============================================
+    
+    @app.route('/api/v1/chat', methods=['POST'])
+    def chat():
+        """
+        统一聊天接口
+        所有小程序都调用这个接口
+        """
+        try:
+            data = request.json
+            user_input = data.get('message', '')
+            user_id = data.get('user_id')
+            app_id = data.get('app_id', 'default')
+            
+            # 验证参数
+            if not user_input:
+                return jsonify({
+                    "success": False,
+                    "error": "缺少参数: message"
+                }), 400
+            
+            # 根据app_id获取小程序名称
+            app_name = APP_IDS.get(app_id, '通用')
+            logger.info(f"收到聊天请求 - 小程序: {app_name} ({app_id}), 用户: {user_id}, 消息: {user_input[:50]}...")
+            
+            # 构建上下文
+            context = {
+                'app_id': app_id,
+                'app_name': app_name,
+                'user_id': user_id
+            }
+            
+            # 主脑路由
+            result = master_brain.route(
+                user_input=user_input,
+                user_id=user_id,
+                context=context
+            )
+            
+            logger.info(f"聊天请求完成 - 技能: {result.get('skill_used')}, 场景: {result.get('scenario_used')}")
+            
+            return jsonify(result)
+        
+        except Exception as e:
+            logger.error(f"聊天接口异常: {e}", exc_info=True)
+            return jsonify({
+                "success": False,
+                "error": str(e)
+            }), 500
+    
+    # ============================================
+    # 技能执行接口（直接调用指定技能）
+    # ============================================
+    
+    @app.route('/api/v1/skills/<skill_name>', methods=['POST'])
+    def execute_skill(skill_name):
+        """
+        直接调用指定技能
+        支持小程序定制功能
+        """
+        try:
+            data = request.json
+            user_input = data.get('message', '')
+            user_id = data.get('user_id')
+            app_id = data.get('app_id', 'default')
+            
+            # 验证参数
+            if not user_input:
+                return jsonify({
+                    "success": False,
+                    "error": "缺少参数: message"
+                }), 400
+            
+            # 检查技能是否存在
+            if not skill_registry.skill_exists(skill_name):
+                return jsonify({
+                    "success": False,
+                    "error": f"技能不存在: {skill_name}"
+                }), 404
+            
+            logger.info(f"执行技能 - 技能: {skill_name}, 小程序: {app_id}, 用户: {user_id}")
+            
+            # 构建上下文
+            context = {
+                'user_id': user_id,
+                'app_id': app_id,
+                'app_name': APP_IDS.get(app_id, '通用')
+            }
+            
+            # 执行技能
+            result = skill_registry.execute(
+                skill_name=skill_name,
+                user_input=user_input,
+                context=context
+            )
+            
+            return jsonify(result)
+        
+        except Exception as e:
+            logger.error(f"技能执行异常: {e}", exc_info=True)
+            return jsonify({
+                "success": False,
+                "error": str(e)
+            }), 500
+    
+    # ============================================
+    # 技能列表接口
+    # ============================================
+    
+    @app.route('/api/v1/skills', methods=['GET'])
+    def list_skills():
+        """
+        获取所有技能列表
+        """
+        try:
+            category = request.args.get('category')
+            skills = skill_registry.list_skills(category)
+            
+            result = {
+                "success": True,
+                "skills": [
+                    {
+                        "name": skill_name,
+                        "description": skill_info.get('description', ''),
+                        "category": skill_info.get('category', '')
+                    }
+                    for skill_name, skill_info in skills.items()
+                ]
+            }
+            
+            return jsonify(result)
+        
+        except Exception as e:
+            logger.error(f"获取技能列表异常: {e}", exc_info=True)
+            return jsonify({
+                "success": False,
+                "error": str(e)
+            }), 500
     
     # ============================================
     # 404错误处理

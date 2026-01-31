@@ -102,10 +102,11 @@ class MasterBrain:
         context["scenario"] = scenario
         
         # 3. 选择人设（静默切换，不告知用户）
-        personality_id = self.personality_selector.select(user_type, scenario)
+        # 根据小程序标识、用户类型和场景选择人设
+        personality_id = self.personality_selector.select(user_type, scenario, app_id=context.get('app_id'))
         context["personality_id"] = personality_id
         
-        logger.info(f"🎭 选择人设：{personality_id} (用户类型={user_type}, 场景={scenario})")
+        logger.info(f"🎭 选择人设：{personality_id} (用户类型={user_type}, 场景={scenario}, 小程序={context.get('app_id', 'default')})")
         
         # 4. 智能触发知识检索（仅法律场景）
         legal_scenarios = ["family_law", "commercial", "compliance"]

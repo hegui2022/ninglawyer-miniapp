@@ -19,32 +19,51 @@
 ## 🗂️ 项目结构
 
 ```
-backend/
-├── config/
-│   └── agents_config.json      # 扣子智能体配置
-├── docs/
-│   └── DECISIONS.md            # 项目决策记录
-├── scripts/
-│   ├── init_db.py              # 数据库初始化脚本
-│   └── test_api.py             # API测试脚本
-├── src/
-│   ├── models/
-│   │   └── v1_models.py        # 数据库模型
-│   ├── routes/
-│   │   ├── auth.py             # 认证路由
-│   │   ├── consultation.py     # 咨询路由
-│   │   └── contract.py         # 合同路由
-│   ├── services/
-│   │   ├── auth.py             # 认证服务
-│   │   └── coze_agent.py       # 扣子智能体服务
-│   ├── utils/
-│   │   ├── database.py         # 数据库配置
-│   │   └── redis_client.py     # Redis客户端
-│   └── app.py                  # Flask应用主文件
-├── .env                        # 环境变量配置
-├── .env.example                # 环境变量示例
-├── requirements.txt            # Python依赖
-└── README.md                   # 本文档
+.
+├── scripts/                      # 部署脚本
+│   └── setup.sh                  # 部署前设置脚本
+├── backend/
+│   ├── config/
+│   │   └── agents_config.json    # 扣子智能体配置
+│   ├── docs/
+│   │   ├── DEPLOYMENT_FIX.md     # 部署问题修复记录
+│   │   ├── DEPLOYMENT_GUIDE.md   # 部署指南（重要！）
+│   │   ├── FRONTEND_ANALYSIS.md  # 前端分析报告
+│   │   └── DECISIONS.md          # 项目决策记录
+│   ├── scripts/
+│   │   ├── init_db.py            # 数据库初始化脚本
+│   │   ├── test_api.py           # API测试脚本
+│   │   └── test_voice.py         # 语音功能测试脚本
+│   ├── src/
+│   │   ├── models/
+│   │   │   └── v1_models.py      # 数据库模型
+│   │   ├── routes/
+│   │   │   ├── auth.py           # 认证路由
+│   │   │   ├── consultation.py   # 咨询路由
+│   │   │   └── contract.py       # 合同路由
+│   │   ├── services/
+│   │   │   ├── auth.py           # 认证服务
+│   │   │   ├── voice.py          # 语音服务
+│   │   │   └── coze_agent.py     # 扣子智能体服务
+│   │   ├── utils/
+│   │   │   ├── database.py       # 数据库配置
+│   │   │   └── redis_client.py   # Redis客户端
+│   │   └── app.py                # Flask应用主文件
+│   ├── logs/                     # 日志目录
+│   ├── assets/                   # 资源目录
+│   │   ├── images/
+│   │   ├── knowledge/
+│   │   └── templates/
+│   ├── .env                      # 环境变量配置
+│   ├── .env.example              # 环境变量示例
+│   ├── requirements.txt          # Python依赖
+│   ├── Dockerfile                # Docker配置
+│   └── README.md                 # 本文档
+├── miniprograms/                 # 小程序代码
+│   ├── ninglawyer-main/          # 宁律师主小程序
+│   ├── fangfengxian/             # 防风险小程序
+│   └── legal-instructor/         # 法律教官小程序
+└── README.md                     # 项目总览
 ```
 
 ## 🚀 快速开始
@@ -100,7 +119,22 @@ cd backend
 python scripts/init_db.py
 ```
 
-### 5. 启动服务
+### 5. 运行部署脚本（推荐）
+
+在部署前运行以下脚本以确保环境配置正确：
+
+```bash
+# 从项目根目录运行
+bash scripts/setup.sh
+```
+
+该脚本会：
+- 设置 PYTHONPATH 环境变量
+- 检查和创建 .env 配置文件
+- 检查数据库状态
+- 创建必要的目录（logs、assets等）
+
+### 6. 启动服务
 
 ```bash
 cd backend/src
@@ -416,7 +450,49 @@ redis-server
 
 如有问题，请联系开发团队。
 
+## 🚀 部署相关
+
+### 部署文档
+
+详细的部署指南请参考：
+
+- **[部署指南](docs/DEPLOYMENT_GUIDE.md)** - 完整的部署流程和配置说明
+- **[部署问题修复记录](docs/DEPLOYMENT_FIX.md)** - 常见部署问题及解决方案
+
+### 快速部署
+
+```bash
+# 1. 运行部署脚本
+bash scripts/setup.sh
+
+# 2. 配置环境变量
+cp backend/.env.example backend/.env
+# 编辑 backend/.env 文件
+
+# 3. 安装依赖
+cd backend
+pip install -r requirements.txt
+
+# 4. 初始化数据库
+python scripts/init_db.py
+
+# 5. 启动服务
+python src/main.py
+```
+
+### Docker 部署
+
+```bash
+cd backend
+docker build -t ninglawyer-backend:latest .
+docker run -d -p 5000:5000 --name ninglawyer-backend ninglawyer-backend:latest
+```
+
+### 云平台部署
+
+确保项目根目录存在 `scripts/setup.sh` 脚本（已包含），部署系统会自动运行该脚本进行环境初始化。
+
 ---
 
-**版本：** v1.0.0  
-**最后更新：** 2025-01-30
+**版本：** v1.0.0
+**最后更新：** 2026-01-31

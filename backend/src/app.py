@@ -5,6 +5,7 @@ Flask应用主文件
 
 import os
 import sys
+import json
 import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request
@@ -24,6 +25,8 @@ from routes.consultation import consultation_bp
 from routes.contract import contract_bp
 from agents.master_brain import master_brain
 from src.utils.skill_registry import skill_registry
+from src.utils.mask import mask_log, mask_dict
+from src.utils.env_config import check_required_env_vars, log_config
 
 # ============================================
 # 小程序标识映射
@@ -88,6 +91,13 @@ def setup_logging(app):
 
 def create_app():
     """创建Flask应用"""
+    # 检查必需的环境变量
+    if not check_required_env_vars():
+        raise RuntimeError("缺少必需的环境变量，请检查配置")
+    
+    # 记录配置信息
+    log_config()
+    
     app = Flask(__name__)
     
     # 配置CORS（支持环境变量限制域名）
@@ -111,6 +121,15 @@ def create_app():
     # 配置日志
     logger = setup_logging(app)
     logger.info("Flask应用启动中...")
+    
+    # 配置数据库连接池
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_size': 20,           # 连接池大小
+        'max_overflow': 40,        # 最大溢出连接数
+        'pool_timeout': 30,        # 连接超时时间（秒）
+        'pool_recycle': 3600,      # 连接回收时间（秒）
+        'pool_pre_ping': True,     # 连接前ping检查
+    }
     
     # 配置
     app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'default-secret-key')

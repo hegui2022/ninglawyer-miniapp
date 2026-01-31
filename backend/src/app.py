@@ -23,7 +23,7 @@ from routes.auth import auth_bp
 from routes.consultation import consultation_bp
 from routes.contract import contract_bp
 from agents.master_brain import master_brain
-from utils.skill_registry import skill_registry
+from src.utils.skill_registry import skill_registry
 
 # ============================================
 # 小程序标识映射
@@ -125,6 +125,17 @@ def create_app():
     app.register_blueprint(contract_bp)
     
     logger.info("蓝图注册完成")
+    
+    # ============================================
+    # 注册所有技能
+    # ============================================
+    
+    try:
+        from skills import register_all_skills
+        register_all_skills()
+        logger.info("技能注册完成")
+    except Exception as e:
+        logger.error(f"技能注册失败: {str(e)}")
     
     # ============================================
     # 初始化数据库
@@ -248,7 +259,17 @@ def create_app():
                 context=context
             )
             
-            return jsonify(result)
+            # 处理返回结果
+            if isinstance(result, str):
+                # 技能返回字符串，包装成标准格式
+                return jsonify({
+                    "success": True,
+                    "reply": result,
+                    "skill_used": skill_name
+                })
+            else:
+                # 技能返回字典，直接返回
+                return jsonify(result)
         
         except Exception as e:
             logger.error(f"技能执行异常: {e}", exc_info=True)

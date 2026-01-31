@@ -12,9 +12,21 @@ const config = require('./config.js')
  */
 function request(url, data = {}, method = 'GET', header = {}) {
   return new Promise((resolve, reject) => {
+    // 自动添加app_id
+    const requestData = {
+      ...data,
+      app_id: config.APP_ID
+    }
+    
+    // 添加user_id（如果已登录）
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo && userInfo.id) {
+      requestData.user_id = userInfo.id
+    }
+    
     wx.request({
       url: config.BASE_URL + url,
-      data: data,
+      data: requestData,
       method: method,
       header: {
         'content-type': 'application/json',
@@ -101,11 +113,23 @@ function del(url, data = {}) {
  */
 function upload(url, filePath, data = {}) {
   return new Promise((resolve, reject) => {
+    // 自动添加app_id
+    const requestData = {
+      ...data,
+      app_id: config.APP_ID
+    }
+    
+    // 添加user_id（如果已登录）
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo && userInfo.id) {
+      requestData.user_id = userInfo.id
+    }
+    
     wx.uploadFile({
       url: config.BASE_URL + url,
       filePath: filePath,
       name: 'file',
-      formData: data,
+      formData: requestData,
       header: {
         'Authorization': wx.getStorageSync('token') || ''
       },

@@ -7,31 +7,15 @@ from loguru import logger
 from collections import defaultdict
 import time
 
+from src.config.rate_limit_config import rate_limit_config
+
 
 class RateLimiter:
     """API 限流器"""
     
     def __init__(self):
         self.requests = defaultdict(list)
-        self.rules = {
-            # 默认规则：每分钟最多 60 次请求
-            'default': {'max_requests': 60, 'window': 60},
-            
-            # 登录接口：每分钟最多 5 次请求
-            'login': {'max_requests': 5, 'window': 60},
-            
-            # 注册接口：每分钟最多 3 次请求
-            'register': {'max_requests': 3, 'window': 60},
-            
-            # 发送验证码：每分钟最多 1 次请求
-            'send_code': {'max_requests': 1, 'window': 60},
-            
-            # 文件上传：每分钟最多 10 次请求
-            'upload': {'max_requests': 10, 'window': 60},
-            
-            # 查询接口：每分钟最多 120 次请求
-            'query': {'max_requests': 120, 'window': 60},
-        }
+        self.rules = rate_limit_config.DEFAULT_RULES
     
     def is_allowed(self, key: str, rule_name: str = 'default') -> tuple[bool, dict]:
         """
@@ -105,6 +89,10 @@ def rate_limit(rule_name: str = 'default'):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            # 检查是否启用限流
+            if not rate_limit_config.ENABLED:
+                return f(*args, **kwargs)
+            
             # 获取限流键（优先使用用户ID，否则使用IP地址）
             from src.api.user import get_current_user
             

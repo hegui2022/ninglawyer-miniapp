@@ -5,7 +5,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from backend.src.adapters import LegalKnowledgeAdapter, get_legal_knowledge_adapter
+from src.adapters import LegalKnowledgeAdapter, get_legal_knowledge_adapter
 
 
 class TestLegalKnowledgeAdapter(unittest.TestCase):

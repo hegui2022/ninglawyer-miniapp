@@ -4,7 +4,7 @@
 
 import pytest
 from unittest.mock import Mock, patch
-from backend.src.services.base_service import BaseThirdPartyAPIService
+from src.services.base_service import BaseThirdPartyAPIService
 
 
 class TestBaseThirdPartyAPIService:

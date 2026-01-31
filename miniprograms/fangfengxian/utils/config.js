@@ -1,5 +1,8 @@
 // utils/config.js - 配置文件
 
+// 小程序标识（与后端APP_IDS保持一致）
+const APP_ID = 'miniprogram_civil'
+
 // API 基础地址
 const BASE_URL = 'https://your-backend-api.com/api'
 
@@ -50,6 +53,7 @@ const PAGE_SIZE = 20
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024 // 10MB
 
 module.exports = {
+  APP_ID,
   BASE_URL,
   PAGE_PATHS,
   RISK_LEVEL,

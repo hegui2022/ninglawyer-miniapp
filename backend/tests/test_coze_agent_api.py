@@ -4,7 +4,7 @@
 
 import os
 import pytest
-from backend.src.services.coze_agent_service import CozeAgentService, get_coze_agent_service
+from src.services.coze_agent_service import CozeAgentService, get_coze_agent_service
 
 
 class TestCozeAgentService:

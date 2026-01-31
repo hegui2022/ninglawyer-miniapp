@@ -3,7 +3,7 @@
 """
 
 import pytest
-from backend.src.services.coze_knowledge_service import CozeKnowledgeService, get_coze_knowledge_service
+from src.services.coze_knowledge_service import CozeKnowledgeService, get_coze_knowledge_service
 
 
 class TestCozeKnowledgeService:

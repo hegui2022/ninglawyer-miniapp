@@ -7,9 +7,9 @@
 import os
 import hashlib
 import json
-import requests
 from loguru import logger
-from src.services.coze_knowledge_service import CozeKnowledgeService
+from coze_coding_dev_sdk import KnowledgeClient, Config
+from coze_coding_utils.runtime_ctx.context import new_context
 from .exception_handler import KnowledgeRetrievalError
 
 
@@ -25,12 +25,13 @@ class KnowledgeRetriever:
     
     def __init__(self):
         # 扣子知识库配置
-        access_token = os.getenv("COZE_ACCESS_TOKEN", "")
-        dataset_id = os.getenv("COZE_KNOWLEDGE_BASE_ID", "")
-        self.knowledge_service = CozeKnowledgeService(
-            access_token=access_token,
-            dataset_id=dataset_id
+        self.knowledge_client = KnowledgeClient(
+            config=Config(),
+            ctx=new_context(method="knowledge_retrieve")
         )
+        
+        # 数据集名称（可以从环境变量配置）
+        self.dataset_name = os.getenv("COZE_KNOWLEDGE_BASE_NAME", "coze_doc_knowledge")
         
         # 北大法宝MCP配置（预留，未来扩展）
         self.pkulaw_enabled = os.getenv("PKULAW_ENABLED", "false") == "true"
@@ -95,7 +96,8 @@ class KnowledgeRetriever:
                 return coze_result
         except Exception as e:
             logger.error(f"❌ 扣子知识库检索失败：{e}")
-            raise KnowledgeRetrievalError(f"扣子知识库检索失败：{e}")
+            # 知识检索失败不抛出异常，返回空字符串
+            return ""
         
         logger.warning(f"⚠️ 知识检索无结果：query='{query}'")
         return ""
@@ -112,23 +114,24 @@ class KnowledgeRetriever:
             检索结果（格式化的文本）
         """
         try:
-            response = self.knowledge_service.search(
+            # 使用 KnowledgeClient 进行检索
+            response = self.knowledge_client.search(
                 query=query,
                 top_k=top_k
             )
             
-            if response and response.get("success") and response.get("data"):
+            if response.code == 0 and response.chunks:
                 formatted = "\n\n【参考知识】\n"
-                for i, item in enumerate(response["data"], 1):
-                    content = item.get('content', '')
-                    score = item.get('score', 0.0)
+                for i, chunk in enumerate(response.chunks, 1):
+                    score = chunk.score
+                    content = chunk.content
                     # 限制内容长度
                     content_preview = content[:200] + "..." if len(content) > 200 else content
                     formatted += f"{i}. [{score:.2f}] {content_preview}\n"
                 return formatted
-            
-            logger.warning(f"⚠️ 扣子知识库无匹配结果")
-            return ""
+            else:
+                logger.warning(f"⚠️ 扣子知识库无匹配结果")
+                return ""
         
         except Exception as e:
             logger.error(f"❌ 扣子知识库调用失败：{e}")
@@ -145,46 +148,9 @@ class KnowledgeRetriever:
         Returns:
             检索结果（格式化的文本）
         """
-        if not self.pkulaw_api_key:
-            logger.warning("⚠️ 未配置北大法宝API密钥")
-            return ""
-        
-        headers = {
-            "Authorization": f"Bearer {self.pkulaw_api_key}",
-            "Content-Type": "application/json"
-        }
-        
-        data = {
-            "query": query,
-            "type": "law+case",  # 检索法条+案例
-            "top_k": top_k
-        }
-        
-        try:
-            response = requests.post(
-                f"{self.pkulaw_base_url}/search",
-                headers=headers,
-                json=data,
-                timeout=5
-            )
-            
-            if response.status_code == 200:
-                results = response.json().get("data", [])
-                if results:
-                    formatted = "\n\n【权威依据】\n"
-                    for i, res in enumerate(results, 1):
-                        title = res.get('title', '无标题')
-                        content = res.get('content', '')
-                        # 限制内容长度
-                        content_preview = content[:200] + "..." if len(content) > 200 else content
-                        formatted += f"{i}. {title}：{content_preview}\n"
-                    return formatted
-            
-            return ""
-        
-        except Exception as e:
-            logger.error(f"❌ 北大法宝调用失败：{e}")
-            raise
+        # 预留接口，未来扩展
+        logger.warning("⚠️ 北大法宝MCP接口尚未实现")
+        return ""
     
     def _get_cache_key(self, query: str, scenario: str = None) -> str:
         """
@@ -197,41 +163,12 @@ class KnowledgeRetriever:
         Returns:
             缓存键
         """
-        # 使用MD5哈希作为缓存键
-        cache_str = f"{query}:{scenario or 'general'}"
-        cache_hash = hashlib.md5(cache_str.encode('utf-8')).hexdigest()
-        return f"knowledge:{cache_hash}"
-    
-    def clear_cache(self, query: str = None, scenario: str = None):
-        """
-        清除缓存
-        
-        Args:
-            query: 查询内容（None表示清除所有）
-            scenario: 场景类型
-        """
-        if not self.redis_client:
-            logger.warning("⚠️ Redis客户端未初始化")
-            return
-        
-        if query:
-            cache_key = self._get_cache_key(query, scenario)
-            self.redis_client.client.delete(cache_key)
-            logger.info(f"✅ 已清除缓存：{cache_key}")
-        else:
-            # 清除所有知识缓存
-            keys = self.redis_client.client.keys("knowledge:*")
-            if keys:
-                self.redis_client.client.delete(*keys)
-                logger.info(f"✅ 已清除所有知识缓存（共{len(keys)}个）")
+        key_str = f"knowledge:{query}"
+        if scenario:
+            key_str += f":{scenario}"
+        # 使用MD5哈希作为缓存键，避免键过长
+        return hashlib.md5(key_str.encode()).hexdigest()
 
 
 # 全局实例
 knowledge_retriever = KnowledgeRetriever()
-
-
-# 导出
-__all__ = [
-    'KnowledgeRetriever',
-    'knowledge_retriever',
-]

@@ -123,10 +123,33 @@ class MasterBrain:
         logger.info(f"🎯 路由到技能：{skill_name} (置信度：{confidence:.2f})")
         
         # 6. 执行技能（传递完整上下文）
-        result = skill_registry.execute(skill_name, user_input, context)
-        result["skill_used"] = skill_name
-        result["personality_used"] = personality_id
-        result["scenario_used"] = scenario
+        skill_result = skill_registry.execute(skill_name, user_input, context)
+        
+        # 处理技能返回结果
+        if isinstance(skill_result, str):
+            # 技能返回字符串，包装成字典
+            result = {
+                "success": True,
+                "reply": skill_result,
+                "skill_used": skill_name,
+                "personality_used": personality_id,
+                "scenario_used": scenario
+            }
+        elif isinstance(skill_result, dict):
+            # 技能返回字典，添加元数据
+            skill_result["skill_used"] = skill_name
+            skill_result["personality_used"] = personality_id
+            skill_result["scenario_used"] = scenario
+            result = skill_result
+        else:
+            # 未知类型，返回错误
+            result = {
+                "success": False,
+                "error": f"技能返回类型不支持: {type(skill_result)}",
+                "skill_used": skill_name,
+                "personality_used": personality_id,
+                "scenario_used": scenario
+            }
         
         return result
     

@@ -27,39 +27,35 @@ def register_all_skills():
     logger.info("=" * 60)
     
     # 注册脱敏技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="desensitize",
+        skill_func=execute_desensitize,
         description="对敏感信息进行脱敏处理（姓名、身份证、手机号、地址等）",
-        execute_func=execute_desensitize,
-        category="privacy",
-        required_subscription="basic"
+        category="privacy"
     )
     
     # 注册民事咨询技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="civil_consult",
+        skill_func=execute_civil_consult,
         description="提供民事法律咨询服务（债务纠纷、婚姻家庭、劳动争议等）",
-        execute_func=execute_civil_consult,
-        category="legal",
-        required_subscription="basic"
+        category="legal"
     )
     
     # 注册合同起草技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="contract_draft",
+        skill_func=execute_contract,
         description="起草各类合同（借款合同、租赁合同、劳动合同等）",
-        execute_func=execute_contract,
-        category="legal",
-        required_subscription="premium"
+        category="legal"
     )
     
     # 注册合同审查技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="contract_review",
+        skill_func=execute_contract,
         description="审查各类合同的风险并提供修改建议",
-        execute_func=execute_contract,
-        category="legal",
-        required_subscription="premium"
+        category="legal"
     )
     
     # 注册婚姻家事技能
@@ -88,39 +84,35 @@ def _register_family_law_skills():
     from src.skills.domestic_violence_skill import execute_domestic_violence
     
     # 注册离婚流程技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="divorce_procedure",
+        skill_func=execute_divorce_procedure,
         description="离婚流程说明",
-        execute_func=execute_divorce_procedure,
-        category="family_law",
-        required_subscription="basic"
+        category="family_law"
     )
     
     # 注册财产分割技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="property_division",
+        skill_func=execute_property_division,
         description="财产分割计算",
-        execute_func=execute_property_division,
-        category="family_law",
-        required_subscription="basic"
+        category="family_law"
     )
     
     # 注册子女抚养技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="child_custody",
+        skill_func=execute_child_custody,
         description="子女抚养权",
-        execute_func=execute_child_custody,
-        category="family_law",
-        required_subscription="basic"
+        category="family_law"
     )
     
     # 注册家暴维权技能
-    skill_registry.register(
+    skill_registry.register_skill(
         skill_name="domestic_violence",
+        skill_func=execute_domestic_violence,
         description="家暴维权",
-        execute_func=execute_domestic_violence,
-        category="family_law",
-        required_subscription="basic"
+        category="family_law"
     )
 
 

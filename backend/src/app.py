@@ -30,6 +30,7 @@ from utils.env_config import check_required_env_vars, log_config
 from api.v1_ninglawyer import v1_ninglawyer_bp
 from api.v1_ninglawyer_enhanced import v1_ninglawyer_enhanced_bp
 from api.v1_how_to_judge import how_to_judge_bp
+from api.v1_legal_instructor import legal_instructor_bp
 
 # ============================================
 # 小程序标识映射
@@ -148,6 +149,7 @@ def create_app():
     app.register_blueprint(v1_ninglawyer_bp, url_prefix='/api/v1/ninglawyer')  # 宁律师V1 API
     app.register_blueprint(v1_ninglawyer_enhanced_bp, url_prefix='/api/v1/ninglawyer')  # 宁律师V1 增强API
     app.register_blueprint(how_to_judge_bp, url_prefix='/api/v1/how_to_judge')  # 怎么判API
+    app.register_blueprint(legal_instructor_bp, url_prefix='/api/v1/legal_instructor')  # 法律教官API
     
     logger.info("蓝图注册完成")
     

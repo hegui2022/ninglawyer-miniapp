@@ -140,12 +140,12 @@ Page({
     this.setData({ loading: true })
 
     try {
+      // 调用新的API，获取PC端录入的案例
       const res = await wx.request({
-        url: `${API_BASE}/judge/cases`,
+        url: `http://localhost:5000/api/v1/legal_instructor/cases/search`,
         method: 'POST',
         data: {
           keywords: this.data.caseKeywords,
-          user_id: `user_${Date.now()}`,
           filters: {
             court: this.data.courtLevel,
             case_type: this.data.caseType

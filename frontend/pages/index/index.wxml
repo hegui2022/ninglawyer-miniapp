@@ -1,0 +1,57 @@
+<!-- 首页 -->
+<view class="container">
+  <view class="header">
+    <image class="logo" src="/assets/logo.png" mode="aspectFit"></image>
+    <text class="title">智能法律服务</text>
+  </view>
+
+  <view class="content">
+    <!-- 宁律师入口 -->
+    <view class="card" bindtap="goToNinglawyer">
+      <view class="card-icon">
+        <image src="/assets/icon-ninglawyer.png" mode="aspectFit"></image>
+      </view>
+      <view class="card-info">
+        <text class="card-title">宁律师</text>
+        <text class="card-desc">智能法律咨询助手</text>
+      </view>
+      <image class="card-arrow" src="/assets/icon-arrow.png" mode="aspectFit"></image>
+    </view>
+
+    <!-- 防风险入口 -->
+    <view class="card">
+      <view class="card-icon">
+        <image src="/assets/icon-risk.png" mode="aspectFit"></image>
+      </view>
+      <view class="card-info">
+        <text class="card-title">防风险</text>
+        <text class="card-desc">企业合规风险管理</text>
+      </view>
+      <image class="card-arrow" src="/assets/icon-arrow.png" mode="aspectFit"></image>
+    </view>
+
+    <!-- 合同专家入口 -->
+    <view class="card">
+      <view class="card-icon">
+        <image src="/assets/icon-contract.png" mode="aspectFit"></image>
+      </view>
+      <view class="card-info">
+        <text class="card-title">合同专家</text>
+        <text class="card-desc">合同起草与审查</text>
+      </view>
+      <image class="card-arrow" src="/assets/icon-arrow.png" mode="aspectFit"></image>
+    </view>
+
+    <!-- 法律教官入口 -->
+    <view class="card">
+      <view class="card-icon">
+        <image src="/assets/icon-teacher.png" mode="aspectFit"></image>
+      </view>
+      <view class="card-info">
+        <text class="card-title">法律教官</text>
+        <text class="card-desc">专业律师服务</text>
+      </view>
+      <image class="card-arrow" src="/assets/icon-arrow.png" mode="aspectFit"></image>
+    </view>
+  </view>
+</view>

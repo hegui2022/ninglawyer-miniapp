@@ -28,6 +28,7 @@ from utils.skill_registry import skill_registry
 from utils.mask import mask_log, mask_dict
 from utils.env_config import check_required_env_vars, log_config
 from api.v1_ninglawyer import v1_ninglawyer_bp
+from api.v1_ninglawyer_enhanced import v1_ninglawyer_enhanced_bp
 
 # ============================================
 # 小程序标识映射
@@ -144,6 +145,7 @@ def create_app():
     app.register_blueprint(consultation_bp)
     app.register_blueprint(contract_bp)
     app.register_blueprint(v1_ninglawyer_bp, url_prefix='/api/v1/ninglawyer')  # 宁律师V1 API
+    app.register_blueprint(v1_ninglawyer_enhanced_bp, url_prefix='/api/v1/ninglawyer')  # 宁律师V1 增强API
     
     logger.info("蓝图注册完成")
     

@@ -1,0 +1,124 @@
+<!-- 宁律师聊天页面 -->
+<view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <view class="header-content">
+      <image class="avatar" src="/assets/avatar-ninglawyer.png" mode="aspectFit"></image>
+      <view class="header-info">
+        <text class="title">宁律师</text>
+        <text class="subtitle">您的智能法律助手</text>
+      </view>
+      <view class="header-actions">
+        <image class="action-icon" src="/assets/icon-history.png" bindtap="onShowHistory" mode="aspectFit"></image>
+        <image class="action-icon" src="/assets/icon-clear.png" bindtap="onClearSession" mode="aspectFit"></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 聊天消息区域 -->
+  <scroll-view class="chat-area" scroll-y scroll-into-view="{{scrollToView}}" scroll-with-animation>
+    <view class="message-list">
+      <!-- 欢迎消息 -->
+      <view class="message assistant" wx:if="{{messages.length === 0}}">
+        <image class="message-avatar" src="/assets/avatar-ninglawyer.png" mode="aspectFit"></image>
+        <view class="message-content welcome">
+          <text class="message-text">您好！我是宁律师，您的智能法律助手。我可以帮您解答法律问题、审查合同、提供法律建议。有什么我可以帮您的吗？</text>
+        </view>
+      </view>
+
+      <!-- 消息列表 -->
+      <view class="message {{item.role}}" wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}">
+        <!-- 用户消息 -->
+        <image class="message-avatar" src="{{item.role === 'user' ? '/assets/avatar-user.png' : '/assets/avatar-ninglawyer.png'}}" mode="aspectFit"></image>
+        
+        <view class="message-content {{item.role}}">
+          <!-- 文本消息 -->
+          <text class="message-text" wx:if="{{item.type === 'text'}}">{{item.content}}</text>
+          
+          <!-- 语音消息 -->
+          <view class="voice-message" wx:if="{{item.type === 'voice'}}" bindtap="onPlayVoice" data-url="{{item.audioUrl}}">
+            <image class="voice-icon" src="/assets/icon-voice.png" mode="aspectFit"></image>
+            <text class="voice-duration">{{item.duration}}"</text>
+            <view class="voice-waves">
+              <view class="wave"></view>
+              <view class="wave"></view>
+              <view class="wave"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 正在输入 -->
+      <view class="message assistant" wx:if="{{isTyping}}">
+        <image class="message-avatar" src="/assets/avatar-ninglawyer.png" mode="aspectFit"></image>
+        <view class="message-content typing">
+          <view class="typing-indicator">
+            <view class="dot"></view>
+            <view class="dot"></view>
+            <view class="dot"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部输入区域 -->
+  <view class="input-area">
+    <!-- 语音输入按钮 -->
+    <view class="voice-button-container" wx:if="{{!isVoiceMode}}">
+      <image class="voice-button" src="/assets/icon-mic.png" bindtap="onToggleVoiceMode" mode="aspectFit"></image>
+    </view>
+
+    <!-- 文本输入框 -->
+    <view class="text-input-container" wx:if="{{!isVoiceMode}}">
+      <textarea
+        class="text-input"
+        value="{{inputText}}"
+        bindinput="onInput"
+        bindconfirm="onSend"
+        placeholder="请输入您的问题..."
+        auto-height
+        maxlength="500"
+        show-confirm-bar="{{false}}"
+      />
+    </view>
+
+    <!-- 语音录制按钮 -->
+    <view class="record-button-container" wx:if="{{isVoiceMode}}">
+      <button class="record-button {{isRecording ? 'recording' : ''}}" bindtouchstart="onStartRecord" bindtouchend="onStopRecord">
+        <image class="record-icon" src="/assets/icon-mic.png" mode="aspectFit"></image>
+        <text class="record-text">{{isRecording ? '松开结束' : '按住说话'}}</text>
+      </button>
+    </view>
+
+    <!-- 发送按钮 -->
+    <view class="send-button-container" wx:if="{{!isVoiceMode && inputText}}">
+      <button class="send-button" bindtap="onSend">
+        <text>发送</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 历史记录弹窗 -->
+  <view class="modal" wx:if="{{showHistoryModal}}">
+    <view class="modal-mask" bindtap="onCloseHistory"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">历史记录</text>
+        <image class="close-icon" src="/assets/icon-close.png" bindtap="onCloseHistory" mode="aspectFit"></image>
+      </view>
+      <view class="modal-body">
+        <scroll-view class="history-list" scroll-y>
+          <view class="history-item" wx:for="{{history}}" wx:key="id">
+            <text class="history-role">{{item.role === 'user' ? '我' : '宁律师'}}</text>
+            <text class="history-text">{{item.content}}</text>
+            <text class="history-time">{{item.time}}</text>
+          </view>
+          <view class="empty-history" wx:if="{{history.length === 0}}">
+            <text>暂无历史记录</text>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -27,6 +27,7 @@ from agents.master_brain import master_brain
 from src.utils.skill_registry import skill_registry
 from src.utils.mask import mask_log, mask_dict
 from src.utils.env_config import check_required_env_vars, log_config
+from src.api.v1_ninglawyer import v1_ninglawyer_bp
 
 # ============================================
 # 小程序标识映射
@@ -142,6 +143,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(consultation_bp)
     app.register_blueprint(contract_bp)
+    app.register_blueprint(v1_ninglawyer_bp)  # 宁律师V1 API
     
     logger.info("蓝图注册完成")
     

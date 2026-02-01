@@ -1,8 +1,9 @@
 """
-宁律师统一提示词
-新架构：单一宁律师 + 主脑调度技能
+宁律师提示词管理
 """
 
+from typing import Optional, Dict, Any
+from loguru import logger
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 # ============================================
@@ -280,4 +281,100 @@ __all__ = [
     'NING_LAWYER_TEMPLATE_SIMPLE',
     'get_system_prompt',
     'get_template',
+    'NingLawyerPrompt',
 ]
+
+
+# ============================================
+# 提示词管理类
+# ============================================
+
+class NingLawyerPrompt:
+    """宁律师提示词管理类"""
+    
+    def __init__(self):
+        self.base_prompt = NING_LAWYER_SYSTEM_PROMPT
+        logger.info("📝 宁律师提示词管理类初始化完成")
+    
+    def build_prompt(
+        self,
+        personality: Optional[str] = None,
+        custom_prefix: Optional[str] = None,
+        custom_suffix: Optional[str] = None
+    ) -> str:
+        """
+        构建系统提示词（支持人设动态选择）
+        
+        Args:
+            personality: 人设ID（可选）
+            custom_prefix: 自定义前缀（可选）
+            custom_suffix: 自定义后缀（可选）
+            
+        Returns:
+            完整的系统提示词
+        """
+        prompt = self.base_prompt
+        
+        # 如果指定了人设，添加人设特定提示词
+        if personality:
+            personality_prompt = self._get_personality_prompt(personality)
+            prompt = f"{prompt}\n\n{personality_prompt}"
+            logger.info(f"🎭 添加人设提示词: {personality}")
+        
+        # 如果有自定义前缀，添加到开头
+        if custom_prefix:
+            prompt = f"{custom_prefix}\n\n{prompt}"
+        
+        # 如果有自定义后缀，添加到末尾
+        if custom_suffix:
+            prompt = f"{prompt}\n\n{custom_suffix}"
+        
+        return prompt
+    
+    def _get_personality_prompt(self, personality_id: str) -> str:
+        """
+        获取人设特定提示词
+        
+        Args:
+            personality_id: 人设ID
+            
+        Returns:
+            人设提示词
+        """
+        # 这里可以加载不同的人设提示词
+        # 目前暂时返回一个通用的温暖陪伴型提示词
+        
+        if personality_id == "warm_personal":
+            return """
+## 特殊要求（温暖陪伴型人设）
+
+请用温暖、亲切的语气回答用户问题，像朋友一样倾听和陪伴：
+- 多使用口语化表达
+- 适当使用表情符号
+- 先共情，再解答
+- 不要使用过于专业的法律术语
+- 给予情感支持和鼓励
+"""
+        elif personality_id == "professional_personal":
+            return """
+## 特殊要求（专业严谨型人设）
+
+请用专业、严谨的语气回答用户问题：
+- 使用准确的法律术语
+- 引用相关法律条文
+- 提供详细的法律分析
+- 注重逻辑性和条理性
+"""
+        elif personality_id == "business_corporate":
+            return """
+## 特殊要求（企业商务型人设）
+
+请用高效、务实的语气回答用户问题：
+- 关注商业价值和风险控制
+- 提供实用的解决方案
+- 注重效率和成本
+- 从企业角度分析问题
+"""
+        else:
+            return ""
+

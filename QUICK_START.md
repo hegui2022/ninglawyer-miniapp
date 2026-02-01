@@ -19,7 +19,7 @@ npm install  # 首次运行需要安装依赖
 npm run dev
 ```
 
-PC端将在 `http://localhost:8080` 启动
+PC端将在 `http://localhost:5173` 启动
 
 ### 3. 打开小程序
 
@@ -29,7 +29,7 @@ PC端将在 `http://localhost:8080` 启动
 
 ### 步骤1：PC端录入案例
 
-1. 浏览器访问 `http://localhost:8080`
+1. 浏览器访问 `http://localhost:5173`
 2. 填写案例信息（所有字段都有默认值和提示）
 3. 点击"提交案例"
 

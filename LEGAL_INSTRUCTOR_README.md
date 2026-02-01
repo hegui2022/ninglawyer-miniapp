@@ -56,7 +56,7 @@ npm install
 npm run dev
 ```
 
-PC端将在 `http://localhost:8080` 启动
+PC端将在 `http://localhost:5173` 启动
 
 ### 4. 启动小程序端
 
@@ -69,7 +69,7 @@ PC端将在 `http://localhost:8080` 启动
 
 ### 步骤1：PC端录入案例
 
-1. 打开浏览器访问 `http://localhost:8080`
+1. 打开浏览器访问 `http://localhost:5173`
 2. 填写案例信息：
    - **标题**：测试案例：张某盗窃案
    - **副标题**：盗窃罪数额认定标准

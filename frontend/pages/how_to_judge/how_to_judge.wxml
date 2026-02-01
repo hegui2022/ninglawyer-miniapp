@@ -1,0 +1,215 @@
+<!-- 怎么判页面 -->
+<view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <view class="header-content">
+      <image class="back-icon" src="/assets/icon-back.png" bindtap="onBack" mode="aspectFit"></image>
+      <text class="title">怎么判</text>
+      <view class="header-right"></view>
+    </view>
+  </view>
+
+  <!-- 功能选择区域 -->
+  <view class="function-tabs">
+    <view 
+      class="tab-item {{activeTab === index ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="index"
+      bindtap="onTabChange"
+      data-index="{{index}}">
+      <image class="tab-icon" src="{{item.icon}}" mode="aspectFit"></image>
+      <text class="tab-text">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 裁判观点查询 -->
+  <view class="content-panel" wx:if="{{activeTab === 0}}">
+    <view class="search-box">
+      <image class="search-icon" src="/assets/icon-search.png" mode="aspectFit"></image>
+      <input 
+        class="search-input" 
+        placeholder="请输入法律问题，如：离婚财产分割如何判决" 
+        value="{{opinionQuery}}"
+        bindinput="onOpinionInput"
+        confirm-type="search"
+        bindconfirm="onOpinionSearch"
+      />
+      <button class="search-btn" bindtap="onOpinionSearch">查询</button>
+    </view>
+
+    <view class="result-card" wx:if="{{opinionResult}}">
+      <view class="result-header">
+        <text class="result-title">裁判观点</text>
+        <view class="confidence-badge">
+          <text>置信度: {{opinionResult.confidence * 100}}%</text>
+        </view>
+      </view>
+      <view class="result-content">
+        <text class="result-text">{{opinionResult.opinion}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 判例检索 -->
+  <view class="content-panel" wx:if="{{activeTab === 1}}">
+    <view class="search-box">
+      <image class="search-icon" src="/assets/icon-search.png" mode="aspectFit"></image>
+      <input 
+        class="search-input" 
+        placeholder="请输入关键词，如：房屋买卖合同纠纷" 
+        value="{{caseKeywords}}"
+        bindinput="onCaseInput"
+        confirm-type="search"
+        bindconfirm="onCaseSearch"
+      />
+      <button class="search-btn" bindtap="onCaseSearch">检索</button>
+    </view>
+
+    <view class="filter-bar" wx:if="{{showFilters}}">
+      <picker class="filter-item" mode="selector" range="{{courtLevels}}" bindchange="onCourtLevelChange">
+        <view class="filter-value">{{courtLevel || '法院级别'}}</view>
+      </picker>
+      <picker class="filter-item" mode="selector" range="{{caseTypes}}" bindchange="onCaseTypeChange">
+        <view class="filter-value">{{caseType || '案件类型'}}</view>
+      </picker>
+    </view>
+
+    <view class="case-list" wx:if="{{cases.length > 0}}">
+      <view class="case-item" wx:for="{{cases}}" wx:key="case_number" bindtap="onCaseDetail" data-case="{{item}}">
+        <view class="case-header">
+          <text class="case-title">{{item.case_title}}</text>
+          <text class="case-type-tag">{{item.case_type}}</text>
+        </view>
+        <view class="case-info">
+          <text class="case-info-item">案号: {{item.case_number}}</text>
+          <text class="case-info-item">法院: {{item.court}}</text>
+          <text class="case-info-item">日期: {{item.judgment_date}}</text>
+        </view>
+        <view class="case-summary">
+          <text class="summary-label">摘要:</text>
+          <text class="summary-text">{{item.summary}}</text>
+        </view>
+        <view class="case-result">
+          <text class="result-label">裁判结果:</text>
+          <text class="result-text">{{item.result}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-tips" wx:if="{{cases.length === 0 && searched}}">
+      <text>暂无相关判例</text>
+    </view>
+  </view>
+
+  <!-- 类案查询 -->
+  <view class="content-panel" wx:if="{{activeTab === 2}}">
+    <view class="case-description-box">
+      <text class="label">案件描述</text>
+      <textarea 
+        class="case-description-input" 
+        placeholder="请详细描述您的案件情况，包括：纠纷背景、争议焦点、诉求等"
+        value="{{caseDescription}}"
+        bindinput="onCaseDescriptionInput"
+        maxlength="500"
+        auto-height
+      ></textarea>
+      <text class="char-count">{{caseDescription.length}}/500</text>
+    </view>
+    <button class="submit-btn" bindtap="onSimilarCaseSearch">查询类案</button>
+
+    <view class="similar-result" wx:if="{{similarCases.length > 0}}">
+      <view class="result-title">类似案件</view>
+      <view class="similar-case-item" wx:for="{{similarCases}}" wx:key="case_number" bindtap="onSimilarCaseDetail" data-case="{{item}}">
+        <view class="similar-header">
+          <text class="similar-title">{{item.case_title}}</text>
+          <view class="similarity-badge">
+            <text>相似度: {{item.similarity * 100}}%</text>
+          </view>
+        </view>
+        <view class="similar-info">
+          <text class="similar-info-item">{{item.court}}</text>
+          <text class="similar-result">{{item.result}}</text>
+        </view>
+      </view>
+
+      <view class="analysis-card">
+        <view class="analysis-title">判决规律</view>
+        <text class="analysis-text">{{judgmentPatterns}}</text>
+      </view>
+
+      <view class="win-rate-card">
+        <view class="win-rate-header">
+          <text class="win-rate-title">类案胜诉率</text>
+          <text class="win-rate-value">{{winRate}}</text>
+        </view>
+        <view class="win-rate-bar">
+          <view class="win-rate-fill" style="width: {{winRate}}"></view>
+        </view>
+      </view>
+
+      <view class="recommendations-card">
+        <view class="recommendations-title">参考建议</view>
+        <text class="recommendations-text">{{recommendations}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 胜诉率分析 -->
+  <view class="content-panel" wx:if="{{activeTab === 3}}">
+    <view class="case-type-select">
+      <text class="label">案件类型</text>
+      <picker class="picker" mode="selector" range="{{caseTypeOptions}}" bindchange="onCaseTypeSelect">
+        <view class="picker-value">{{selectedCaseType || '请选择案件类型'}}</view>
+      </picker>
+    </view>
+    <button class="submit-btn" bindtap="onWinRateAnalyze">分析胜诉率</button>
+
+    <view class="win-rate-result" wx:if="{{winRateAnalysis}}">
+      <view class="overall-card">
+        <view class="overall-title">总体胜诉率</view>
+        <view class="overall-value">{{winRateAnalysis.overall_win_rate}}</view>
+      </view>
+
+      <view class="court-chart">
+        <view class="chart-title">各法院胜诉率</view>
+        <view class="chart-bars">
+          <view class="chart-bar-item" wx:for="{{winRateAnalysis.by_court}}" wx:key="*this">
+            <view class="bar-label">{{item.court}}</view>
+            <view class="bar-container">
+              <view class="bar-fill" style="width: {{item.rate}}"></view>
+            </view>
+            <view class="bar-value">{{item.rate}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="factors-card">
+        <view class="factors-title">影响因素</view>
+        <view class="factors-list">
+          <view class="factor-item" wx:for="{{winRateAnalysis.key_factors}}" wx:key="*this">
+            <image class="factor-icon" src="/assets/icon-check.png" mode="aspectFit"></image>
+            <text class="factor-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="recommendations-card">
+        <view class="recommendations-title">提高胜诉率建议</view>
+        <view class="recommendations-list">
+          <view class="recommendation-item" wx:for="{{winRateAnalysis.recommendations}}" wx:key="*this">
+            <view class="recommendation-number">{{index + 1}}</view>
+            <text class="recommendation-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载提示 -->
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">查询中...</text>
+    </view>
+  </view>
+</view>

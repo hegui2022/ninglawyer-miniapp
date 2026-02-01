@@ -1,12 +1,13 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/ninglawyer/ninglawyer",
-    "pages/index/index"
+    "pages/how_to_judge/how_to_judge"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#4a90e2",
-    "navigationBarTitleText": "宁律师",
+    "navigationBarTitleText": "智能法律服务",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#f5f5f5"
   },

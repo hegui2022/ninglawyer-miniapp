@@ -1,0 +1,599 @@
+/* 怎么判页面样式 */
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部标题栏 */
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20rpx 30rpx;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.header-right {
+  width: 48rpx;
+}
+
+/* 功能选项卡 */
+.function-tabs {
+  display: flex;
+  background: #fff;
+  padding: 20rpx 10rpx;
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  gap: 10rpx;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 10rpx;
+  border-radius: 12rpx;
+  gap: 10rpx;
+}
+
+.tab-item.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.tab-icon {
+  width: 56rpx;
+  height: 56rpx;
+}
+
+.tab-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.tab-item.active .tab-text {
+  color: #fff;
+}
+
+/* 内容面板 */
+.content-panel {
+  flex: 1;
+  padding: 0 30rpx 30rpx;
+}
+
+/* 搜索框 */
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 50rpx;
+  padding: 20rpx 30rpx;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+  width: 40rpx;
+  height: 40rpx;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.search-btn {
+  padding: 12rpx 30rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 36rpx;
+  border: none;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.filter-item {
+  flex: 1;
+}
+
+.filter-value {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx 30rpx;
+  font-size: 26rpx;
+  color: #333;
+  text-align: center;
+}
+
+/* 结果卡片 */
+.result-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.result-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.confidence-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+.result-content {
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.result-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #333;
+}
+
+/* 判例列表 */
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.case-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.case-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.case-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+.case-type-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  margin-left: 20rpx;
+}
+
+.case-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+}
+
+.case-info-item {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.case-summary,
+.case-result {
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 15rpx;
+}
+
+.summary-label,
+.result-label {
+  display: block;
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.summary-text,
+.result-text {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 案件描述输入框 */
+.case-description-box {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.case-description-input {
+  width: 100%;
+  min-height: 200rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: bold;
+  border-radius: 44rpx;
+  border: none;
+  margin-bottom: 30rpx;
+}
+
+/* 类案结果 */
+.similar-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.similar-case-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.similar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.similar-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+.similarity-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+}
+
+.similar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.similar-info-item,
+.similar-result {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 分析卡片 */
+.analysis-card,
+.win-rate-card,
+.recommendations-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.analysis-title,
+.win-rate-title,
+.recommendations-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.analysis-text,
+.recommendations-text {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* 胜诉率图表 */
+.win-rate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.win-rate-value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.win-rate-bar {
+  height: 24rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.win-rate-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12rpx;
+  transition: width 0.5s;
+}
+
+/* 各法院胜诉率图表 */
+.overall-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.overall-title {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.overall-value {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.court-chart {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.chart-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.chart-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.bar-label {
+  width: 200rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.bar-container {
+  flex: 1;
+  height: 20rpx;
+  background: #f5f5f5;
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10rpx;
+  transition: width 0.5s;
+}
+
+.bar-value {
+  width: 80rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: #667eea;
+  font-weight: bold;
+}
+
+/* 影响因素 */
+.factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.factor-item {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.factor-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.factor-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 建议列表 */
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15rpx;
+}
+
+.recommendation-number {
+  width: 48rpx;
+  height: 48rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.recommendation-item .recommendation-text {
+  flex: 1;
+  padding-top: 6rpx;
+}
+
+/* 案件类型选择 */
+.case-type-select {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.picker {
+  margin-top: 20rpx;
+}
+
+.picker-value {
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 加载提示 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.loading-content {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 50rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #f5f5f5;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 空提示 */
+.empty-tips {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}

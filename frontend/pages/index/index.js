@@ -11,5 +11,12 @@ Page({
     wx.navigateTo({
       url: '/pages/ninglawyer/ninglawyer'
     })
+  },
+
+  // 跳转到怎么判页面
+  goToHowToJudge() {
+    wx.navigateTo({
+      url: '/pages/how_to_judge/how_to_judge'
+    })
   }
 })

@@ -6,6 +6,18 @@
   </view>
 
   <view class="content">
+    <!-- 怎么判入口 -->
+    <view class="card" bindtap="goToHowToJudge">
+      <view class="card-icon">
+        <image src="/assets/icon-judge.png" mode="aspectFit"></image>
+      </view>
+      <view class="card-info">
+        <text class="card-title">怎么判</text>
+        <text class="card-desc">裁判观点查询与类案分析</text>
+      </view>
+      <image class="card-arrow" src="/assets/icon-arrow.png" mode="aspectFit"></image>
+    </view>
+
     <!-- 宁律师入口 -->
     <view class="card" bindtap="goToNinglawyer">
       <view class="card-icon">

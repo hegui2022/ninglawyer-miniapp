@@ -45,11 +45,17 @@ const toolbarTools = [
   { key: 'italic', label: 'I', title: '斜体' },
   { key: 'underline', label: 'U', title: '下划线' },
   { key: 'strikeThrough', label: 'S', title: '删除线' },
-  { key: 'insertOrderedList', label: 'OL', title: '有序列表' },
-  { key: 'insertUnorderedList', label: 'UL', title: '无序列表' },
+  { key: 'foreColor', label: 'A', title: '字体颜色' },
+  { key: 'hiliteColor', label: '🖊', title: '背景色' },
+  { key: 'fontSize', label: 'Size', title: '字号' },
+  { key: 'formatBlock', label: 'H', title: '标题' },
   { key: 'justifyLeft', label: '左', title: '左对齐' },
   { key: 'justifyCenter', label: '中', title: '居中对齐' },
   { key: 'justifyRight', label: '右', title: '右对齐' },
+  { key: 'insertOrderedList', label: 'OL', title: '有序列表' },
+  { key: 'insertUnorderedList', label: 'UL', title: '无序列表' },
+  { key: 'indent', label: '→', title: '增加缩进' },
+  { key: 'outdent', label: '←', title: '减少缩进' },
   { key: 'undo', label: '↩', title: '撤销' },
   { key: 'redo', label: '↪', title: '重做' }
 ]
@@ -76,7 +82,32 @@ function handleBlur() {
 
 function handleToolClick(tool) {
   editorRef.value.focus()
-  document.execCommand(tool, false, null)
+  
+  // 特殊工具处理
+  if (tool === 'foreColor') {
+    const color = prompt('请输入颜色值（如：#FF0000 或 red）', '#000000')
+    if (color) {
+      document.execCommand('foreColor', false, color)
+    }
+  } else if (tool === 'hiliteColor') {
+    const color = prompt('请输入背景色值（如：#FFFF00 或 yellow）', '#FFFF00')
+    if (color) {
+      document.execCommand('hiliteColor', false, color)
+    }
+  } else if (tool === 'fontSize') {
+    const size = prompt('请输入字号（1-7）', '3')
+    if (size) {
+      document.execCommand('fontSize', false, size)
+    }
+  } else if (tool === 'formatBlock') {
+    const format = prompt('请输入格式（h1/h2/h3/p）', 'p')
+    if (format) {
+      document.execCommand('formatBlock', false, format)
+    }
+  } else {
+    // 常规工具
+    document.execCommand(tool, false, null)
+  }
 }
 
 function isToolActive(tool) {

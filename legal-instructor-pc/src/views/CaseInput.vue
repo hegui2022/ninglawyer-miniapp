@@ -1,10 +1,11 @@
 <template>
   <div class="case-input-container">
     <div class="header">
-      <h1>法律案例录入</h1>
+      <el-button @click="goBack" :icon="ArrowLeft">返回</el-button>
+      <h1>{{ isEditMode ? '编辑案例' : '法律案例录入' }}</h1>
     </div>
 
-    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px">
+    <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" v-loading="loading">
       <!-- 模块1：基础信息区 -->
       <div class="form-section">
         <div class="section-title">基础信息</div>
@@ -228,9 +229,9 @@
       <!-- 提交按钮 -->
       <div class="form-actions">
         <el-button type="primary" size="large" @click="handleSubmit" :loading="submitting">
-          提交案例
+          {{ isEditMode ? '保存修改' : '提交案例' }}
         </el-button>
-        <el-button size="large" @click="handleReset">
+        <el-button size="large" @click="handleReset" :disabled="isEditMode">
           重置表单
         </el-button>
       </div>
@@ -239,13 +240,20 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { ArrowLeft } from '@element-plus/icons-vue'
 import RichTextEditor from '@/components/RichTextEditor.vue'
-import { createCase } from '@/api/case'
+import { createCase, updateCase, getCaseDetail } from '@/api/case'
 
+const route = useRoute()
+const router = useRouter()
 const formRef = ref(null)
 const submitting = ref(false)
+const loading = ref(false)
+const caseId = computed(() => route.query.id)
+const isEditMode = computed(() => !!caseId.value)
 
 // 表单数据
 const formData = reactive({
@@ -280,6 +288,65 @@ const formData = reactive({
 const formRules = {
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
   subtitle: [{ required: true, message: '请输入副标题', trigger: 'blur' }]
+}
+
+// 页面加载时检查是否为编辑模式
+onMounted(() => {
+  if (isEditMode.value) {
+    loadCaseData(caseId.value)
+  }
+})
+
+// 加载案例数据
+async function loadCaseData(id) {
+  loading.value = true
+  try {
+    const res = await getCaseDetail(id)
+    if (res.success) {
+      const data = res.data
+      
+      // 填充表单数据
+      formData.title = data.title
+      formData.subtitle = data.subtitle
+      formData.keywords = data.keywords || [
+        { type: '裁判类型', value: '' },
+        { type: '案由', value: '' },
+        { value: '' },
+        { value: '' },
+        { value: '' }
+      ]
+      formData.basic_facts = data.basic_facts || ''
+      formData.judgment_essence = data.judgment_essence || ''
+      formData.judgment_result = data.judgment_result || ''
+      formData.dispute_foci = data.dispute_foci || ['', '']
+      formData.related_index = {
+        laws: data.laws || [{ law_name: '', article_numbers: '' }],
+        proceedings: data.proceedings || [
+          {
+            procedure_type: '',
+            court: '',
+            case_number: '',
+            judgment_type: '',
+            judgment_date: null
+          }
+        ]
+      }
+    } else {
+      ElMessage.error('加载案例数据失败')
+      goBack()
+    }
+  } catch (error) {
+    console.error('加载案例数据失败:', error)
+    ElMessage.error('加载案例数据失败')
+    goBack()
+  } finally {
+    loading.value = false
+  }
+}
+
+// 返回列表
+function goBack() {
+  router.push('/case-list')
 }
 
 // 添加法条
@@ -361,12 +428,18 @@ async function handleSubmit() {
         created_by: 'legal_instructor'
       }
 
-      await createCase(submitData)
+      if (isEditMode.value) {
+        // 更新模式
+        await updateCase(caseId.value, submitData)
+        ElMessage.success('案例更新成功')
+      } else {
+        // 新增模式
+        await createCase(submitData)
+        ElMessage.success('案例提交成功')
+      }
 
-      ElMessage.success('案例提交成功')
-
-      // 重置表单
-      handleReset()
+      // 跳转到列表页
+      goBack()
 
     } catch (error) {
       console.error('提交失败:', error)
@@ -379,6 +452,10 @@ async function handleSubmit() {
 
 // 重置表单
 function handleReset() {
+  if (isEditMode.value) {
+    return // 编辑模式下不允许重置
+  }
+  
   formRef.value?.resetFields()
   formData.title = ''
   formData.subtitle = ''
@@ -416,7 +493,9 @@ function handleReset() {
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 20px;
   margin-bottom: 40px;
 }
 
@@ -424,6 +503,7 @@ function handleReset() {
   font-size: 28px;
   color: #1F2937;
   font-weight: 600;
+  margin: 0;
 }
 
 .form-section {

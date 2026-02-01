@@ -206,6 +206,85 @@ def get_case_detail(case_id):
 
 
 # ============================================
+# 案例：更新案例
+# ============================================
+
+@legal_instructor_bp.route('/cases/<int:case_id>', methods=['PUT'])
+def update_case(case_id):
+    """
+    更新案例
+    
+    请求体：同创建案例
+    """
+    try:
+        data = request.json
+        
+        db = get_db()
+        
+        # 查找案例
+        case = db.query(LegalCase).options(
+            joinedload(LegalCase.proceedings),
+            joinedload(LegalCase.laws)
+        ).filter(LegalCase.id == case_id).first()
+        
+        if not case:
+            return error_response("案例不存在", code=404)
+        
+        # 更新主表数据
+        case.title = data['title']
+        case.subtitle = data['subtitle']
+        case.keywords = json.dumps(data.get('keywords', []), ensure_ascii=False)
+        case.basic_facts = data.get('basic_facts')
+        case.judgment_essence = data.get('judgment_essence')
+        case.judgment_result = data.get('judgment_result')
+        case.dispute_foci = json.dumps(data.get('dispute_foci', []), ensure_ascii=False)
+        case.related_index = json.dumps(data.get('related_index', {}), ensure_ascii=False)
+        case.updated_at = datetime.utcnow()
+        
+        # 删除原有的历审程序和法条
+        for proc in case.proceedings:
+            db.delete(proc)
+        for law in case.laws:
+            db.delete(law)
+        
+        # 重新添加历审程序
+        if data.get('related_index', {}).get('proceedings'):
+            for proc_data in data['related_index']['proceedings']:
+                proceeding = CaseProceeding(
+                    case_id=case.id,
+                    procedure_type=proc_data.get('procedure_type'),
+                    court=proc_data.get('court'),
+                    case_number=proc_data.get('case_number'),
+                    judgment_type=proc_data.get('judgment_type'),
+                    judgment_date=datetime.fromisoformat(proc_data['judgment_date']) if proc_data.get('judgment_date') else None
+                )
+                db.add(proceeding)
+        
+        # 重新添加法条
+        if data.get('related_index', {}).get('laws'):
+            for law_data in data['related_index']['laws']:
+                law = CaseLaw(
+                    case_id=case.id,
+                    law_name=law_data.get('law_name'),
+                    article_numbers=law_data.get('article_numbers')
+                )
+                db.add(law)
+        
+        db.commit()
+        
+        logger.info(f"案例更新成功: case_id={case_id}, title={case.title}")
+        
+        return success_response(
+            data=case_to_dict(case),
+            message="案例更新成功"
+        )
+        
+    except Exception as e:
+        logger.error(f"更新案例失败: {str(e)}")
+        return error_response(f"更新案例失败: {str(e)}")
+
+
+# ============================================
 # 案例：删除案例（可选）
 # ============================================
 

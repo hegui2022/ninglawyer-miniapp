@@ -1,0 +1,101 @@
+<!-- 案例详情页面 -->
+<view class="case-detail-container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 案例内容 -->
+  <view wx:else class="case-content">
+    <!-- 标题区 -->
+    <view class="header">
+      <view class="back-btn" bindtap="onBack">← 返回</view>
+      <text class="title">{{caseData.title}}</text>
+    </view>
+
+    <!-- 副标题 -->
+    <view class="subtitle">{{caseData.subtitle}}</view>
+
+    <!-- 基础信息 -->
+    <view class="section">
+      <view class="section-title">基础信息</view>
+      <view class="info-item">
+        <text class="label">创建时间：</text>
+        <text>{{formatDate(caseData.created_at)}}</text>
+      </view>
+      <view class="keywords">
+        <text class="label">关键词：</text>
+        <view class="keyword-list">
+          <text wx:for="{{caseData.keywords}}" wx:key="index" class="keyword-tag">
+            {{item.type ? item.type + ': ' : ''}}{{item.value || item}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 基本案情 -->
+    <view class="section">
+      <view class="section-title">基本案情</view>
+      <view class="content-text">{{caseData.basic_facts}}</view>
+    </view>
+
+    <!-- 裁判要旨 -->
+    <view class="section">
+      <view class="section-title">裁判要旨</view>
+      <view class="content-text">{{caseData.judgment_essence}}</view>
+    </view>
+
+    <!-- 裁判结果 -->
+    <view class="section">
+      <view class="section-title">裁判结果</view>
+      <view class="content-text">{{caseData.judgment_result}}</view>
+    </view>
+
+    <!-- 争议焦点 -->
+    <view class="section" wx:if="{{caseData.dispute_foci && caseData.dispute_foci.length > 0}}">
+      <view class="section-title">争议焦点</view>
+      <view class="focus-list">
+        <view wx:for="{{caseData.dispute_foci}}" wx:key="index" class="focus-item">
+          <text class="focus-index">{{index + 1}}.</text>
+          <text class="focus-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 关联法条 -->
+    <view class="section" wx:if="{{caseData.laws && caseData.laws.length > 0}}">
+      <view class="section-title">关联法条</view>
+      <view class="law-list">
+        <view wx:for="{{caseData.laws}}" wx:key="id" class="law-item">
+          <text class="law-name">{{item.law_name}}</text>
+          <text class="law-articles">{{item.article_numbers}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 历审程序 -->
+    <view class="section" wx:if="{{caseData.proceedings && caseData.proceedings.length > 0}}">
+      <view class="section-title">历审程序</view>
+      <view class="proceeding-list">
+        <view wx:for="{{caseData.proceedings}}" wx:key="id" class="proceeding-item">
+          <view class="proceeding-header">
+            <text class="procedure-type">{{item.procedure_type}}</text>
+            <text class="proceeding-date">{{formatDate(item.judgment_date)}}</text>
+          </view>
+          <view class="proceeding-info">
+            <text class="info-label">法院：</text>
+            <text>{{item.court}}</text>
+          </view>
+          <view class="proceeding-info">
+            <text class="info-label">案号：</text>
+            <text>{{item.case_number}}</text>
+          </view>
+          <view class="proceeding-info">
+            <text class="info-label">裁判类型：</text>
+            <text>{{item.judgment_type}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

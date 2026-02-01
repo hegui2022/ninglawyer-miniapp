@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/ninglawyer/ninglawyer",
-    "pages/how_to_judge/how_to_judge"
+    "pages/how_to_judge/how_to_judge",
+    "pages/case_detail/case_detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

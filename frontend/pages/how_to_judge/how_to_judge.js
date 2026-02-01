@@ -177,10 +177,8 @@ Page({
 
   onCaseDetail(e) {
     const caseData = e.currentTarget.dataset.case
-    wx.showModal({
-      title: caseData.case_title,
-      content: `案号: ${caseData.case_number}\n法院: ${caseData.court}\n裁判结果: ${caseData.result}`,
-      showCancel: false
+    wx.navigateTo({
+      url: `/pages/case_detail/case_detail?id=${caseData.case_id}`
     })
   },
 

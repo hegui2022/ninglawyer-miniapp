@@ -34,6 +34,13 @@ export function createCase(data) {
 }
 
 /**
+ * 更新案例
+ */
+export function updateCase(caseId, data) {
+  return api.put(`/cases/${caseId}`, data)
+}
+
+/**
  * 获取案例列表
  */
 export function getCases(params) {

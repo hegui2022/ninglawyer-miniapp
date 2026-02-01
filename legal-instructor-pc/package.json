@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "法律教官PC端 - 案例录入系统",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 8080",
+    "dev:3001": "vite --port 3001",
+    "dev:5173": "vite --port 5173",
     "build": "vite build",
     "preview": "vite preview"
   },

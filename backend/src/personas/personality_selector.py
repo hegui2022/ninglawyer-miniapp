@@ -7,6 +7,11 @@ import os
 from typing import Dict, Any
 from loguru import logger
 
+# 导入人设配置
+from .warm_personal import WARM_PERSONALITY
+from .professional_personal import PROFESSIONAL_PERSONALITY
+from .business_corporate import BUSINESS_CORPORATE
+
 
 class PersonalitySelector:
     """人设选择器"""
@@ -16,14 +21,14 @@ class PersonalitySelector:
         self.personality_map = {
             "personal": {  # 个人用户
                 "family_law": "warm_personal",  # 婚姻家事 → 温暖陪伴型
-                "commercial": "professional_personal",  # 商事场景 → 专业严谨型（阶段2补充）
-                "compliance": "professional_personal",  # 合规场景 → 专业严谨型（阶段2补充）
+                "commercial": "professional_personal",  # 商事场景 → 专业严谨型
+                "compliance": "professional_personal",  # 合规场景 → 专业严谨型
                 "general": "warm_personal"  # 默认场景 → 温暖陪伴型
             },
             "corporate": {  # 企业用户
                 "family_law": "professional_personal",  # 企业员工的婚姻问题 → 专业严谨型
-                "commercial": "business_corporate",  # 企业商事 → 企业商务型（阶段2补充）
-                "compliance": "business_corporate",  # 企业合规 → 企业商务型（阶段2补充）
+                "commercial": "business_corporate",  # 企业商事 → 企业商务型
+                "compliance": "business_corporate",  # 企业合规 → 企业商务型
                 "general": "business_corporate"  # 默认场景 → 企业商务型
             }
         }
@@ -82,13 +87,10 @@ class PersonalitySelector:
         Returns:
             人设配置字典
         """
-        from .warm_personal import WARM_PERSONALITY
-        
         personality_map = {
             "warm_personal": WARM_PERSONALITY,
-            # 阶段2补充：
-            # "professional_personal": PROFESSIONAL_PERSONALITY,
-            # "business_corporate": BUSINESS_PERSONALITY,
+            "professional_personal": PROFESSIONAL_PERSONALITY,
+            "business_corporate": BUSINESS_CORPORATE,
         }
         
         personality = personality_map.get(personality_id)

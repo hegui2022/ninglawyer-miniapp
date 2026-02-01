@@ -29,6 +29,9 @@ ninglawyer_prompt = NingLawyerPrompt()
 # 宁律师Bot ID（从环境变量读取）
 NINGLAWYER_BOT_ID = os.getenv("NINGLAWYER_BOT_ID", "7478766030654679080")
 
+# 对话历史存储（暂时使用内存存储，生产环境使用Redis）
+_conversation_history = {}
+
 
 @v1_ninglawyer_bp.route('/chat', methods=['POST'])
 def chat():
@@ -80,7 +83,10 @@ def chat():
         if not session_id:
             session_id = f"temp_{user_id}_{hash(query) % 10000}"
         
-        # 3. 动态选择人设（根据用户类型和场景）
+        # 3. 加载历史对话（如果有）
+        conversation_history = _load_conversation_history(session_id)
+        
+        # 4. 动态选择人设（根据用户类型和场景）
         # 先根据query判断场景
         scenario = _identify_scenario(query)
         # 转换user_type格式（individual -> personal, corporate -> corporate）
@@ -105,7 +111,7 @@ def chat():
         
         # 暂时使用模拟数据（快速展示功能）
         # TODO: 配置好扣子API后，切换到真实调用
-        result = _mock_bot_response(query, personality_id)
+        result = _mock_bot_response(query, personality_id, conversation_history)
         
         # 真实调用扣子API（暂时注释）
         # result = coze_service.run_bot(
@@ -113,7 +119,8 @@ def chat():
         #     query=query,
         #     user_id=user_id,
         #     conversation_id=session_id,
-        #     stream=stream
+        #     stream=stream,
+        #     additional_messages=conversation_history
         # )
         
         # 7. 处理结果
@@ -124,6 +131,14 @@ def chat():
         bot_data = result.get('data', {})
         answer = bot_data.get('answer', '')
         conversation_id = bot_data.get('conversation_id', '')
+        
+        # 8. 保存对话历史
+        _save_conversation_history(session_id, query, answer)
+        
+        # 9. 案源识别（判断用户是否需要律师服务）
+        lead_info = _identify_lead(query, intent_result, user_id, session_id)
+        if lead_info['is_lead']:
+            logger.info(f"🎯 案源识别成功 - 用户ID: {user_id}, 案源类型: {lead_info['lead_type']}")
         
         logger.info(f"✅ 宁律师回复成功 - 会话ID: {session_id}")
         
@@ -226,24 +241,30 @@ def get_personalities():
         return error_response(f"获取人设列表失败: {str(e)}", 500)
 
 
-def _mock_bot_response(query: str, personality_id: str) -> Dict[str, Any]:
+def _mock_bot_response(query: str, personality_id: str, conversation_history: list = None) -> Dict[str, Any]:
     """
     模拟智能体回复（用于快速展示功能）
     
     Args:
         query: 用户输入
         personality_id: 人设ID
+        conversation_history: 对话历史（可选）
         
     Returns:
         模拟的回复结果
     """
+    # 如果有对话历史，可以在回复中引用之前的对话
+    history_context = ""
+    if conversation_history and len(conversation_history) > 0:
+        history_context = "\n\n（基于我们之前的对话）"
+    
     # 根据人设生成不同的回复
     personality_responses = {
-        "warm_personal": f"您好！我是宁律师，很高兴为您服务😊\n\n关于您提到的「{query}」，我理解您现在的心情。别担心，我会帮您理清楚这个问题。\n\n首先，让我简单跟您说一下相关的法律要点：\n\n1. 这个问题属于民事纠纷范畴，可以通过协商、调解或诉讼解决\n2. 根据法律规定，您有权维护自己的合法权益\n3. 建议您先收集相关证据，如合同、聊天记录、转账记录等\n\n如果您想了解更多细节，可以跟我说说具体情况，我会根据您的具体情况给出更详细的建议。我在这里陪着你，有需要随时问我～",
+        "warm_personal": f"您好！我是宁律师，很高兴为您服务😊{history_context}\n\n关于您提到的「{query}」，我理解您现在的心情。别担心，我会帮您理清楚这个问题。\n\n首先，让我简单跟您说一下相关的法律要点：\n\n1. 这个问题属于民事纠纷范畴，可以通过协商、调解或诉讼解决\n2. 根据法律规定，您有权维护自己的合法权益\n3. 建议您先收集相关证据，如合同、聊天记录、转账记录等\n\n如果您想了解更多细节，可以跟我说说具体情况，我会根据您的具体情况给出更详细的建议。我在这里陪着你，有需要随时问我～",
         
-        "professional_personal": f"您好，我是宁律师，为您提供专业的法律咨询服务。\n\n关于您咨询的「{query}」问题，我已收到。根据法律规定，涉及此类问题的法律依据如下：\n\n1. 民法典相关条文规定...\n2. 司法实践中的常见处理方式...\n3. 您需要准备的相关证据材料...\n\n建议您：\n- 保留所有相关证据\n- 必要时寻求专业律师协助\n- 注意法律时效\n\n如果您有更具体的问题，请提供详细信息，我会给您更准确的法律意见。",
+        "professional_personal": f"您好，我是宁律师。关于您咨询的「{query}」问题，我将从法律专业角度为您分析。{history_context}\n\n## 一、法律关系分析\n根据您提供的情况，这是一个法律问题，需要从法律角度进行分析。\n\n## 二、法律依据\n1. 根据《民法典》相关规定，当事人享有合法权益\n2. 根据相关司法解释，您的诉求具有法律依据\n\n## 三、法律分析\n基于您提供的情况：\n1. 您有权维护自己的合法权益\n2. 建议您保留相关证据\n3. 可通过法律途径解决纠纷\n\n## 四、法律建议\n建议您：\n1. 先与对方协商\n2. 协商不成可发送律师函\n3. 必要时向法院提起诉讼\n\n以上是我的法律分析和建议，供您参考。",
         
-        "business_corporate": f"您好，我是宁律师，为企业提供高效、务实的法律服务。\n\n关于您提到的「{query}」问题，从企业法律风险管理的角度，我的建议如下：\n\n风险点分析：\n1. 合规风险：需要检查是否符合相关法律法规\n2. 商业风险：评估对业务运营的影响\n3. 成本风险：预估可能的经济损失\n\n应对措施：\n1. 建立完善的风险防控机制\n2. 加强合同管理和审查\n3. 定期进行法律风险评估\n\n如需更详细的合规方案，建议安排专项法律评估。"
+        "business_corporate": f"您好，我是宁律师，为企业提供高效、务实的法律服务。{history_context}\n\n关于您提到的「{query}」问题，我将从企业风险管理的角度为您分析。\n\n## 风险点分析\n\n### 1. 合规风险\n- 需要检查是否符合相关法律法规\n- 需要完善相关制度和流程\n\n### 2. 商业风险\n- 评估对业务运营的影响\n- 识别潜在的商业风险\n\n### 3. 成本风险\n- 预估可能的经济损失\n- 评估管理成本\n\n## 应对措施\n\n### 1. 建立完善的风险防控机制\n- 完善相关制度和流程\n- 建立风险预警机制\n\n### 2. 加强管理\n- 定期进行风险评估\n- 及时发现和整改问题\n\n### 3. 定期评估\n- 建议定期进行法律风险评估\n- 建立长效机制\n\n如需更详细的合规方案，建议安排专项法律评估。"
     }
     
     # 获取对应人设的回复，如果找不到则使用默认回复
@@ -356,3 +377,142 @@ def _identify_intent(query: str) -> Dict[str, str]:
         'intent': 'general_consultation',
         'description': '普通法律咨询'
     }
+
+
+def _load_conversation_history(session_id: str, max_history: int = 10) -> list:
+    """
+    加载对话历史
+    
+    Args:
+        session_id: 会话ID
+        max_history: 最大历史记录数
+        
+    Returns:
+        对话历史列表
+    """
+    global _conversation_history
+    
+    if session_id not in _conversation_history:
+        return []
+    
+    # 返回最近的历史记录
+    history = _conversation_history[session_id]
+    return history[-max_history:] if len(history) > max_history else history
+
+
+def _save_conversation_history(session_id: str, query: str, answer: str):
+    """
+    保存对话历史
+    
+    Args:
+        session_id: 会话ID
+        query: 用户问题
+        answer: 宁律师回复
+    """
+    global _conversation_history
+    
+    if session_id not in _conversation_history:
+        _conversation_history[session_id] = []
+    
+    # 添加新的对话
+    _conversation_history[session_id].append({
+        "role": "user",
+        "content": query
+    })
+    _conversation_history[session_id].append({
+        "role": "assistant",
+        "content": answer
+    })
+    
+    # 限制历史记录数量（最多保留20轮对话）
+    max_conversations = 40  # 20轮对话（每轮包含用户和助手各一条）
+    if len(_conversation_history[session_id]) > max_conversations:
+        _conversation_history[session_id] = _conversation_history[session_id][-max_conversations:]
+    
+    logger.info(f"💾 保存对话历史 - 会话ID: {session_id}, 对话轮数: {len(_conversation_history[session_id]) // 2}")
+
+
+def _identify_lead(query: str, intent_result: dict, user_id: str, session_id: str) -> dict:
+    """
+    案源识别（判断用户是否需要律师服务）
+    
+    Args:
+        query: 用户输入
+        intent_result: 意图识别结果
+        user_id: 用户ID
+        session_id: 会话ID
+        
+    Returns:
+        案源信息
+    """
+    query_lower = query.lower()
+    
+    # 案源识别规则
+    lead_rules = [
+        {
+            'lead_type': 'divorce',
+            'description': '离婚咨询',
+            'keywords': ['离婚', '财产分割', '抚养权', '家暴'],
+            'priority': 'high'
+        },
+        {
+            'lead_type': 'debt',
+            'description': '债务纠纷',
+            'keywords': ['债务', '欠款', '借钱', '还钱', '追债'],
+            'priority': 'medium'
+        },
+        {
+            'lead_type': 'contract_dispute',
+            'description': '合同纠纷',
+            'keywords': ['合同', '违约', '纠纷', '赔偿'],
+            'priority': 'medium'
+        },
+        {
+            'lead_type': 'injury',
+            'description': '人身损害',
+            'keywords': ['受伤', '赔偿', '医疗', '事故'],
+            'priority': 'high'
+        },
+        {
+            'lead_type': 'company',
+            'description': '企业法务',
+            'keywords': ['公司', '企业', '合规', '劳动'],
+            'priority': 'medium'
+        }
+    ]
+    
+    # 匹配案源
+    for rule in lead_rules:
+        for keyword in rule['keywords']:
+            if keyword in query_lower:
+                return {
+                    'is_lead': True,
+                    'lead_type': rule['lead_type'],
+                    'lead_description': rule['description'],
+                    'priority': rule['priority'],
+                    'user_id': user_id,
+                    'session_id': session_id,
+                    'query': query,
+                    'intent': intent_result.get('intent', ''),
+                    'timestamp': _get_current_timestamp()
+                }
+    
+    # 不是案源
+    return {
+        'is_lead': False,
+        'lead_type': None,
+        'lead_description': None,
+        'priority': None,
+        'user_id': user_id,
+        'session_id': session_id,
+        'query': query,
+        'intent': intent_result.get('intent', ''),
+        'timestamp': _get_current_timestamp()
+    }
+
+
+def _get_current_timestamp() -> str:
+    """获取当前时间戳"""
+    from datetime import datetime
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+

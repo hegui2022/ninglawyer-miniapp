@@ -341,9 +341,6 @@ class NingLawyerPrompt:
         Returns:
             人设提示词
         """
-        # 这里可以加载不同的人设提示词
-        # 目前暂时返回一个通用的温暖陪伴型提示词
-        
         if personality_id == "warm_personal":
             return """
 ## 特殊要求（温暖陪伴型人设）
@@ -364,6 +361,7 @@ class NingLawyerPrompt:
 - 引用相关法律条文
 - 提供详细的法律分析
 - 注重逻辑性和条理性
+- 采用分点列举的方式
 """
         elif personality_id == "business_corporate":
             return """
@@ -374,6 +372,7 @@ class NingLawyerPrompt:
 - 提供实用的解决方案
 - 注重效率和成本
 - 从企业角度分析问题
+- 给出可操作的建议
 """
         else:
             return ""

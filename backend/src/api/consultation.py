@@ -6,11 +6,11 @@
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
-from src.agents.master_agent import MasterAgent
-from src.agents.lawyer_factory import LawyerAgentFactory
-from src.utils.response import success_response, error_response
-from src.utils.logger import log_api_request
-from src.middleware.permission import check_skill_permission, check_usage_limit
+from agents.master_agent import MasterAgent
+from agents.lawyer_factory import LawyerAgentFactory
+from utils.response import success_response, error_response
+from utils.logger import log_api_request
+from middleware.permission import check_skill_permission, check_usage_limit
 
 # 创建蓝图
 consultation_bp = Blueprint('consultation', __name__)

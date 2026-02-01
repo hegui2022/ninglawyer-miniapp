@@ -8,9 +8,9 @@ from datetime import datetime, timedelta
 from loguru import logger
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
-from src.database import get_db_context
-from src.crud.crud import session_crud
-from src.models.schemas import SessionCreate
+from database import get_db_context
+from crud.crud import session_crud
+from models.schemas import SessionCreate
 
 
 class SessionService:

@@ -11,7 +11,7 @@ from functools import wraps
 from collections import defaultdict, deque
 from loguru import logger
 
-from src.utils.cache_manager import CacheManager
+from utils.cache_manager import CacheManager
 
 
 class ResponseQualityMonitor:

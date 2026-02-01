@@ -7,8 +7,8 @@ from flask import Blueprint, request, jsonify
 from loguru import logger
 import traceback
 
-from src.agents.master_brain import master_brain
-from src.utils.logger import log_function_call
+from agents.master_brain import master_brain
+from utils.logger import log_function_call
 
 # 创建蓝图
 master_bp = Blueprint('master', __name__)

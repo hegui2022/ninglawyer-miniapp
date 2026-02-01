@@ -8,7 +8,7 @@ from typing import Callable, Optional, List, Dict, Any
 from loguru import logger
 
 from database import get_db_context
-from src.utils.cache_manager import CacheManager
+from utils.cache_manager import CacheManager
 
 
 class TransactionManager:

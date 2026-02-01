@@ -5,16 +5,22 @@
 """
 
 import os
+import json
 from flask import Blueprint, request, jsonify
 from loguru import logger
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union, List
 
-from src.services.coze_agent_service import CozeAgentService
-from src.services.user_service import UserService
-from src.services.session_service import SessionService
-from src.personas.personality_selector import PersonalitySelector
-from src.prompts.ning_lawyer import NingLawyerPrompt
-from src.utils.response import success_response, error_response
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, BaseMessage
+from coze_coding_dev_sdk import LLMClient
+from coze_coding_utils.runtime_ctx.context import new_context
+
+from services.coze_agent_service import CozeAgentService
+from services.user_service import UserService
+from services.session_service import SessionService
+from personas.personality_selector import PersonalitySelector
+from prompts.ning_lawyer import NingLawyerPrompt
+from utils.response import success_response, error_response
+from utils.cache_manager import CacheManager
 
 # 创建蓝图
 v1_ninglawyer_bp = Blueprint('v1_ninglawyer', __name__)
@@ -26,11 +32,14 @@ session_service = SessionService()
 personality_selector = PersonalitySelector()
 ninglawyer_prompt = NingLawyerPrompt()
 
+# 缓存管理器（用于对话历史和用户信息）
+cache_manager = CacheManager()
+
 # 宁律师Bot ID（从环境变量读取）
 NINGLAWYER_BOT_ID = os.getenv("NINGLAWYER_BOT_ID", "7478766030654679080")
 
-# 对话历史存储（暂时使用内存存储，生产环境使用Redis）
-_conversation_history = {}
+# 对话历史存储（使用Redis缓存，24小时过期）
+CONVERSATION_TTL = 86400  # 24小时
 
 
 @v1_ninglawyer_bp.route('/chat', methods=['POST'])
@@ -106,22 +115,15 @@ def chat():
         # 5. 构建系统提示词（宁律师+人设）
         system_prompt = ninglawyer_prompt.build_prompt(personality=personality['name'])
         
-        # 6. 调用扣子智能体（暂时使用模拟数据，快速展示功能）
-        logger.info(f"🚀 调用智能体 - Bot ID: {NINGLAWYER_BOT_ID}")
+        # 6. 调用LLM生成回复
+        logger.info(f"🚀 调用LLM - 人设: {personality_id}")
         
-        # 暂时使用模拟数据（快速展示功能）
-        # TODO: 配置好扣子API后，切换到真实调用
-        result = _mock_bot_response(query, personality_id, conversation_history)
-        
-        # 真实调用扣子API（暂时注释）
-        # result = coze_service.run_bot(
-        #     bot_id=NINGLAWYER_BOT_ID,
-        #     query=query,
-        #     user_id=user_id,
-        #     conversation_id=session_id,
-        #     stream=stream,
-        #     additional_messages=conversation_history
-        # )
+        # 调用真实的LLM
+        result = _call_llm(
+            query=query,
+            system_prompt=system_prompt,
+            conversation_history=conversation_history
+        )
         
         # 7. 处理结果
         if not result.get('success'):
@@ -241,42 +243,100 @@ def get_personalities():
         return error_response(f"获取人设列表失败: {str(e)}", 500)
 
 
-def _mock_bot_response(query: str, personality_id: str, conversation_history: list = None) -> Dict[str, Any]:
+def _call_llm(query: str, system_prompt: str, conversation_history: list = None) -> Dict[str, Any]:
     """
-    模拟智能体回复（用于快速展示功能）
+    调用LLM生成回复
     
     Args:
         query: 用户输入
-        personality_id: 人设ID
+        system_prompt: 系统提示词
         conversation_history: 对话历史（可选）
         
     Returns:
-        模拟的回复结果
+        LLM回复结果
     """
-    # 如果有对话历史，可以在回复中引用之前的对话
-    history_context = ""
-    if conversation_history and len(conversation_history) > 0:
-        history_context = "\n\n（基于我们之前的对话）"
-    
-    # 根据人设生成不同的回复
-    personality_responses = {
-        "warm_personal": f"您好！我是宁律师，很高兴为您服务😊{history_context}\n\n关于您提到的「{query}」，我理解您现在的心情。别担心，我会帮您理清楚这个问题。\n\n首先，让我简单跟您说一下相关的法律要点：\n\n1. 这个问题属于民事纠纷范畴，可以通过协商、调解或诉讼解决\n2. 根据法律规定，您有权维护自己的合法权益\n3. 建议您先收集相关证据，如合同、聊天记录、转账记录等\n\n如果您想了解更多细节，可以跟我说说具体情况，我会根据您的具体情况给出更详细的建议。我在这里陪着你，有需要随时问我～",
+    try:
+        # 创建上下文
+        ctx = new_context(method="ninglawyer_chat")
         
-        "professional_personal": f"您好，我是宁律师。关于您咨询的「{query}」问题，我将从法律专业角度为您分析。{history_context}\n\n## 一、法律关系分析\n根据您提供的情况，这是一个法律问题，需要从法律角度进行分析。\n\n## 二、法律依据\n1. 根据《民法典》相关规定，当事人享有合法权益\n2. 根据相关司法解释，您的诉求具有法律依据\n\n## 三、法律分析\n基于您提供的情况：\n1. 您有权维护自己的合法权益\n2. 建议您保留相关证据\n3. 可通过法律途径解决纠纷\n\n## 四、法律建议\n建议您：\n1. 先与对方协商\n2. 协商不成可发送律师函\n3. 必要时向法院提起诉讼\n\n以上是我的法律分析和建议，供您参考。",
+        # 创建LLM客户端
+        client = LLMClient(ctx=ctx)
         
-        "business_corporate": f"您好，我是宁律师，为企业提供高效、务实的法律服务。{history_context}\n\n关于您提到的「{query}」问题，我将从企业风险管理的角度为您分析。\n\n## 风险点分析\n\n### 1. 合规风险\n- 需要检查是否符合相关法律法规\n- 需要完善相关制度和流程\n\n### 2. 商业风险\n- 评估对业务运营的影响\n- 识别潜在的商业风险\n\n### 3. 成本风险\n- 预估可能的经济损失\n- 评估管理成本\n\n## 应对措施\n\n### 1. 建立完善的风险防控机制\n- 完善相关制度和流程\n- 建立风险预警机制\n\n### 2. 加强管理\n- 定期进行风险评估\n- 及时发现和整改问题\n\n### 3. 定期评估\n- 建议定期进行法律风险评估\n- 建立长效机制\n\n如需更详细的合规方案，建议安排专项法律评估。"
-    }
-    
-    # 获取对应人设的回复，如果找不到则使用默认回复
-    answer = personality_responses.get(personality_id, personality_responses["warm_personal"])
-    
-    return {
-        "success": True,
-        "data": {
-            "answer": answer,
-            "conversation_id": f"mock_conv_{hash(query)}"
+        # 构建消息列表
+        messages = []
+        
+        # 添加系统提示词
+        messages.append(SystemMessage(content=system_prompt))
+        
+        # 添加对话历史
+        if conversation_history and len(conversation_history) > 0:
+            for msg in conversation_history:
+                if msg.get('role') == 'user':
+                    messages.append(HumanMessage(content=msg.get('content', '')))
+                elif msg.get('role') == 'assistant':
+                    messages.append(AIMessage(content=msg.get('content', '')))
+        
+        # 添加当前用户输入
+        messages.append(HumanMessage(content=query))
+        
+        # 调用LLM
+        logger.info(f"🤖 调用LLM - 消息数量: {len(messages)}, 对话历史轮数: {len(conversation_history) // 2 if conversation_history else 0}")
+        
+        response = client.invoke(
+            messages=messages,
+            model="doubao-seed-1-6-251015",  # 使用豆包模型
+            temperature=0.7,
+            thinking="disabled",
+            caching="disabled",
+            max_completion_tokens=2000
+        )
+        
+        # 安全处理响应内容
+        answer = _get_text_content(response.content)
+        
+        logger.info(f"✅ LLM调用成功 - 回复长度: {len(answer)} 字符")
+        
+        return {
+            "success": True,
+            "data": {
+                "answer": answer,
+                "conversation_id": f"llm_conv_{hash(query)}"
+            }
         }
-    }
+        
+    except Exception as e:
+        logger.error(f"❌ LLM调用失败: {str(e)}", exc_info=True)
+        return {
+            "success": False,
+            "message": f"LLM调用失败: {str(e)}"
+        }
+
+
+def _get_text_content(content: Union[str, List[str], List[Dict[str, Any]]]) -> str:
+    """
+    安全地从LLM响应中提取文本内容
+    
+    Args:
+        content: LLM响应内容（可能是str、list[str]或list[dict]）
+        
+    Returns:
+        提取的文本内容
+    """
+    if isinstance(content, str):
+        return content
+    elif isinstance(content, list):
+        if content and isinstance(content[0], str):
+            # List of strings
+            return " ".join(content)
+        else:
+            # List of dicts (multimodal response)
+            text_parts = []
+            for item in content:
+                if isinstance(item, dict) and item.get("type") == "text":
+                    text_parts.append(item.get("text", ""))
+            return " ".join(text_parts)
+    else:
+        return str(content)
 
 
 def _identify_scenario(query: str) -> str:
@@ -381,7 +441,7 @@ def _identify_intent(query: str) -> Dict[str, str]:
 
 def _load_conversation_history(session_id: str, max_history: int = 10) -> list:
     """
-    加载对话历史
+    加载对话历史（从Redis缓存）
     
     Args:
         session_id: 会话ID
@@ -390,46 +450,67 @@ def _load_conversation_history(session_id: str, max_history: int = 10) -> list:
     Returns:
         对话历史列表
     """
-    global _conversation_history
-    
-    if session_id not in _conversation_history:
+    try:
+        # 从Redis缓存中加载对话历史
+        cache_key = f"conversation:{session_id}"
+        history = cache_manager.get(cache_key)
+        
+        if not history:
+            return []
+        
+        # 返回最近的历史记录
+        return history[-max_history:] if len(history) > max_history else history
+        
+    except Exception as e:
+        logger.error(f"❌ 加载对话历史失败: {str(e)}")
         return []
-    
-    # 返回最近的历史记录
-    history = _conversation_history[session_id]
-    return history[-max_history:] if len(history) > max_history else history
 
 
 def _save_conversation_history(session_id: str, query: str, answer: str):
     """
-    保存对话历史
+    保存对话历史（到Redis缓存）
     
     Args:
         session_id: 会话ID
         query: 用户问题
         answer: 宁律师回复
     """
-    global _conversation_history
-    
-    if session_id not in _conversation_history:
-        _conversation_history[session_id] = []
-    
-    # 添加新的对话
-    _conversation_history[session_id].append({
-        "role": "user",
-        "content": query
-    })
-    _conversation_history[session_id].append({
-        "role": "assistant",
-        "content": answer
-    })
-    
-    # 限制历史记录数量（最多保留20轮对话）
-    max_conversations = 40  # 20轮对话（每轮包含用户和助手各一条）
-    if len(_conversation_history[session_id]) > max_conversations:
-        _conversation_history[session_id] = _conversation_history[session_id][-max_conversations:]
-    
-    logger.info(f"💾 保存对话历史 - 会话ID: {session_id}, 对话轮数: {len(_conversation_history[session_id]) // 2}")
+    try:
+        # 从Redis缓存中加载现有历史
+        cache_key = f"conversation:{session_id}"
+        history_json = cache_manager.get(cache_key)
+        
+        if history_json:
+            history = json.loads(history_json)
+        else:
+            history = []
+        
+        # 添加新的对话
+        history.append({
+            "role": "user",
+            "content": query
+        })
+        history.append({
+            "role": "assistant",
+            "content": answer
+        })
+        
+        # 限制历史记录数量（最多保留20轮对话）
+        max_conversations = 40  # 20轮对话（每轮包含用户和助手各一条）
+        if len(history) > max_conversations:
+            history = history[-max_conversations:]
+        
+        # 保存到Redis缓存（24小时过期）
+        cache_manager.set(
+            cache_key,
+            json.dumps(history, ensure_ascii=False),
+            ttl=CONVERSATION_TTL
+        )
+        
+        logger.info(f"💾 保存对话历史到Redis - 会话ID: {session_id}, 对话轮数: {len(history) // 2}")
+        
+    except Exception as e:
+        logger.error(f"❌ 保存对话历史失败: {str(e)}")
 
 
 def _identify_lead(query: str, intent_result: dict, user_id: str, session_id: str) -> dict:

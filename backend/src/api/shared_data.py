@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 import json
 from loguru import logger
 
-from src.utils.response import success_response, error_response
-from src.utils.logger import log_api_request
+from utils.response import success_response, error_response
+from utils.logger import log_api_request
 
 # 创建蓝图
 shared_data_bp = Blueprint('shared-data', __name__)

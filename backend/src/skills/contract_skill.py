@@ -11,7 +11,7 @@ from coze_coding_dev_sdk import LLMClient
 from coze_coding_utils.runtime_ctx.context import new_context
 from loguru import logger
 
-from src.prompts.manager import PromptManager
+from prompts.manager import PromptManager
 
 
 class ContractSkill:

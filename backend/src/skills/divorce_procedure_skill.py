@@ -9,8 +9,8 @@ from loguru import logger
 from coze_coding_dev_sdk import LLMClient
 from coze_coding_utils.runtime_ctx.context import new_context
 
-from src.prompts.skills.family_law import DIVORCE_PROCEDURE_PROMPT
-from src.utils.exception_handler import exception_handler
+from prompts.skills.family_law import DIVORCE_PROCEDURE_PROMPT
+from utils.exception_handler import exception_handler
 
 
 def execute_divorce_procedure(user_input: str, context: Dict[str, Any] = None) -> str:

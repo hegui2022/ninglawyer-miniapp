@@ -10,7 +10,7 @@ from sqlalchemy.orm import Query
 from loguru import logger
 
 from database import get_db_context
-from src.models.models import Base
+from models.models import Base
 
 # 泛型类型
 T = TypeVar('T', bound=Base)

@@ -7,7 +7,7 @@ from loguru import logger
 from collections import defaultdict
 import time
 
-from src.config.rate_limit_config import rate_limit_config
+from config.rate_limit_config import rate_limit_config
 
 
 class RateLimiter:

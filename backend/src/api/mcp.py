@@ -6,8 +6,8 @@ MCP (Model Context Protocol) API
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
-from src.utils.response import success_response, error_response
-from src.utils.logger import log_api_request
+from utils.response import success_response, error_response
+from utils.logger import log_api_request
 
 # 创建蓝图
 mcp_bp = Blueprint('mcp', __name__)

@@ -7,8 +7,8 @@ from loguru import logger
 
 from database import get_db_context
 from .base_repository import BaseRepository
-from src.models.models import User
-from src.utils.cache_manager import CacheManager
+from models.models import User
+from utils.cache_manager import CacheManager
 
 
 class UserRepository(BaseRepository[User]):

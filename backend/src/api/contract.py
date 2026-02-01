@@ -6,9 +6,9 @@
 from flask import Blueprint, request, jsonify
 from loguru import logger
 
-from src.agents.lawyer_factory import LawyerAgentFactory
-from src.utils.response import success_response, error_response
-from src.utils.logger import log_api_request
+from agents.lawyer_factory import LawyerAgentFactory
+from utils.response import success_response, error_response
+from utils.logger import log_api_request
 
 # 创建蓝图
 contract_bp = Blueprint('contract', __name__)

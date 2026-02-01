@@ -6,9 +6,9 @@ from flask import Blueprint, request, jsonify
 from loguru import logger
 import traceback
 
-from src.api.user import require_auth, get_current_user
-from src.database import get_db_context
-from src.crud.crud import consultation_crud, contract_crud, desensitize_crud, statistics_crud
+from api.user import require_auth, get_current_user
+from database import get_db_context
+from crud.crud import consultation_crud, contract_crud, desensitize_crud, statistics_crud
 
 # 创建蓝图
 records_bp = Blueprint('records', __name__)

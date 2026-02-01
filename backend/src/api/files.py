@@ -7,8 +7,8 @@ from loguru import logger
 import traceback
 from pathlib import Path
 
-from src.api.user import require_auth, get_current_user
-from src.services.file_service import file_service
+from api.user import require_auth, get_current_user
+from services.file_service import file_service
 
 # 创建蓝图
 files_bp = Blueprint('files', __name__)

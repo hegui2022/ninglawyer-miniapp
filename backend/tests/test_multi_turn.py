@@ -7,7 +7,7 @@ import requests
 import json
 
 BASE_URL = "http://localhost:5000"
-CHAT_ENDPOINT = "/chat"
+CHAT_ENDPOINT = "/api/v1/ninglawyer/chat"
 
 # 测试多轮对话
 def test_multi_turn_conversation():

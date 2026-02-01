@@ -7,10 +7,10 @@ from functools import wraps
 from loguru import logger
 import traceback
 
-from src.services.user_service import user_service
-from src.database import get_db_context
-from src.crud.crud import statistics_crud
-from src.models.models import User
+from services.user_service import user_service
+from database import get_db_context
+from crud.crud import statistics_crud
+from models.models import User
 
 # 创建蓝图
 user_bp = Blueprint('user', __name__)

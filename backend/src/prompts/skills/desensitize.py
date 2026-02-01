@@ -3,7 +3,7 @@
 """
 
 from langchain_core.prompts import ChatPromptTemplate
-from src.prompts.shared import SHARED_DISCLAIMER
+from prompts.shared import SHARED_DISCLAIMER
 
 
 # 脱敏技能的系统提示词

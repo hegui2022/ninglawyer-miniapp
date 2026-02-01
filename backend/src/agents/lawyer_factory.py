@@ -6,8 +6,8 @@ Lawyer Agent Factory - 宁律师工厂
 from typing import Dict, Any, Optional
 from loguru import logger
 
-from src.utils.logger import log_function_call
-from src.config.lawyer_domains import (
+from utils.logger import log_function_call
+from config.lawyer_domains import (
     CIVIL_LAWYER_CONFIG,
     CRIMINAL_LAWYER_CONFIG,
     CONTRACT_LAWYER_CONFIG,

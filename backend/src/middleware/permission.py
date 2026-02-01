@@ -8,10 +8,10 @@ from flask import request, jsonify
 from datetime import datetime
 from loguru import logger
 
-from src.database import get_db_context
-from src.models.models import User
-from src.config.subscription import check_permission
-from src.utils.skill_registry import skill_registry
+from database import get_db_context
+from models.models import User
+from config.subscription import check_permission
+from utils.skill_registry import skill_registry
 
 
 def check_subscription_permission(required_subscription: str = "basic"):

@@ -8,10 +8,10 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import sessionmaker
 from loguru import logger
 
-from src.database import get_db_context
-from src.models.models import User, Statistics
-from src.config.subscription import SUBSCRIPTION_PLANS, MODULE_TO_MINIPROGRAM, get_upgrade_path
-from src.utils.skill_registry import skill_registry
+from database import get_db_context
+from models.models import User, Statistics
+from config.subscription import SUBSCRIPTION_PLANS, MODULE_TO_MINIPROGRAM, get_upgrade_path
+from utils.skill_registry import skill_registry
 
 subscription_bp = Blueprint('subscription', __name__)
 

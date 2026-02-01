@@ -8,12 +8,12 @@ from sqlalchemy import desc, func
 from datetime import datetime, timedelta
 from loguru import logger
 
-from src.models.models import (
+from models.models import (
     User, Session, Message, ConsultationRecord, 
     ContractRecord, DesensitizeRecord, FileRecord, 
     UserProfile, Statistics, SystemConfig
 )
-from src.models.schemas import (
+from models.schemas import (
     UserCreate, UserUpdate, SessionCreate,
     ConsultationRecordBase, ContractRecordBase, 
     DesensitizeRecordBase, UserProfileBase

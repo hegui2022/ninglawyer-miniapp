@@ -8,14 +8,14 @@ import traceback
 from datetime import datetime, timedelta
 from sqlalchemy import func
 
-from src.api.user import require_auth
-from src.database import get_db_context
-from src.crud.crud import (
+from api.user import require_auth
+from database import get_db_context
+from crud.crud import (
     user_crud, session_crud, consultation_crud, 
     contract_crud, desensitize_crud, file_crud,
     statistics_crud
 )
-from src.models.models import User, Session, ConsultationRecord, ContractRecord, Message
+from models.models import User, Session, ConsultationRecord, ContractRecord, Message
 
 # 创建蓝图
 admin_bp = Blueprint('admin', __name__)

@@ -13,11 +13,11 @@ from loguru import logger
 from coze_coding_dev_sdk import LLMClient
 from coze_coding_utils.runtime_ctx.context import new_context
 
-from src.utils.skill_registry import skill_registry
-from src.utils.knowledge_retriever import knowledge_retriever
-from src.personas.personality_selector import personality_selector
-from src.prompts.manager import PromptManager
-from src.utils.exception_handler import exception_handler, RouteError, ExceptionLevel
+from utils.skill_registry import skill_registry
+from utils.knowledge_retriever import knowledge_retriever
+from personas.personality_selector import personality_selector
+from prompts.manager import PromptManager
+from utils.exception_handler import exception_handler, RouteError, ExceptionLevel
 
 
 class MasterBrain:

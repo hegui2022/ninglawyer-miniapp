@@ -6,8 +6,8 @@ from flask import Blueprint, request, jsonify
 from loguru import logger
 import traceback
 
-from src.api.user import require_auth, get_current_user
-from src.services.session_service import session_service
+from api.user import require_auth, get_current_user
+from services.session_service import session_service
 
 # 创建蓝图
 session_bp = Blueprint('session', __name__)

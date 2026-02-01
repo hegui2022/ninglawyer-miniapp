@@ -6,10 +6,10 @@ from loguru import logger
 from datetime import datetime
 from pathlib import Path
 
-from src.database import get_db_context
-from src.crud.crud import file_crud
-from src.models.models import FileRecord
-from src.models.schemas import FileCreate, FileUpdate
+from database import get_db_context
+from crud.crud import file_crud
+from models.models import FileRecord
+from models.schemas import FileCreate, FileUpdate
 
 
 class FileService:

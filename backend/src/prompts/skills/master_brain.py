@@ -4,7 +4,7 @@
 """
 
 from langchain_core.prompts import ChatPromptTemplate
-from src.prompts.shared import SHARED_DISCLAIMER
+from prompts.shared import SHARED_DISCLAIMER
 
 
 # 主脑路由的系统提示词

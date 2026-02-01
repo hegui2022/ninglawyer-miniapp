@@ -8,7 +8,7 @@ import json
 from typing import Dict, Any
 from loguru import logger
 
-from src.prompts.manager import PromptManager
+from prompts.manager import PromptManager
 
 
 class ContractRiskSkill:

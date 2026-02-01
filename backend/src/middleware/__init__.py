@@ -2,7 +2,7 @@
 中间件模块
 """
 
-from src.middleware.error_handler import (
+from middleware.error_handler import (
     APIError,
     ValidationError,
     AuthenticationError,
@@ -13,7 +13,7 @@ from src.middleware.error_handler import (
     init_error_handlers,
     setup_logging
 )
-from src.middleware.rate_limit import RateLimiter, rate_limit, get_rate_limiter
+from middleware.rate_limit import RateLimiter, rate_limit, get_rate_limiter
 
 __all__ = [
     'APIError',

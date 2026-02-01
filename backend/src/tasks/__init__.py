@@ -2,7 +2,7 @@
 异步任务模块
 """
 
-from src.tasks.async_tasks import (
+from tasks.async_tasks import (
     celery_app,
     send_notification_task,
     cleanup_expired_sessions_task,

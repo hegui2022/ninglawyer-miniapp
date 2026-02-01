@@ -8,8 +8,8 @@ from loguru import logger
 
 from database import get_db_context
 from .base_repository import BaseRepository
-from src.models.models import Session
-from src.utils.cache_manager import CacheManager
+from models.models import Session
+from utils.cache_manager import CacheManager
 
 
 class SessionRepository(BaseRepository[Session]):

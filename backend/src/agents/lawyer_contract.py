@@ -8,10 +8,10 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from loguru import logger
 
-from src.utils.config import get_config
-from src.utils.logger import log_function_call, log_business_event
-from src.utils.response import success_response, error_response
-from src.prompts.manager import PromptManager
+from utils.config import get_config
+from utils.logger import log_function_call, log_business_event
+from utils.response import success_response, error_response
+from prompts.manager import PromptManager
 
 # 获取配置
 config = get_config()

@@ -3,23 +3,23 @@ API 路由
 """
 
 from flask import Blueprint
-from src.utils.logger import logger
+from utils.logger import logger
 
 # 创建蓝图
 api_bp = Blueprint('api', __name__)
 
 # 导入各个模块的路由
-from src.api.consultation import consultation_bp
-from src.api.contract import contract_bp
-from src.api.shared_data import shared_data_bp
-from src.api.mcp import mcp_bp
-from src.api.master import master_bp
-from src.api.user import user_bp
-from src.api.session import session_bp
-from src.api.files import files_bp
-from src.api.records import records_bp
-from src.api.admin import admin_bp
-from src.api.subscription import subscription_bp
+from api.consultation import consultation_bp
+from api.contract import contract_bp
+from api.shared_data import shared_data_bp
+from api.mcp import mcp_bp
+from api.master import master_bp
+from api.user import user_bp
+from api.session import session_bp
+from api.files import files_bp
+from api.records import records_bp
+from api.admin import admin_bp
+from api.subscription import subscription_bp
 
 # 注册蓝图
 api_bp.register_blueprint(user_bp, url_prefix='/user')

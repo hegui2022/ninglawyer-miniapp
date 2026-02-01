@@ -12,9 +12,9 @@ from datetime import datetime, timedelta
 from loguru import logger
 from jose import JWTError, jwt
 
-from src.database import get_db_context
-from src.crud.crud import user_crud, user_profile_crud, statistics_crud
-from src.models.schemas import UserCreate, UserProfileBase
+from database import get_db_context
+from crud.crud import user_crud, user_profile_crud, statistics_crud
+from models.schemas import UserCreate, UserProfileBase
 
 
 class UserService:

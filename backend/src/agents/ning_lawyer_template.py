@@ -9,9 +9,9 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from loguru import logger
 
-from src.utils.config import get_config
-from src.utils.logger import log_function_call, log_business_event
-from src.utils.response import success_response, error_response
+from utils.config import get_config
+from utils.logger import log_function_call, log_business_event
+from utils.response import success_response, error_response
 
 # 获取配置
 config = get_config()
